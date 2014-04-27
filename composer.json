@@ -4,7 +4,8 @@
     "keywords": ["CMS", "laravel", "larapress"],
     "license": "MIT",
     "require": {
-        "laravel/framework": "4.1.*"
+        "laravel/framework": "4.1.*",
+        "cartalyst/sentry": "2.1.*"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "1.*"
