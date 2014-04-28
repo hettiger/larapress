@@ -18,7 +18,8 @@ var respond = components + 'respond/src/respond.js';
 var paths = {
     less: [bootstrap + 'less/bootstrap.less'],
     scripts: [jquery, bootstrap + 'js/*.js'],
-    fallbacks: [html5shiv, respond]
+    fallbacks: [html5shiv, respond],
+    fonts: [bootstrap + 'fonts/*']
 };
 
 gulp.task('less', function() {
@@ -49,4 +50,9 @@ gulp.task('fallback', function() {
         .pipe(gulp.dest(destination + 'js'));
 });
 
-gulp.task('default', ['less', 'js', 'fallback']);
+gulp.task('fonts', function() {
+    return gulp.src(paths.fonts)
+        .pipe(gulp.dest(destination + 'fonts'));
+});
+
+gulp.task('default', ['less', 'js', 'fallback', 'fonts']);
