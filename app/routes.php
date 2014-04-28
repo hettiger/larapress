@@ -37,7 +37,7 @@ Route::group(
         Route::group(array('prefix' => 'cp'), function() {
             Route::get('dashboard', function()
             {
-                return 'Dashboard';
+                return (string) \Sentry::check();
             });
         });
 
