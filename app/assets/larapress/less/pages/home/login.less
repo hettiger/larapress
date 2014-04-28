@@ -23,3 +23,21 @@ img {
     max-width: 100%;
     margin: 0 0 2em 0;
 }
+
+#copyright {
+    @copy-color: #cccccc;
+
+    margin-top: 0.6em;
+    font-size: 0.8em;
+    color: @copy-color;
+    text-align: center;
+
+    a {
+        text-decoration: underline;
+        color: @copy-color;
+    }
+
+    a:hover, a:active {
+        color: #ffffff;
+    }
+}
