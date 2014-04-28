@@ -92,33 +92,17 @@ Route::filter('csrf', function()
 
 Route::filter('access.backend', function()
 {
-    if ( ! Sentry::check())
+    try
     {
-        Session::flash('error', 'User is not logged in.');
+        Permission::has('access.backend');
+    }
+    catch (\Larapress\Exceptions\PermissionMissingException $e)
+    {
+        Session::flash('error', $e->getMessage());
         return Redirect::route('larapress.home.login.get');
     }
-    else
-    {
-        try
-        {
-            $user = Sentry::getUser();
 
-            if ( ! $user->hasAccess('access.backend') )
-            {
-                Session::flash('error', 'User is missing access rights for this area.');
-                return Redirect::route('larapress.home.login.get');
-            }
-            else
-            {
-                return null; // User has access
-            }
-        }
-        catch (Cartalyst\Sentry\UserNotFoundException $e)
-        {
-            Session::flash('error', 'User was not found.');
-            return Redirect::route('larapress.home.login.get');
-        }
-    }
+    return null; // User has access
 });
 
 /*
