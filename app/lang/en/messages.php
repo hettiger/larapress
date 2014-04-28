@@ -8,7 +8,7 @@ return array(
 
     'User is not logged in.' => 'User is not logged in.',
 
-    'User is missing access rights for this area.' => 'User is missing access rights for this area.',
+    'User is missing permissions.' => 'User is missing permissions.',
 
     'User was not found.' => 'User was not found.',
 

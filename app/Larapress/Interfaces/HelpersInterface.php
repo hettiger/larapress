@@ -8,6 +8,6 @@ interface HelpersInterface {
      * @param string $page_name The page name
      * @return void
      */
-    public function set_page_title($page_name);
+    public function setPageTitle($page_name);
 
 }

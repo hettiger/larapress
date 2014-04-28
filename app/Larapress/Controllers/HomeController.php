@@ -19,7 +19,7 @@ class HomeController extends BaseController
 
     public function getLogin()
     {
-        Helpers::set_page_title('Login');
+        Helpers::setPageTitle('Login');
 
         return View::make('larapress.pages.home.login');
     }
