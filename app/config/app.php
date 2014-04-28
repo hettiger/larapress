@@ -123,6 +123,7 @@ return array(
         'Cartalyst\Sentry\SentryServiceProvider',
 
         'Larapress\Providers\PermissionServiceProvider',
+        'Larapress\Providers\HelpersServiceProvider',
 
 	),
 
@@ -193,6 +194,7 @@ return array(
         'Sentry'          => 'Cartalyst\Sentry\Facades\Laravel\Sentry',
 
         'Permission'      => 'Larapress\Facades\Permission',
+        'Helpers'         => 'Larapress\Facades\Helpers',
 
 	),
 

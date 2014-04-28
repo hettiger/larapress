@@ -7,6 +7,7 @@ use Cartalyst\Sentry\Users\PasswordRequiredException;
 use Cartalyst\Sentry\Users\UserNotActivatedException;
 use Cartalyst\Sentry\Users\UserNotFoundException;
 use Cartalyst\Sentry\Users\WrongPasswordException;
+use Helpers;
 use Input;
 use Redirect;
 use Sentry;
@@ -18,6 +19,8 @@ class HomeController extends BaseController
 
     public function getLogin()
     {
+        Helpers::set_page_title('Login');
+
         return View::make('larapress.pages.home.login');
     }
 

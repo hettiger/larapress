@@ -4,4 +4,6 @@ return array(
 
     'Login' => 'Login',
 
+    'Dashboard' => 'Dashboard',
+
 );
