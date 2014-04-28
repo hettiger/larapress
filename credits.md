@@ -18,6 +18,8 @@ This Application is using following Projects:
 | [gulp-rename](https://github.com/hparra/gulp-rename) | [MIT](http://opensource.org/licenses/MIT) |
 | [gulp-gzip](https://github.com/jstuckey/gulp-gzip) | [MIT](http://opensource.org/licenses/MIT) |
 | [jQuery JavaScript Library](https://github.com/jquery/jquery) | [MIT](http://opensource.org/licenses/MIT) |
+| [html5shiv](https://github.com/aFarkas/html5shiv) | [MIT](http://opensource.org/licenses/MIT) or [GPL Version 2](http://opensource.org/licenses/GPL-2.0) |
+| [Respond](https://github.com/scottjehl/Respond) | [MIT](http://opensource.org/licenses/MIT) |
 
 Please be aware that these projects might have their own dependencies that I won't list here.  
 If I forgot any project here please open an issue and I'll add it to this list immediately.

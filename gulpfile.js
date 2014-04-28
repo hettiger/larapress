@@ -12,10 +12,13 @@ var destination = 'public/larapress/assets/';
 
 var bootstrap = components + 'bootstrap/';
 var jquery = components + 'jquery/dist/jquery.js';
+var html5shiv = components + 'html5shiv/dist/html5shiv.js';
+var respond = components + 'respond/src/respond.js';
 
 var paths = {
     less: [bootstrap + 'less/bootstrap.less'],
-    scripts: [jquery, bootstrap + 'js/*.js']
+    scripts: [jquery, bootstrap + 'js/*.js'],
+    fallbacks: [html5shiv, respond]
 };
 
 gulp.task('less', function() {
@@ -37,4 +40,13 @@ gulp.task('js', function() {
         .pipe(gulp.dest(destination + 'js'));
 });
 
-gulp.task('default', ['less', 'js']);
+gulp.task('fallback', function() {
+    return gulp.src(paths.fallbacks)
+        .pipe(concat('fallback.js'))
+        .pipe(js_min())
+        .pipe(gulp.dest(destination + 'js'))
+        .pipe(gzip({threshold: true, gzipOptions: {level: 9}}))
+        .pipe(gulp.dest(destination + 'js'));
+});
+
+gulp.task('default', ['less', 'js', 'fallback']);
