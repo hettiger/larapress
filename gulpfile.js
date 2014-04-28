@@ -3,11 +3,11 @@ var less = require('gulp-less');
 var css_min = require('gulp-minify-css');
 var concat = require('gulp-concat');
 var js_min = require('gulp-uglify');
-var rename = require('gulp-rename');
 var gzip = require('gulp-gzip');
 
 var root = 'app/assets/';
 var components = root + 'components/';
+var larapress = root + 'larapress/';
 var destination = 'public/larapress/assets/';
 
 var bootstrap = components + 'bootstrap/';
@@ -16,7 +16,10 @@ var html5shiv = components + 'html5shiv/dist/html5shiv.js';
 var respond = components + 'respond/src/respond.js';
 
 var paths = {
-    less: [bootstrap + 'less/bootstrap.less'],
+    less: [
+        bootstrap + 'less/bootstrap.less',
+        larapress + 'less/app.less'
+    ],
     scripts: [
         jquery,
         bootstrap + 'js/transition.js',
@@ -38,12 +41,21 @@ var paths = {
 
 gulp.task('less', function() {
     return gulp.src(paths.less)
+        .pipe(concat('larapress.less'))
         .pipe(less())
         .pipe(css_min())
-        .pipe(rename('larapress.css'))
         .pipe(gulp.dest(destination + 'css'))
         .pipe(gzip({threshold: true, gzipOptions: {level: 9}}))
         .pipe(gulp.dest(destination + 'css'));
+});
+
+gulp.task('less-per-page', function() {
+    return gulp.src(larapress + 'less/pages/**/*.less')
+        .pipe(less())
+        .pipe(css_min())
+        .pipe(gulp.dest(destination + 'css/pages'))
+        .pipe(gzip({threshold: true, gzipOptions: {level: 9}}))
+        .pipe(gulp.dest(destination + 'css/pages'));
 });
 
 gulp.task('js', function() {
@@ -69,4 +81,12 @@ gulp.task('fonts', function() {
         .pipe(gulp.dest(destination + 'fonts'));
 });
 
-gulp.task('default', ['less', 'js', 'fallback', 'fonts']);
+gulp.task('default',
+    [
+        'less',
+        'less-per-page',
+        'js',
+        'fallback',
+        'fonts'
+    ]
+);

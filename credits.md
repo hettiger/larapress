@@ -15,7 +15,6 @@ This Application is using following Projects:
 | [gulp-minify-css](https://github.com/jonathanepollack/gulp-minify-css) | [MIT](http://opensource.org/licenses/MIT) |
 | [gulp-concat](https://github.com/wearefractal/gulp-concat) | [MIT](http://opensource.org/licenses/MIT) |
 | [gulp-uglify](https://github.com/terinjokes/gulp-uglify) | [MIT](http://opensource.org/licenses/MIT) |
-| [gulp-rename](https://github.com/hparra/gulp-rename) | [MIT](http://opensource.org/licenses/MIT) |
 | [gulp-gzip](https://github.com/jstuckey/gulp-gzip) | [MIT](http://opensource.org/licenses/MIT) |
 | [jQuery JavaScript Library](https://github.com/jquery/jquery) | [MIT](http://opensource.org/licenses/MIT) |
 | [html5shiv](https://github.com/aFarkas/html5shiv) | [MIT](http://opensource.org/licenses/MIT) or [GPL Version 2](http://opensource.org/licenses/GPL-2.0) |
