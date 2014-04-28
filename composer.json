@@ -4,10 +4,12 @@
     "keywords": ["CMS", "laravel", "larapress"],
     "license": "MIT",
     "require": {
-        "laravel/framework": "4.1.*"
+        "laravel/framework": "4.1.*",
+        "cartalyst/sentry": "2.1.*"
     },
     "require-dev": {
-        "barryvdh/laravel-ide-helper": "1.*"
+        "barryvdh/laravel-ide-helper": "1.*",
+        "phpunit/phpunit": "3.7.*"
     },
     "autoload": {
         "classmap": [
@@ -17,7 +19,10 @@
             "app/database/migrations",
             "app/database/seeds",
             "app/tests/TestCase.php"
-        ]
+        ],
+        "psr-0": {
+            "Larapress": "app/"
+        }
     },
     "scripts": {
         "post-install-cmd": [
