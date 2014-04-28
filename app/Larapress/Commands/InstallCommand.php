@@ -5,6 +5,7 @@ use Cartalyst\Sentry\Groups\GroupNotFoundException;
 use Cartalyst\Sentry\Users\LoginRequiredException;
 use Cartalyst\Sentry\Users\PasswordRequiredException;
 use Cartalyst\Sentry\Users\UserExistsException;
+use Config;
 use Sentry;
 use Cartalyst\Sentry\Groups\GroupExistsException;
 use Cartalyst\Sentry\Groups\NameRequiredException;
@@ -16,7 +17,7 @@ class InstallCommand extends Command
 {
     protected $email = 'admin@example.com';
     protected $password = 'password';
-    protected $uri_segment = '/admin';
+    protected $url;
 
     /**
      * The console command name.
@@ -40,6 +41,8 @@ class InstallCommand extends Command
     public function __construct()
     {
         parent::__construct();
+
+        $this->url = Config::get('larapress.urls.backend');
     }
 
     /**
@@ -189,7 +192,7 @@ class InstallCommand extends Command
          * Notify the user about the successful install and tell him how to continue
          */
         $this->info(PHP_EOL . 'Installation complete!' . PHP_EOL);
-        $this->info('Now please visit ' . url($this->uri_segment) . ' and login.' . PHP_EOL);
+        $this->info('Now please visit ' . $this->url . ' and login.' . PHP_EOL);
         $this->info('Credentials:');
         $this->info('E-Mail: ' . $this->email);
         $this->info('Password: ' . $this->password . PHP_EOL);
