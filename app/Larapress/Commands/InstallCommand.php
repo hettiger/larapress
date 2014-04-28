@@ -42,7 +42,7 @@ class InstallCommand extends Command
     {
         parent::__construct();
 
-        $this->url = Config::get('larapress.urls.backend');
+        $this->url = url(Config::get('larapress.urls.backend'));
     }
 
     /**

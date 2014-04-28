@@ -17,7 +17,21 @@ var respond = components + 'respond/src/respond.js';
 
 var paths = {
     less: [bootstrap + 'less/bootstrap.less'],
-    scripts: [jquery, bootstrap + 'js/*.js'],
+    scripts: [
+        jquery,
+        bootstrap + 'js/transition.js',
+        bootstrap + 'js/alert.js',
+        bootstrap + 'js/modal.js',
+        bootstrap + 'js/dropdown.js',
+        bootstrap + 'js/scrollspy.js',
+        bootstrap + 'js/tab.js',
+        bootstrap + 'js/tooltip.js',
+        bootstrap + 'js/popover.js',
+        bootstrap + 'js/button.js',
+        bootstrap + 'js/collapse.js',
+        bootstrap + 'js/carousel.js',
+        bootstrap + 'js/affix.js'
+    ],
     fallbacks: [html5shiv, respond],
     fonts: [bootstrap + 'fonts/*']
 };
