@@ -8,6 +8,15 @@
     <div id="wrapper">
         <div id="login-box">
             <img src="{{ asset('larapress/assets/png/logo.png') }}">
+
+            {{-- Messages --}}
+            @if ( Session::has('error') )
+                <div class="alert alert-danger">
+                    <strong>@lang('messages.Error')!</strong>
+                    @lang('messages.' . Session::get('error'))
+                </div>
+            @endif
+
             @yield('content')
         </div>
         <p id="copyright">
