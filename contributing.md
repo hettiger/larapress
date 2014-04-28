@@ -24,6 +24,8 @@ If you set the environment in the command line you could run into trouble trying
 ```bash
 composer install --dev -o
 php artisan ide-helper:generate
+chmod -R 777 app/storage
+php artisan larapress:install
 ```
 
 ### Adding Packages
