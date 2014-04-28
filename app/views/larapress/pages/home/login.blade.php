@@ -1,15 +1,15 @@
 @extends('larapress.layouts.login')
 
 @section('content')
-    <form class="form-signin" role="form">
+    {{ Form::open() }}
         <div class="form-group">
-            <label for="exampleInputEmail1">Email address</label>
-            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+            {{ Form::label('email', trans('forms.Email address')) }}
+            {{ Form::text('email', '', array('class' => 'form-control', 'placeholder' => trans('forms.Enter email'))) }}
         </div>
         <div class="form-group">
-            <label for="exampleInputPassword1">Password</label>
-            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+            {{ Form::label('password', trans('forms.Password')) }}
+            {{ Form::password('password', array('class' => 'form-control', 'placeholder' => trans('forms.Password'))) }}
         </div>
-        <button class="btn btn-lg btn-default btn-block btn-dark" type="submit">Sign in</button>
-    </form>
+        {{ Form::button(trans('forms.Sign in'), array('class' => 'btn btn-lg btn-default btn-block btn-dark')) }}
+    {{ Form::close() }}
 @stop
