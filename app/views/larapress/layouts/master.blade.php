@@ -9,6 +9,8 @@
     {{-- Bootstrap --}}
     {{ HTML::style('larapress/assets/css/larapress.css') }}
 
+    @include('larapress.partials.head')
+
     {{-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries --}}
     <!--[if lt IE 9]>
         {{ HTML::script('larapress/assets/js/fallback.js') }}
@@ -16,7 +18,7 @@
 </head>
 <body>
 
-@yield('content')
+@yield('body')
 
 {{-- Include all compiled plugins below (including jQuery) --}}
 {{ HTML::script('larapress/assets/js/larapress.js') }}

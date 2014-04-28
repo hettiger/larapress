@@ -1,0 +1,1 @@
+@yield('head.extension')
