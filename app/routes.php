@@ -34,7 +34,14 @@ Route::group(
     ),
     function () {
 
-        Route::get('login', array('uses' => 'HomeController@getLogin', 'as' => 'home.login.get'));
+        Route::group(array('prefix' => 'cp'), function() {
+            Route::get('dashboard', function()
+            {
+                return 'Dashboard';
+            });
+        });
+
+        Route::get('login', array('uses' => 'HomeController@getLogin', 'as' => 'larapress.home.login.get'));
 
     }
 );

@@ -78,3 +78,58 @@ Route::filter('csrf', function()
 		throw new Illuminate\Session\TokenMismatchException;
 	}
 });
+
+/*
+|--------------------------------------------------------------------------
+| Filters for the larapress backend
+|--------------------------------------------------------------------------
+|
+| The following filters are used to verify that the user of the current
+| session is logged into this application and has the required permissions
+| for several tasks.
+|
+*/
+
+Route::filter('access.backend', function()
+{
+    if ( ! Sentry::check())
+    {
+        Session::flash('error', 'User is not logged in.');
+        return Redirect::route('larapress.home.login.get');
+    }
+    else
+    {
+        try
+        {
+            $user = Sentry::getUser();
+
+            if ( ! $user->hasAccess('access.backend') )
+            {
+                Session::flash('error', 'User is missing access rights for this area.');
+                return Redirect::route('larapress.home.login.get');
+            }
+            else
+            {
+                return null; // User has access
+            }
+        }
+        catch (Cartalyst\Sentry\UserNotFoundException $e)
+        {
+            Session::flash('error', 'User was not found.');
+            return Redirect::route('larapress.home.login.get');
+        }
+    }
+});
+
+/*
+|--------------------------------------------------------------------------
+| Pattern Filters for the larapress backend
+|--------------------------------------------------------------------------
+|
+| The following filters are used to define when to use larapress's filters.
+|
+*/
+
+$backend_url = Config::get('larapress.urls.backend');
+
+Route::when($backend_url . '/cp*', 'access.backend');
