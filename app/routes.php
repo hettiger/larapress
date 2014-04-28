@@ -35,10 +35,9 @@ Route::group(
     function () {
 
         Route::group(array('prefix' => 'cp'), function() {
-            Route::get('dashboard', function()
-            {
-                return (string) \Sentry::check();
-            });
+            Route::controller('/', 'ControlPanelController', array(
+                'getDashboard' => 'larapress.cp.dashboard.get',
+            ));
         });
 
         Route::controller('/', 'HomeController', array(

@@ -70,8 +70,7 @@ class HomeController extends BaseController
             return Redirect::route('larapress.home.login.get')->withInput(Input::except('password'));
         }
 
-        // TODO Make this a named route!
-        return Redirect::to('admin/cp/dashboard');
+        return Redirect::route('larapress.cp.dashboard.get');
     }
 
     public function getLogout()
