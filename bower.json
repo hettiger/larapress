@@ -1,0 +1,25 @@
+{
+  "name": "larapress",
+  "version": "0.0.0",
+  "homepage": "https://github.com/larapress-cms/larapress",
+  "authors": [
+    "Martin Hettiger"
+  ],
+  "description": "A Laravel 4 CMS",
+  "moduleType": [
+    "globals"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "app/assets/components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.1.1"
+  }
+}
