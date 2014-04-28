@@ -41,7 +41,10 @@ Route::group(
             });
         });
 
-        Route::get('login', array('uses' => 'HomeController@getLogin', 'as' => 'larapress.home.login.get'));
+        Route::controller('/', 'HomeController', array(
+            'getLogin' => 'larapress.home.login.get',
+            'postLogin' => 'larapress.home.login.post'
+        ));
 
     }
 );

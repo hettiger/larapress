@@ -10,4 +10,9 @@ class HomeController extends BaseController
         return View::make('larapress.pages.home.login');
     }
 
+    public function postLogin()
+    {
+        return false;
+    }
+
 }
