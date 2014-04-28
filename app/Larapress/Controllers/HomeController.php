@@ -12,7 +12,7 @@ class HomeController extends BaseController
 
     public function postLogin()
     {
-        return false;
+        return \Input::all();
     }
 
 }
