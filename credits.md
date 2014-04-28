@@ -11,6 +11,13 @@ This Application is using following Projects:
 | [Bootstrap](http://getbootstrap.com) | [MIT](http://opensource.org/licenses/MIT) |
 | [Bower](http://bower.io) | [MIT](http://opensource.org/licenses/MIT) |
 | [Gulp](http://gulpjs.com) | [MIT](http://opensource.org/licenses/MIT) |
+| [gulp-less](https://github.com/plus3network/gulp-less) | [MIT](http://opensource.org/licenses/MIT) |
+| [gulp-minify-css](https://github.com/jonathanepollack/gulp-minify-css) | [MIT](http://opensource.org/licenses/MIT) |
+| [gulp-concat](https://github.com/wearefractal/gulp-concat) | [MIT](http://opensource.org/licenses/MIT) |
+| [gulp-uglify](https://github.com/terinjokes/gulp-uglify) | [MIT](http://opensource.org/licenses/MIT) |
+| [gulp-rename](https://github.com/hparra/gulp-rename) | [MIT](http://opensource.org/licenses/MIT) |
+| [gulp-gzip](https://github.com/jstuckey/gulp-gzip) | [MIT](http://opensource.org/licenses/MIT) |
+| [jQuery JavaScript Library](https://github.com/jquery/jquery) | [MIT](http://opensource.org/licenses/MIT) |
 
 Please be aware that these projects might have their own dependencies that I won't list here.  
 If I forgot any project here please open an issue and I'll add it to this list immediately.
