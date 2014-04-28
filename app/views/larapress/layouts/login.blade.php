@@ -11,7 +11,8 @@
 
             {{-- Messages --}}
             @if ( Session::has('error') )
-                <div class="alert alert-danger">
+                <div class="alert alert-danger alert-dismissable fade in">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                     <strong>@lang('messages.Error')!</strong>
                     @lang('messages.' . Session::get('error'))
                 </div>
