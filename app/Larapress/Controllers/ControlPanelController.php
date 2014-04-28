@@ -1,11 +1,13 @@
 <?php namespace Larapress\Controllers;
 
+use View;
+
 class ControlPanelController extends BaseController
 {
 
     public function getDashboard()
     {
-        return (string) \Sentry::check();
+        return View::make('larapress.pages.cp.dashboard');
     }
 
 }
