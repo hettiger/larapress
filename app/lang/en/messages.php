@@ -2,6 +2,8 @@
 
 return array(
 
+    // Error
+
     'Error' => 'Error',
 
     'User is not logged in.' => 'User is not logged in.',
@@ -21,5 +23,11 @@ return array(
     'User is suspended.' => 'User is suspended.',
 
     'User is banned.' => 'User is banned.',
+
+    // Success
+
+    'Success' => 'Success',
+
+    'You have successfully logged out.' => 'You have successfully logged out.',
 
 );

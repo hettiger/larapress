@@ -17,6 +17,13 @@
                     @lang('messages.' . Session::get('error'))
                 </div>
             @endif
+            @if ( Session::has('success') )
+                <div class="alert alert-success alert-dismissable fade in">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <strong>@lang('messages.Success')!</strong>
+                    @lang('messages.' . Session::get('success'))
+                </div>
+            @endif
 
             @yield('content')
         </div>

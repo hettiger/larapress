@@ -74,4 +74,15 @@ class HomeController extends BaseController
         return Redirect::to('admin/cp/dashboard');
     }
 
+    public function getLogout()
+    {
+        if ( Sentry::check() )
+        {
+            Sentry::logout();
+            Session::flash('success', 'You have successfully logged out.');
+        }
+
+        return Redirect::route('larapress.home.login.get');
+    }
+
 }
