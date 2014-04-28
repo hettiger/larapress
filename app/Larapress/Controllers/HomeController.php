@@ -25,8 +25,6 @@ class HomeController extends BaseController
     {
         $input = Input::all();
 
-        // TODO Translations missing for the error messages!
-
         try
         {
             $credentials = array(
