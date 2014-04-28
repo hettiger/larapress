@@ -18,10 +18,10 @@ Route::get('/', function()
 
 /*
 |--------------------------------------------------------------------------
-| Routes for larapress
+| Routes for the larapress backend
 |--------------------------------------------------------------------------
 |
-| Here is where you can register all of the routes for the larapress cms.
+| Here is where you can register all of the routes for the backend.
 | It's a breeze. Simply tell Laravel the URIs it should respond to
 | and give it the Closure to execute when that URI is requested.
 |
