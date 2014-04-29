@@ -1,6 +1,5 @@
 <?php namespace Larapress\Tests\Services;
 
-use Artisan;
 use Larapress\Tests\TestCase;
 use Mockery;
 use Permission;
