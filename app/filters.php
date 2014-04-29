@@ -13,13 +13,28 @@
 
 App::before(function($request)
 {
-	//
+    // Record the starting time for logging the application performance
+    Session::put('start.time', microtime(true));
+
+    // Get the Throttle Provider
+    $throttleProvider = Sentry::getThrottleProvider();
+
+    // Enable the Throttling Feature
+    $throttleProvider->enable();
+
+    // Custom additions go below here
 });
 
 
 App::after(function($request, $response)
 {
-	//
+    // Custom additions go below here
+
+    // Write performance related statistics into the log file
+    if ( Config::get('larapress.settings.log') )
+    {
+        Helpers::logPerformance();
+    }
 });
 
 /*
@@ -78,3 +93,45 @@ Route::filter('csrf', function()
 		throw new Illuminate\Session\TokenMismatchException;
 	}
 });
+
+// Apply the csrf filter to all POST, PUT, PATCH and DELETE requests
+Route::when('*', 'csrf', array('post', 'put', 'patch', 'delete'));
+
+/*
+|--------------------------------------------------------------------------
+| Filters for the larapress backend
+|--------------------------------------------------------------------------
+|
+| The following filters are used to verify that the user of the current
+| session is logged into this application and has the required permissions
+| for several tasks.
+|
+*/
+
+Route::filter('access.backend', function()
+{
+    try
+    {
+        Permission::has('access.backend');
+    }
+    catch (\Larapress\Exceptions\PermissionMissingException $e)
+    {
+        Session::flash('error', $e->getMessage());
+        return Redirect::route('larapress.home.login.get');
+    }
+
+    return null; // User has access
+});
+
+/*
+|--------------------------------------------------------------------------
+| Pattern Filters for the larapress backend
+|--------------------------------------------------------------------------
+|
+| The following filters are used to define when to use larapress's filters.
+|
+*/
+
+$backend_url = Config::get('larapress.urls.backend');
+
+Route::when($backend_url . '/cp*', 'access.backend');

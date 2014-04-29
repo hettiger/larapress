@@ -122,6 +122,9 @@ return array(
 
         'Cartalyst\Sentry\SentryServiceProvider',
 
+        'Larapress\Providers\PermissionServiceProvider',
+        'Larapress\Providers\HelpersServiceProvider',
+
 	),
 
 	/*
@@ -188,7 +191,10 @@ return array(
 		'Validator'       => 'Illuminate\Support\Facades\Validator',
 		'View'            => 'Illuminate\Support\Facades\View',
 
-        'Sentry' => 'Cartalyst\Sentry\Facades\Laravel\Sentry',
+        'Sentry'          => 'Cartalyst\Sentry\Facades\Laravel\Sentry',
+
+        'Permission'      => 'Larapress\Facades\Permission',
+        'Helpers'         => 'Larapress\Facades\Helpers',
 
 	),
 

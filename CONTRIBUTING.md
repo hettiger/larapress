@@ -8,6 +8,8 @@ Clone this repository and setup your development environment configuration:
 2. Apply your configuration
 3. Make sure you never commit this file. (It should be git ignored per default)
 
+__Important: Have a look at the docs directory. Else you'll be missing some important instructions.__
+
 ### Set the environment to local
 
 Currently the app is configured to use either the variable `$_ENV['APP_ENV']` to set the environment or fall back to `production`. To make it short: The whole Application runs in the `production` environment if you don't apply the following changes.

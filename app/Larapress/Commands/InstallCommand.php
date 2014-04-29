@@ -42,7 +42,7 @@ class InstallCommand extends Command
     {
         parent::__construct();
 
-        $this->url = Config::get('larapress.urls.backend');
+        $this->url = url(Config::get('larapress.urls.backend'));
     }
 
     /**
@@ -58,6 +58,7 @@ class InstallCommand extends Command
                 array(
                     'name' => 'Administrator',
                     'permissions' => array(
+                        'access.backend' => 1,
                         'administrator.edit' => 1,
                         'owner.add' => 1,
                         'owner.remove' => 1,
@@ -80,6 +81,7 @@ class InstallCommand extends Command
                 array(
                     'name' => 'Owner',
                     'permissions' => array(
+                        'access.backend' => 1,
                         'administrator.edit' => 0,
                         'owner.add' => 0,
                         'owner.remove' => 0,
@@ -102,6 +104,7 @@ class InstallCommand extends Command
                 array(
                     'name' => 'Moderator',
                     'permissions' => array(
+                        'access.backend' => 1,
                         'administrator.edit' => 0,
                         'owner.add' => 0,
                         'owner.remove' => 0,

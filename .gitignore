@@ -8,3 +8,5 @@ composer.phar
 Thumbs.db
 .idea
 _ide_helper.php
+node_modules
+app/assets/components
