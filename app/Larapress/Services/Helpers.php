@@ -1,6 +1,7 @@
 <?php namespace Larapress\Services;
 
 use Config;
+use Lang;
 use Larapress\Interfaces\HelpersInterface;
 use View;
 
@@ -15,7 +16,7 @@ class Helpers implements HelpersInterface
      */
     public function setPageTitle($page_name)
     {
-        $title = Config::get('larapress.names.cms') . ' | ' . trans('general.' . $page_name);
+        $title = Config::get('larapress.names.cms') . ' | ' . Lang::get('general.' . $page_name);
         View::share('title', $title);
     }
 

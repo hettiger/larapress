@@ -1,6 +1,7 @@
 <?php namespace Larapress\Tests;
 
 use Illuminate\Foundation\Testing\TestCase as LaravelTestCase;
+use Mockery;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 class TestCase extends LaravelTestCase
@@ -18,6 +19,13 @@ class TestCase extends LaravelTestCase
         $testEnvironment = 'testing';
 
         return require __DIR__ . '/../../../bootstrap/start.php';
+    }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+
+        Mockery::close();
     }
 
 }
