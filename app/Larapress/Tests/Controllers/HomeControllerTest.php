@@ -2,6 +2,7 @@
 
 use Config;
 use Larapress\Tests\TestCase;
+use Permission;
 use Sentry;
 
 class HomeControllerTest extends TestCase
@@ -13,6 +14,31 @@ class HomeControllerTest extends TestCase
         parent::setUp();
 
         $this->backend_route = Config::get('larapress.urls.backend');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | HomeController@getIndex Tests
+    |--------------------------------------------------------------------------
+    |
+    | Here is where you can test the HomeController@getIndex method
+    |
+    */
+
+    public function test_can_redirect_to_the_login_page_on_missing_permissions()
+    {
+        Permission::shouldReceive('has')->once()->andThrow('\Larapress\Exceptions\PermissionMissingException', 'error');
+
+        $this->call('GET', $this->backend_route);
+        $this->assertRedirectedToRoute('larapress.home.login.get');
+    }
+
+    public function test_can_redirect_to_the_dashboard_on_given_permissions()
+    {
+        Permission::shouldReceive('has')->once()->andReturn(true);
+
+        $this->call('GET', $this->backend_route);
+        $this->assertRedirectedToRoute('larapress.cp.dashboard.get');
     }
 
     /*
