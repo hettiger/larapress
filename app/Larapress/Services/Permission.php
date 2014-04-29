@@ -1,6 +1,5 @@
 <?php namespace Larapress\Services;
 
-use Cartalyst\Sentry\UserNotFoundException;
 use Larapress\Exceptions\PermissionMissingException;
 use Larapress\Interfaces\PermissionInterface;
 use Sentry;
@@ -23,22 +22,15 @@ class Permission implements PermissionInterface
         }
         else
         {
-            try
-            {
-                $user = Sentry::getUser();
+            $user = Sentry::getUser();
 
-                if ( ! $user->hasAccess($permission) )
-                {
-                    throw new PermissionMissingException('User is missing permissions.');
-                }
-                else
-                {
-                    return true;
-                }
-            }
-            catch (UserNotFoundException $e)
+            if ( ! $user->hasAccess($permission) )
             {
-                throw new PermissionMissingException('User was not found.');
+                throw new PermissionMissingException('User is missing permissions.');
+            }
+            else
+            {
+                return true;
             }
         }
     }

@@ -10,6 +10,15 @@ use View;
 class HelpersTest extends TestCase
 {
 
+    /*
+    |--------------------------------------------------------------------------
+    | Helpers::setPageTitle() Tests
+    |--------------------------------------------------------------------------
+    |
+    | Here is where you can test the Helpers::setPageTitle() method
+    |
+    */
+
     public function test_can_set_page_title()
     {
         Config::shouldReceive('get')->with('larapress.names.cms')->once()->andReturn('foo')->shouldReceive('offsetGet');
