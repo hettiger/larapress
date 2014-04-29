@@ -10,4 +10,11 @@ interface HelpersInterface {
      */
     public function setPageTitle($page_name);
 
+    /**
+     * Writes performance related statistics into the log file
+     *
+     * @return void
+     */
+    public function logPerformance();
+
 }

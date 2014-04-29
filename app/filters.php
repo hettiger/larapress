@@ -13,6 +13,9 @@
 
 App::before(function($request)
 {
+    // Record the starting time for logging the application performance
+    Session::put('start.time', microtime(true));
+
     // Get the Throttle Provider
     $throttleProvider = Sentry::getThrottleProvider();
 
@@ -23,7 +26,11 @@ App::before(function($request)
 
 App::after(function($request, $response)
 {
-	//
+    // Write performance related statistics into the log file
+    if ( Config::get('larapress.settings.log') )
+    {
+        Helpers::logPerformance();
+    }
 });
 
 /*
