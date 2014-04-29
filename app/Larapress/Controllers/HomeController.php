@@ -9,6 +9,8 @@ use Cartalyst\Sentry\Users\UserNotFoundException;
 use Cartalyst\Sentry\Users\WrongPasswordException;
 use Helpers;
 use Input;
+use Larapress\Exceptions\PermissionMissingException;
+use Permission;
 use Redirect;
 use Sentry;
 use Session;
@@ -16,6 +18,20 @@ use View;
 
 class HomeController extends BaseController
 {
+
+    public function getIndex()
+    {
+        try
+        {
+            Permission::has('access.backend');
+        }
+        catch (PermissionMissingException $e)
+        {
+            return Redirect::route('larapress.home.login.get');
+        }
+
+        return Redirect::route('larapress.cp.dashboard.get');
+    }
 
     public function getLogin()
     {
