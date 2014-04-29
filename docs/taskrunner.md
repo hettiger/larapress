@@ -20,3 +20,9 @@ There are several commands you can currently run from the command line:
 > Simply running `gulp` will run them altogether in a row.
 
 __A watchtask is planned for v0.0.2__
+
+## Bower
+
+In order to keep all the frontend dependencies up to date we're utilizing [bower](http://bower.io).
+
+> If you have trouble using bower you can find help on their website.
