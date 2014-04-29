@@ -13,7 +13,11 @@
 
 App::before(function($request)
 {
-	//
+    // Get the Throttle Provider
+    $throttleProvider = Sentry::getThrottleProvider();
+
+    // Enable the Throttling Feature
+    $throttleProvider->enable();
 });
 
 
