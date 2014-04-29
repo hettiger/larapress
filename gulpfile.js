@@ -20,7 +20,8 @@ var paths = {
         bootstrap + 'less/bootstrap.less',
         larapress + 'less/app.less'
     ],
-    scripts: [
+    less_per_page: larapress + 'less/pages/**/*.less',
+    js: [
         jquery,
         bootstrap + 'js/transition.js',
         bootstrap + 'js/alert.js',
@@ -50,7 +51,7 @@ gulp.task('less', function() {
 });
 
 gulp.task('less-per-page', function() {
-    return gulp.src(larapress + 'less/pages/**/*.less')
+    return gulp.src(paths.less_per_page)
         .pipe(less())
         .pipe(css_min())
         .pipe(gulp.dest(destination + 'css/pages'))
@@ -59,7 +60,7 @@ gulp.task('less-per-page', function() {
 });
 
 gulp.task('js', function() {
-    return gulp.src(paths.scripts)
+    return gulp.src(paths.js)
         .pipe(concat('larapress.js'))
         .pipe(js_min())
         .pipe(gulp.dest(destination + 'js'))
