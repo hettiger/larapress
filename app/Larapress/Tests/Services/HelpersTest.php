@@ -7,6 +7,7 @@ use Lang;
 use Log;
 use Mockery;
 use Larapress\Tests\TestCase;
+use Redirect;
 use Request;
 use View;
 
@@ -47,6 +48,33 @@ class HelpersTest extends TestCase
         DB::shouldReceive('getQueryLog')->once();
 
         Helpers::logPerformance();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Helpers::forceSSL() Tests
+    |--------------------------------------------------------------------------
+    |
+    | Here is where you can test the Helpers::forceSSL() method
+    |
+    */
+
+    public function test_can_force_ssl()
+    {
+        Request::shouldReceive('secure')->once()->andReturn(false);
+        Request::shouldReceive('getRequestUri')->once()->andReturn('foo');
+        Request::shouldReceive('root');
+        Redirect::shouldReceive('secure')->with('foo')->once();
+
+        Helpers::forceSSL();
+    }
+
+    public function test_can_remain_silent()
+    {
+        Request::shouldReceive('secure')->once()->andReturn(true);
+        Redirect::shouldReceive('secure')->never();
+
+        $this->assertNull(Helpers::forceSSL());
     }
 
 }

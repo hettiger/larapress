@@ -123,6 +123,16 @@ Route::filter('access.backend', function()
     return null; // User has access
 });
 
+Route::filter('force.ssl', function()
+{
+    if ( Config::get('larapress.settings.ssl') )
+    {
+        return Helpers::forceSSL();
+    }
+
+    return null; // SSL is not enabled
+});
+
 /*
 |--------------------------------------------------------------------------
 | Pattern Filters for the larapress backend
@@ -135,3 +145,4 @@ Route::filter('access.backend', function()
 $backend_url = Config::get('larapress.urls.backend');
 
 Route::when($backend_url . '/cp*', 'access.backend');
+Route::when($backend_url . '*', 'force.ssl');
