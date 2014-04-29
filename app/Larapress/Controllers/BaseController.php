@@ -3,6 +3,8 @@
 use App;
 use Carbon\Carbon;
 use Controller;
+use Helpers;
+use Response;
 use View;
 
 class BaseController extends Controller
@@ -15,6 +17,13 @@ class BaseController extends Controller
 
         View::share('lang', $lang);
         View::share('now', $now);
+    }
+
+    public function missingMethod($parameters = array())
+    {
+        Helpers::setPageTitle('404 Error');
+
+        return Response::view('larapress.errors.404', array(), 404);
     }
 
 }

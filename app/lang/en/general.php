@@ -6,4 +6,6 @@ return array(
 
     'Dashboard' => 'Dashboard',
 
+    '404 Error' => '404 Error',
+
 );
