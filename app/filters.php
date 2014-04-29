@@ -21,11 +21,15 @@ App::before(function($request)
 
     // Enable the Throttling Feature
     $throttleProvider->enable();
+
+    // Custom additions go below here
 });
 
 
 App::after(function($request, $response)
 {
+    // Custom additions go below here
+
     // Write performance related statistics into the log file
     if ( Config::get('larapress.settings.log') )
     {
