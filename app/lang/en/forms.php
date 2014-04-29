@@ -8,6 +8,6 @@ return array(
 
     'Password' => 'Password',
 
-    'Sign in' => 'Sign in',
+    'Login' => 'Login',
 
 );

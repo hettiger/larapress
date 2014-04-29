@@ -10,6 +10,6 @@
             {{ Form::label('password', trans('forms.Password')) }}
             {{ Form::password('password', array('class' => 'form-control', 'placeholder' => trans('forms.Password'))) }}
         </div>
-        {{ Form::submit(trans('forms.Sign in'), array('class' => 'btn btn-lg btn-default btn-block btn-dark')) }}
+        {{ Form::submit(trans('forms.Login'), array('class' => 'btn btn-lg btn-default btn-block btn-dark')) }}
     {{ Form::close() }}
 @stop
