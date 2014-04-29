@@ -20,7 +20,8 @@ var paths = {
         bootstrap + 'less/bootstrap.less',
         larapress + 'less/app.less'
     ],
-    scripts: [
+    less_per_page: larapress + 'less/pages/**/*.less',
+    js: [
         jquery,
         bootstrap + 'js/transition.js',
         bootstrap + 'js/alert.js',
@@ -35,7 +36,7 @@ var paths = {
         bootstrap + 'js/carousel.js',
         bootstrap + 'js/affix.js'
     ],
-    fallbacks: [html5shiv, respond],
+    fallback: [html5shiv, respond],
     fonts: [bootstrap + 'fonts/*']
 };
 
@@ -50,7 +51,7 @@ gulp.task('less', function() {
 });
 
 gulp.task('less-per-page', function() {
-    return gulp.src(larapress + 'less/pages/**/*.less')
+    return gulp.src(paths.less_per_page)
         .pipe(less())
         .pipe(css_min())
         .pipe(gulp.dest(destination + 'css/pages'))
@@ -59,7 +60,7 @@ gulp.task('less-per-page', function() {
 });
 
 gulp.task('js', function() {
-    return gulp.src(paths.scripts)
+    return gulp.src(paths.js)
         .pipe(concat('larapress.js'))
         .pipe(js_min())
         .pipe(gulp.dest(destination + 'js'))
@@ -68,7 +69,7 @@ gulp.task('js', function() {
 });
 
 gulp.task('fallback', function() {
-    return gulp.src(paths.fallbacks)
+    return gulp.src(paths.fallback)
         .pipe(concat('fallback.js'))
         .pipe(js_min())
         .pipe(gulp.dest(destination + 'js'))
@@ -79,6 +80,15 @@ gulp.task('fallback', function() {
 gulp.task('fonts', function() {
     return gulp.src(paths.fonts)
         .pipe(gulp.dest(destination + 'fonts'));
+});
+
+gulp.task('watch', function() {
+    gulp.watch(paths.less, ['less']);
+    gulp.watch(larapress + 'less/app/**/*.less', ['less']);
+    gulp.watch(paths.less_per_page, ['less-per-page']);
+    gulp.watch(paths.js, ['js']);
+    gulp.watch(paths.fallback, ['fallback']);
+    gulp.watch(paths.fonts, ['fonts']);
 });
 
 gulp.task('default',

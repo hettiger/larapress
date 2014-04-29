@@ -11,15 +11,15 @@ __The taskrunner is not required to use this CMS!__
 There are several commands you can currently run from the command line:
 
 * `gulp`
+* `gulp watch`
 * `gulp less`
 * `gulp less-per-page`
 * `gulp js`
 * `gulp fallback`
 * `gulp fonts`
 
-> Simply running `gulp` will run them altogether in a row.
-
-__A watchtask is planned for v0.0.2__
+> Simply running `gulp` will run all the other tasks except `gulp watch` in a row.    
+> Use `gulp watch` to make gulp.js watch your filesystem for changes and run the related task.
 
 ## Bower
 
