@@ -90,6 +90,9 @@ Route::filter('csrf', function()
 	}
 });
 
+// Apply the csrf filter to all POST, PUT, PATCH and DELETE requests
+Route::when('*', 'csrf', array('post', 'put', 'patch', 'delete'));
+
 /*
 |--------------------------------------------------------------------------
 | Filters for the larapress backend
