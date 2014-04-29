@@ -20,6 +20,7 @@ This Application is using following Projects:
 | [html5shiv](https://github.com/aFarkas/html5shiv) | [MIT](http://opensource.org/licenses/MIT) or [GPL Version 2](http://opensource.org/licenses/GPL-2.0) |
 | [Respond](https://github.com/scottjehl/Respond) | [MIT](http://opensource.org/licenses/MIT) |
 | [Mockery](https://github.com/padraic/mockery) | [BSD-3-Clause](http://opensource.org/licenses/BSD-3-Clause) |
+| [Night sky with twinkling stars](http://www.script-tutorials.com/night-sky-with-twinkling-stars/) | [Custom](http://www.script-tutorials.com/terms-of-use/) |
 
 Please be aware that these projects might have their own dependencies that I won't list here.  
 If I forgot any project here please open an issue and I'll add it to this list immediately.

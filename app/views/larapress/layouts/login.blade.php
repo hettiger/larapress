@@ -32,4 +32,8 @@
             Powered by <a href="http://laravel.com" target="_blank">Laravel</a>
         </p>
     </div>
+
+    <div class="stars"></div>
+    <div class="twinkling"></div>
+    <div class="clouds"></div>
 @stop
