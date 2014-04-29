@@ -18,7 +18,7 @@ $backend_url = Config::get('larapress.urls.backend');
 Route::when($backend_url . '*', 'csrf', array('post', 'put', 'patch', 'delete'));
 ```
 
-## App::before & App:after
+## App::before & App::after
 
 We're taking care of throttling and performance logging in these filters.  
 We highly suggest you leave this the way it is. If you're planning on making some custom additions ...  
