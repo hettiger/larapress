@@ -1,8 +1,12 @@
 /bootstrap/compiled.php
 /vendor
 composer.phar
-.env.*.php
 .env.php
+.env.production.php
+.env.local.php
 .DS_Store
 Thumbs.db
 .idea
+_ide_helper.php
+node_modules
+app/assets/components

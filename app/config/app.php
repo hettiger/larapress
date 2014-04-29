@@ -120,6 +120,11 @@ return array(
 		'Illuminate\View\ViewServiceProvider',
 		'Illuminate\Workbench\WorkbenchServiceProvider',
 
+        'Cartalyst\Sentry\SentryServiceProvider',
+
+        'Larapress\Providers\PermissionServiceProvider',
+        'Larapress\Providers\HelpersServiceProvider',
+
 	),
 
 	/*
@@ -185,6 +190,11 @@ return array(
 		'URL'             => 'Illuminate\Support\Facades\URL',
 		'Validator'       => 'Illuminate\Support\Facades\Validator',
 		'View'            => 'Illuminate\Support\Facades\View',
+
+        'Sentry'          => 'Cartalyst\Sentry\Facades\Laravel\Sentry',
+
+        'Permission'      => 'Larapress\Facades\Permission',
+        'Helpers'         => 'Larapress\Facades\Helpers',
 
 	),
 
