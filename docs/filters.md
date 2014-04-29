@@ -2,10 +2,10 @@
 
 ## CSRF Protection
 
-We decided to apply the `csrf` filter to all `POST`, `PUT`, `PATCH` and `DELETE` requests.
+We decided to apply the `csrf` filter to all `POST`, `PUT`, `PATCH` and `DELETE` requests.  
 This has been done in `app/filters.php` on the `CSRF Protection Filter` section.
 
-Be careful if you're planning to change this behaviour.
+Be careful if you're planning to change this behaviour.  
 The whole backend relies on this pattern filter.
 
 You could do something like this if you need to:
@@ -20,14 +20,14 @@ Route::when($backend_url . '*', 'csrf', array('post', 'put', 'patch', 'delete'))
 
 ## App::before & App:after
 
-We're taking care of throttling and performance logging in these filters.
-We highly suggest you leave this the way it is. If you're planning on making some custom additions ...
+We're taking care of throttling and performance logging in these filters.  
+We highly suggest you leave this the way it is. If you're planning on making some custom additions ...  
 There are comments, study them ;-)
 
-> If you don't like the performance logging you should disable it in the configuration.
-> We really suggest not touching this stuff. You can find the configuration file here:
-> `app/config/larapress.php`
-> As you can see it's already disabled because you're looking at the production configuration file.
+> If you don't like the performance logging you should disable it in the configuration.  
+> We really suggest not touching this stuff. You can find the configuration file here:  
+> `app/config/larapress.php`  
+> As you can see it's already disabled because you're looking at the production configuration file.  
 > If you still want to disable this have a look at `app/config/local/larapress.php`.
 
 ## Filters for the larapress backend
