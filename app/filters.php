@@ -127,13 +127,10 @@ Route::filter('force.ssl', function()
 {
     if ( Config::get('larapress.settings.ssl') )
     {
-        if ( ! Request::secure() )
-        {
-            return Redirect::secure(Request::getRequestUri());
-        }
+        return Helpers::forceSSL();
     }
 
-    return null;
+    return null; // SSL is not enabled
 });
 
 /*
