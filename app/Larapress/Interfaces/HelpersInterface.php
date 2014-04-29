@@ -1,5 +1,7 @@
 <?php namespace Larapress\Interfaces;
 
+use Redirect;
+
 interface HelpersInterface {
 
     /**
@@ -16,5 +18,12 @@ interface HelpersInterface {
      * @return void
      */
     public function logPerformance();
+
+    /**
+     * Force to use https:// requests
+     *
+     * @return null|Redirect Redirects to the https:// protocol if the current request is insecure
+     */
+    public function forceSSL();
 
 }

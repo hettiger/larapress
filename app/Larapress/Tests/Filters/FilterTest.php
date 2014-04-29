@@ -14,7 +14,7 @@ class FilterTest extends TestCase
         parent::setUp();
 
         Route::enableFilters();
-        
+
         $this->backend_route = Config::get('larapress.urls.backend');
     }
 
@@ -42,6 +42,34 @@ class FilterTest extends TestCase
 
         $this->call('GET', $this->backend_route . '/cp/dashboard');
         $this->assertResponseOk();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | force.ssl Tests
+    |--------------------------------------------------------------------------
+    |
+    | Here is where you can test the force.ssl filter
+    |
+    */
+
+    public function test_can_remain_silent_if_the_config_entry_is_set_to_false()
+    {
+        Config::set('larapress.settings.ssl', false);
+
+        $this->call('GET', $this->backend_route . '/login');
+        $this->assertResponseOk();
+    }
+
+    public function test_can_redirect_to_secure_urls_if_the_config_entry_is_set_to_true()
+    {
+        Config::set('larapress.settings.ssl', true);
+        $request = $this->backend_route . '/login';
+        $expected_redirect_url = url($request, array(), true);
+
+        $this->call('GET', $this->backend_route . '/login');
+
+        $this->assertRedirectedTo($expected_redirect_url);
     }
 
 }

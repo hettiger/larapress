@@ -5,6 +5,7 @@ use DB;
 use Lang;
 use Larapress\Interfaces\HelpersInterface;
 use Log;
+use Redirect;
 use Request;
 use Session;
 use View;
@@ -55,6 +56,21 @@ class Helpers implements HelpersInterface
             'Total performed DB Queries: ' . count(DB::getQueryLog())
             . PHP_EOL
         );
+    }
+
+    /**
+     * Force to use https:// requests
+     *
+     * @return null|Redirect Redirects to the https:// protocol if the current request is insecure
+     */
+    public function forceSSL()
+    {
+        if ( ! Request::secure() )
+        {
+            return Redirect::secure(Request::getRequestUri());
+        }
+
+        return null; // The request is already secure
     }
 
 }
