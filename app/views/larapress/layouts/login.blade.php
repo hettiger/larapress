@@ -7,7 +7,9 @@
 @section('body')
     <div id="wrapper">
         <div id="login-box">
-            <img src="{{ asset('larapress/assets/png/logo.png') }}">
+            <a href="https://github.com/larapress-cms/larapress" target="_blank">
+                <img src="{{ asset('larapress/assets/png/logo.png') }}">
+            </a>
 
             {{-- Messages --}}
             @if ( Session::has('error') )
