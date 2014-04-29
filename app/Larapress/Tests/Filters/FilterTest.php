@@ -14,6 +14,7 @@ class FilterTest extends TestCase
         parent::setUp();
 
         Route::enableFilters();
+        Config::set('larapress.settings.ssl', false);
         
         $this->backend_route = Config::get('larapress.urls.backend');
     }
