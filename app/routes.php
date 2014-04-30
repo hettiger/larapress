@@ -42,9 +42,9 @@ Route::group(
 
         Route::controller('/', 'HomeController', array(
             'getLogin' => 'larapress.home.login.get',
-            'postLogin' => 'larapress.home.login.post',
             'getLogout' => 'larapress.home.logout.get',
-            'getResetPassword' => 'larapress.home.reset.password.get'
+            'getResetPassword' => 'larapress.home.reset.password.get',
+            'getSendNewPassword' => 'larapress.home.send.new.password.get',
         ));
 
     }

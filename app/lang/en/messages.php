@@ -30,4 +30,9 @@ return array(
 
     'You have successfully logged out.' => 'You have successfully logged out.',
 
+    'Now please check your email account for further instructions!'
+        => 'Now please check your email account for further instructions!',
+
+    'Cannot send message without a sender address' => 'Cannot send message without a sender address',
+
 );
