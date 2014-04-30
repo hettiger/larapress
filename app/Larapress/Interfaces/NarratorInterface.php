@@ -11,7 +11,6 @@ interface NarratorInterface {
      *
      * For more complex emails you might write another method
      *
-     * @param array $from From details: 'address' and 'name'
      * @param array $to To details: 'address' and 'name'
      * @param string $subject The translated email subject
      * @param array|object $data The data you want to pass to the view
@@ -20,7 +19,7 @@ interface NarratorInterface {
      * @throws MailException Throws an exception containing further information as message
      * @return bool Returns true on success
      */
-    public function sendMail($from, $to, $subject, $data, $view, $mail_error_message);
+    public function sendMail($to, $subject, $data, $view, $mail_error_message);
 
     /**
      * Request an account reset

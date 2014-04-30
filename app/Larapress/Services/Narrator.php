@@ -18,7 +18,6 @@ class Narrator implements NarratorInterface
      *
      * For more complex emails you might write another method
      *
-     * @param array $from From details: 'address' and 'name'
      * @param array $to To details: 'address' and 'name'
      * @param string $subject The translated email subject
      * @param array|object $data The data you want to pass to the view
@@ -27,8 +26,13 @@ class Narrator implements NarratorInterface
      * @throws MailException Throws an exception containing further information as message
      * @return bool Returns true on success
      */
-    public function sendMail($from, $to, $subject, $data, $view, $mail_error_message)
+    public function sendMail($to, $subject, $data, $view, $mail_error_message)
     {
+        $from = array(
+            'address' => Config::get('larapress.email.from.address'),
+            'name' => Config::get('larapress.email.from.name'),
+        );
+
         try
         {
             $result = Mail::send($view, $data,
@@ -73,11 +77,6 @@ class Narrator implements NarratorInterface
         $user = Sentry::findUserByLogin($input['email']);
         $reset_code = $user->getResetPasswordCode();
 
-        $from = array(
-            'address' => Config::get('larapress.email.from.address'),
-            'name' => Config::get('larapress.email.from.name'),
-        );
-
         $to = array(
             'address' => $input['email'],
             'name' => $user['first_name'] . ' ' . $user['last_name'],
@@ -95,7 +94,7 @@ class Narrator implements NarratorInterface
         $mail_error_message = 'Sending the email containing the reset key failed. ' .
             'Please try again later or contact the administrator.';
 
-        $this->sendMail($from, $to, $subject, $data, $view, $mail_error_message);
+        $this->sendMail($to, $subject, $data, $view, $mail_error_message);
     }
 
 }
