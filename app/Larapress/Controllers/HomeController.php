@@ -1,6 +1,5 @@
 <?php namespace Larapress\Controllers;
 
-use App;
 use Cartalyst\Sentry\Throttling\UserBannedException;
 use Cartalyst\Sentry\Throttling\UserSuspendedException;
 use Cartalyst\Sentry\Users\LoginRequiredException;
