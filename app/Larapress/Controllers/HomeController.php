@@ -144,8 +144,7 @@ class HomeController extends BaseController
         }
         catch (UserNotFoundException $e)
         {
-            $controller = new BaseController;
-            return $controller->missingMethod(array());
+            return Helpers::force404();
         }
         catch (PasswordResetFailedException $e)
         {
@@ -156,8 +155,7 @@ class HomeController extends BaseController
         }
         catch (PasswordResetCodeInvalidException $e)
         {
-            $controller = new BaseController;
-            return $controller->missingMethod(array());
+            return Helpers::force404();
         }
         catch (MailException $e)
         {

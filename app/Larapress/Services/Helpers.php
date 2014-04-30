@@ -3,10 +3,12 @@
 use Config;
 use DB;
 use Lang;
+use Larapress\Controllers\BaseController;
 use Larapress\Interfaces\HelpersInterface;
 use Log;
 use Redirect;
 use Request;
+use Response;
 use Session;
 use View;
 
@@ -71,6 +73,17 @@ class Helpers implements HelpersInterface
         }
 
         return null; // The request is already secure
+    }
+
+    /**
+     * Abort the app and return the backend 404 response
+     *
+     * @return Response Returns a 404 Response with view
+     */
+    public function force404()
+    {
+        $controller = new BaseController;
+        return $controller->missingMethod(array());
     }
 
 }
