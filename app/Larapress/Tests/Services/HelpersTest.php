@@ -77,4 +77,21 @@ class HelpersTest extends TestCase
         $this->assertNull(Helpers::forceSSL());
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Helpers::force404() Tests
+    |--------------------------------------------------------------------------
+    |
+    | Here is where you can test the Helpers::force404() method
+    |
+    */
+
+    public function test_can_abort_the_app_and_return_the_backend_404_view()
+    {
+        $result = Helpers::force404();
+
+        $this->assertInstanceOf('Illuminate\Http\Response', $result);
+        $this->assertAttributeContains('larapress.errors.404', 'view', $result->getOriginalContent());
+    }
+
 }
