@@ -1,9 +1,12 @@
 <?php namespace Larapress\Tests\Services;
 
+use Artisan;
+use Input;
 use Larapress\Tests\TestCase;
 use Log;
 use Mail;
 use Narrator;
+use Sentry;
 
 class NarratorTest extends TestCase
 {
@@ -12,10 +15,10 @@ class NarratorTest extends TestCase
 
     /*
     |--------------------------------------------------------------------------
-    | Helpers::sendMail() Tests
+    | Narrator::sendMail() Tests
     |--------------------------------------------------------------------------
     |
-    | Here is where you can test the Helpers::sendMail() method
+    | Here is where you can test the Narrator::sendMail() method
     |
     */
 
@@ -91,6 +94,41 @@ class NarratorTest extends TestCase
 
         Narrator::sendMail($to, $subject, $data, $view, $mail_error_message);
         $this->assertEquals('Pretending to mail message to: example@domain.com', $this->log_message);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Narrator::resetPassword() Tests
+    |--------------------------------------------------------------------------
+    |
+    | Here is where you can test the Narrator::resetPassword() method
+    |
+    */
+
+    /**
+     * @expectedException \Cartalyst\Sentry\Users\UserNotFoundException
+     */
+    public function test_can_throw_a_user_not_found_exception()
+    {
+        Artisan::call('larapress:install');
+        Input::merge(array('email' => 'example@domain.tld'));
+
+        Narrator::resetPassword();
+    }
+
+    public function test_can_send_a_reset_password_email()
+    {
+        Artisan::call('larapress:install');
+        Input::merge(array('email' => 'admin@example.com'));
+
+        Log::listen(function($level, $message, $context)
+        {
+            $this->log_message = $message;
+        });
+
+        Narrator::resetPassword();
+
+        $this->assertEquals('Pretending to mail message to: admin@example.com', $this->log_message);
     }
 
 }

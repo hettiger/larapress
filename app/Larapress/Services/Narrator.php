@@ -69,7 +69,6 @@ class Narrator implements NarratorInterface
      * This will generate a reset password code for the given user and send it via email to him.
      *
      * @param Input|null $input Passing Input::all() can be omitted
-     * @throws MailException Throws an exception containing further information as message
      * @throws UserNotFoundException Throws a UserNotFoundException if Sentry cannot find the given user.
      * @throws MailException Throws an exception containing further information as message
      * @return bool Returns true on success
