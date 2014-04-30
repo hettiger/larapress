@@ -87,9 +87,11 @@ class NarratorTest extends TestCase
         $view = array();
         $mail_error_message = '';
 
-        Log::listen(function($level, $message, $context)
+        $self = $this;
+
+        Log::listen(function($level, $message, $context) use ($self)
         {
-            $this->log_message = $message;
+            $self->log_message = $message;
         });
 
         Narrator::sendMail($to, $subject, $data, $view, $mail_error_message);
@@ -121,9 +123,11 @@ class NarratorTest extends TestCase
         Artisan::call('larapress:install');
         Input::merge(array('email' => 'admin@example.com'));
 
-        Log::listen(function($level, $message, $context)
+        $self = $this;
+
+        Log::listen(function($level, $message, $context) use ($self)
         {
-            $this->log_message = $message;
+            $self->log_message = $message;
         });
 
         Narrator::resetPassword();
