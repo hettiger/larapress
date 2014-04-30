@@ -5,15 +5,6 @@ use Larapress\Tests\TestCase;
 
 class ControlPanelControllerTest extends TestCase
 {
-    private $backend_route;
-
-    public function setUp()
-    {
-        parent::setUp();
-
-        $this->backend_route = Config::get('larapress.urls.backend');
-    }
-
     /*
     |--------------------------------------------------------------------------
     | ControlPanelController@getDashboard Tests

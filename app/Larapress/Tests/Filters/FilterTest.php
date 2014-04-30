@@ -31,7 +31,8 @@ class FilterTest extends TestCase
     {
         Permission::shouldReceive('has')->once()->andThrow('\Larapress\Exceptions\PermissionMissingException', 'error');
 
-        $this->call('GET', $this->backend_route . '/cp/dashboard');
+        $this->route('GET', 'larapress.cp.dashboard.get');
+
         $this->assertRedirectedToRoute('larapress.home.login.get');
         $this->assertSessionHas('error', 'error');
     }
@@ -40,7 +41,8 @@ class FilterTest extends TestCase
     {
         Permission::shouldReceive('has')->once()->andReturn(true);
 
-        $this->call('GET', $this->backend_route . '/cp/dashboard');
+        $this->route('GET', 'larapress.cp.dashboard.get');
+
         $this->assertResponseOk();
     }
 
@@ -57,7 +59,8 @@ class FilterTest extends TestCase
     {
         Config::set('larapress.settings.ssl', false);
 
-        $this->call('GET', $this->backend_route . '/login');
+        $this->route('GET', 'larapress.home.login.get');
+
         $this->assertResponseOk();
     }
 
@@ -67,7 +70,7 @@ class FilterTest extends TestCase
         $request = $this->backend_route . '/login';
         $expected_redirect_url = url($request, array(), true);
 
-        $this->call('GET', $this->backend_route . '/login');
+        $this->route('GET', 'larapress.home.login.get');
 
         $this->assertRedirectedTo($expected_redirect_url);
     }
