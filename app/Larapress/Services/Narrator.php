@@ -27,9 +27,7 @@ class Narrator implements NarratorInterface
         $input = $input ? : Input::all();
 
         $user = Sentry::findUserByLogin($input['email']);
-        $resetCode = $user->getResetPasswordCode();
-        $cms_name = Config::get('larapress.names.cms');
-        $url = route('larapress.home.send.new.password.get', array($resetCode));
+        $reset_code = $user->getResetPasswordCode();
 
         $from = array(
             'address' => Config::get('larapress.email.from.address'),
@@ -42,8 +40,8 @@ class Narrator implements NarratorInterface
         );
 
         $data = array(
-            'cms_name' => $cms_name,
-            'url' => $url,
+            'cms_name' => Config::get('larapress.names.cms'),
+            'url' => route('larapress.home.send.new.password.get', array($reset_code)),
         );
 
         try
