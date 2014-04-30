@@ -24,6 +24,11 @@ return array(
 
     'User is banned.' => 'User is banned.',
 
+    'Cannot send message without a sender address' => 'Cannot send message without a sender address',
+
+    'Sending the email containing the reset key failed. Please try again later or contact the administrator.'
+        => 'Sending the email containing the reset key failed. Please try again later or contact the administrator.',
+
     // Success
 
     'Success' => 'Success',
@@ -32,7 +37,5 @@ return array(
 
     'Now please check your email account for further instructions!'
         => 'Now please check your email account for further instructions!',
-
-    'Cannot send message without a sender address' => 'Cannot send message without a sender address',
 
 );
