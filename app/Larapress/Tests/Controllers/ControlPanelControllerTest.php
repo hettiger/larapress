@@ -1,6 +1,5 @@
 <?php namespace Larapress\Tests\Controllers;
 
-use Config;
 use Larapress\Tests\TestCase;
 
 class ControlPanelControllerTest extends TestCase
