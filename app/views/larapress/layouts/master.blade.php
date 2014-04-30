@@ -23,5 +23,7 @@
 {{-- Include all compiled plugins below (including jQuery) --}}
 {{ HTML::script('larapress/assets/js/larapress.js') }}
 
+@yield('bottom.extension')
+
 </body>
 </html>

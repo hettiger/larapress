@@ -1,7 +1,9 @@
 <?php namespace Larapress\Tests\Controllers;
 
 use Config;
+use Helpers;
 use Larapress\Tests\TestCase;
+use Narrator;
 use Permission;
 use Sentry;
 
@@ -52,7 +54,7 @@ class HomeControllerTest extends TestCase
 
     public function test_can_browse_the_login_page()
     {
-        $this->call('GET', $this->backend_route . '/login');
+        $this->route('GET', 'larapress.home.login.get');
 
         $this->assertResponseOk();
     }
@@ -73,7 +75,7 @@ class HomeControllerTest extends TestCase
             ->once()
             ->andThrow('Cartalyst\Sentry\Users\LoginRequiredException');
 
-        $this->call('POST', $this->backend_route . '/login', array('email' => 'foo', 'password' => 'bar'));
+        $this->route('POST', 'larapress.home.login.post', array(), array('email' => 'foo', 'password' => 'bar'));
 
         $this->assertRedirectedToRoute('larapress.home.login.get');
         $this->assertHasOldInput();
@@ -87,7 +89,7 @@ class HomeControllerTest extends TestCase
             ->once()
             ->andThrow('Cartalyst\Sentry\Users\PasswordRequiredException');
 
-        $this->call('POST', $this->backend_route . '/login', array('email' => 'foo', 'password' => 'bar'));
+        $this->route('POST', 'larapress.home.login.post', array(), array('email' => 'foo', 'password' => 'bar'));
 
         $this->assertRedirectedToRoute('larapress.home.login.get');
         $this->assertHasOldInput();
@@ -101,7 +103,7 @@ class HomeControllerTest extends TestCase
             ->once()
             ->andThrow('Cartalyst\Sentry\Users\WrongPasswordException');
 
-        $this->call('POST', $this->backend_route . '/login', array('email' => 'foo', 'password' => 'bar'));
+        $this->route('POST', 'larapress.home.login.post', array(), array('email' => 'foo', 'password' => 'bar'));
 
         $this->assertRedirectedToRoute('larapress.home.login.get');
         $this->assertHasOldInput();
@@ -115,7 +117,7 @@ class HomeControllerTest extends TestCase
             ->once()
             ->andThrow('Cartalyst\Sentry\Users\UserNotFoundException');
 
-        $this->call('POST', $this->backend_route . '/login', array('email' => 'foo', 'password' => 'bar'));
+        $this->route('POST', 'larapress.home.login.post', array(), array('email' => 'foo', 'password' => 'bar'));
 
         $this->assertRedirectedToRoute('larapress.home.login.get');
         $this->assertHasOldInput();
@@ -129,7 +131,7 @@ class HomeControllerTest extends TestCase
             ->once()
             ->andThrow('Cartalyst\Sentry\Users\UserNotActivatedException');
 
-        $this->call('POST', $this->backend_route . '/login', array('email' => 'foo', 'password' => 'bar'));
+        $this->route('POST', 'larapress.home.login.post', array(), array('email' => 'foo', 'password' => 'bar'));
 
         $this->assertRedirectedToRoute('larapress.home.login.get');
         $this->assertHasOldInput();
@@ -143,7 +145,7 @@ class HomeControllerTest extends TestCase
             ->once()
             ->andThrow('Cartalyst\Sentry\Throttling\UserSuspendedException');
 
-        $this->call('POST', $this->backend_route . '/login', array('email' => 'foo', 'password' => 'bar'));
+        $this->route('POST', 'larapress.home.login.post', array(), array('email' => 'foo', 'password' => 'bar'));
 
         $this->assertRedirectedToRoute('larapress.home.login.get');
         $this->assertHasOldInput();
@@ -157,7 +159,7 @@ class HomeControllerTest extends TestCase
             ->once()
             ->andThrow('Cartalyst\Sentry\Throttling\UserBannedException');
 
-        $this->call('POST', $this->backend_route . '/login', array('email' => 'foo', 'password' => 'bar'));
+        $this->route('POST', 'larapress.home.login.post', array(), array('email' => 'foo', 'password' => 'bar'));
 
         $this->assertRedirectedToRoute('larapress.home.login.get');
         $this->assertHasOldInput();
@@ -168,7 +170,7 @@ class HomeControllerTest extends TestCase
     {
         Sentry::shouldReceive('authenticate')->with(array('email' => 'foo', 'password' => 'bar'), false)->once();
 
-        $this->call('POST', $this->backend_route . '/login', array('email' => 'foo', 'password' => 'bar'));
+        $this->route('POST', 'larapress.home.login.post', array(), array('email' => 'foo', 'password' => 'bar'));
 
         $this->assertRedirectedToRoute('larapress.cp.dashboard.get');
     }
@@ -187,7 +189,7 @@ class HomeControllerTest extends TestCase
         Sentry::shouldReceive('check')->once()->andReturn(false);
         Sentry::shouldReceive('logout')->never();
 
-        $this->call('GET', $this->backend_route . '/logout');
+        $this->route('GET', 'larapress.home.logout.get');
 
         $this->assertRedirectedToRoute('larapress.home.login.get');
     }
@@ -197,10 +199,126 @@ class HomeControllerTest extends TestCase
         Sentry::shouldReceive('check')->once()->andReturn(true);
         Sentry::shouldReceive('logout')->once();
 
-        $this->call('GET', $this->backend_route . '/logout');
+        $this->route('GET', 'larapress.home.logout.get');
 
         $this->assertRedirectedToRoute('larapress.home.login.get');
         $this->assertSessionHas('success', 'You have successfully logged out.');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | HomeController@getResetPassword Tests
+    |--------------------------------------------------------------------------
+    |
+    | Here is where you can test the HomeController@getResetPassword method
+    |
+    */
+
+    public function test_can_browse_the_get_reset_password_route()
+    {
+        $this->route('GET', 'larapress.home.reset.password.get');
+
+        $this->assertResponseOk();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | HomeController@postResetPassword Tests
+    |--------------------------------------------------------------------------
+    |
+    | Here is where you can test the HomeController@postResetPassword method
+    |
+    */
+
+    public function test_can_redirect_on_user_not_found_exception_with_flash_message_and_old_input()
+    {
+        Narrator::shouldReceive('resetPassword')->once()->andThrow('Cartalyst\Sentry\Users\UserNotFoundException');
+
+        $this->route('POST', 'larapress.home.reset.password.post');
+
+        $this->assertRedirectedToRoute('larapress.home.reset.password.get');
+        $this->assertSessionHas('error', 'User was not found.');
+        $this->assertHasOldInput();
+    }
+
+    public function test_can_redirect_on_mail_exception_with_flash_message_and_old_input()
+    {
+        Narrator::shouldReceive('resetPassword')->once()->andThrow('Larapress\Exceptions\MailException', 'foo');
+
+        $this->route('POST', 'larapress.home.reset.password.post');
+
+        $this->assertRedirectedToRoute('larapress.home.reset.password.get');
+        $this->assertSessionHas('error', 'foo');
+        $this->assertHasOldInput();
+    }
+
+    public function test_can_redirect_success_with_flash_message()
+    {
+        Narrator::shouldReceive('resetPassword')->once()->andReturnNull();
+
+        $this->route('POST', 'larapress.home.reset.password.post');
+
+        $this->assertRedirectedToRoute('larapress.home.reset.password.get');
+        $this->assertSessionHas('success', 'Now please check your email account for further instructions!');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | HomeController@getSendNewPassword Tests
+    |--------------------------------------------------------------------------
+    |
+    | Here is where you can test the HomeController@getSendNewPassword method
+    |
+    */
+
+    public function test_can_return_a_404_response_on_user_not_found_exception()
+    {
+        Narrator::shouldReceive('sendNewPassword')->once()->andThrow('Cartalyst\Sentry\Users\UserNotFoundException');
+        Helpers::shouldReceive('force404')->once();
+
+        $this->route('GET', 'larapress.home.send.new.password.get');
+    }
+
+    public function test_can_redirect_on_password_reset_failed_exception_with_flash_message()
+    {
+        Narrator::shouldReceive('sendNewPassword')
+            ->once()->andThrow('Larapress\Exceptions\PasswordResetFailedException');
+
+        $this->route('GET', 'larapress.home.send.new.password.get');
+
+        $this->assertRedirectedToRoute('larapress.home.reset.password.get');
+        $this->assertSessionHas('error', 'Resetting your password failed. ' .
+            'Please try again later or contact the administrator.');
+    }
+
+    public function test_can_return_a_404_response_on_password_reset_code_invalid_exception()
+    {
+        Narrator::shouldReceive('sendNewPassword')
+            ->once()->andThrow('Larapress\Exceptions\PasswordResetCodeInvalidException');
+        Helpers::shouldReceive('force404')->once();
+
+        $this->route('GET', 'larapress.home.send.new.password.get');
+    }
+
+    public function test_can_redirect_on_mail_exception_with_flash_message()
+    {
+        Narrator::shouldReceive('sendNewPassword')
+            ->once()->andThrow('Larapress\Exceptions\MailException', 'foo');
+
+        $this->route('GET', 'larapress.home.send.new.password.get');
+
+        $this->assertRedirectedToRoute('larapress.home.reset.password.get');
+        $this->assertSessionHas('error', 'foo');
+    }
+
+    public function test_can_redirect_on_success_with_flash_message()
+    {
+        Narrator::shouldReceive('sendNewPassword')->once()->andReturnNull();
+
+        $this->route('GET', 'larapress.home.send.new.password.get');
+
+        $this->assertRedirectedToRoute('larapress.home.login.get');
+        $this->assertSessionHas('success', 'Now please check your email account for the new password!');
     }
 
 }

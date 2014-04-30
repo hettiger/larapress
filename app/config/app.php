@@ -124,6 +124,7 @@ return array(
 
         'Larapress\Providers\PermissionServiceProvider',
         'Larapress\Providers\HelpersServiceProvider',
+        'Larapress\Providers\NarratorServiceProvider',
 
 	),
 
@@ -195,6 +196,7 @@ return array(
 
         'Permission'      => 'Larapress\Facades\Permission',
         'Helpers'         => 'Larapress\Facades\Helpers',
+        'Narrator'        => 'Larapress\Facades\Narrator',
 
 	),
 

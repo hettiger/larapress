@@ -19,6 +19,12 @@ return array(
 
     ),
 
+    'email' => array(
+
+        'from' => array('address' => null, 'name' => null),
+
+    ),
+
     /*
     |--------------------------------------------------------------------------
     | Names
@@ -47,6 +53,6 @@ return array(
 
         'backend' => 'admin'
 
-    )
+    ),
 
 );

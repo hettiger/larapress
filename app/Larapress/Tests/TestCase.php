@@ -1,5 +1,7 @@
 <?php namespace Larapress\Tests;
 
+ini_set('memory_limit', '256M');
+
 use Illuminate\Foundation\Testing\TestCase as LaravelTestCase;
 use Mockery;
 use Symfony\Component\HttpKernel\HttpKernelInterface;

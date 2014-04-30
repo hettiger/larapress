@@ -9,7 +9,11 @@ use Cartalyst\Sentry\Users\UserNotFoundException;
 use Cartalyst\Sentry\Users\WrongPasswordException;
 use Helpers;
 use Input;
+use Larapress\Exceptions\MailException;
+use Larapress\Exceptions\PasswordResetCodeInvalidException;
+use Larapress\Exceptions\PasswordResetFailedException;
 use Larapress\Exceptions\PermissionMissingException;
+use Narrator;
 use Permission;
 use Redirect;
 use Sentry;
@@ -100,6 +104,65 @@ class HomeController extends BaseController
             Session::flash('success', 'You have successfully logged out.');
         }
 
+        return Redirect::route('larapress.home.login.get');
+    }
+
+    public function getResetPassword()
+    {
+        Helpers::setPageTitle('Reset Password');
+
+        return View::make('larapress.pages.home.reset-password');
+    }
+
+    public function postResetPassword()
+    {
+        try
+        {
+            Narrator::resetPassword();
+        }
+        catch (UserNotFoundException $e)
+        {
+            Session::flash('error', 'User was not found.');
+            return Redirect::route('larapress.home.reset.password.get')->withInput(Input::all());
+        }
+        catch (MailException $e)
+        {
+            Session::flash('error', $e->getMessage());
+            return Redirect::route('larapress.home.reset.password.get')->withInput(Input::all());
+        }
+
+        Session::flash('success', 'Now please check your email account for further instructions!');
+        return Redirect::route('larapress.home.reset.password.get');
+    }
+
+    public function getSendNewPassword($id = null, $reset_code = null)
+    {
+        try
+        {
+            Narrator::sendNewPassword($id, $reset_code);
+        }
+        catch (UserNotFoundException $e)
+        {
+            return Helpers::force404();
+        }
+        catch (PasswordResetFailedException $e)
+        {
+            Session::flash('error', 'Resetting your password failed. ' .
+                'Please try again later or contact the administrator.');
+
+            return Redirect::route('larapress.home.reset.password.get');
+        }
+        catch (PasswordResetCodeInvalidException $e)
+        {
+            return Helpers::force404();
+        }
+        catch (MailException $e)
+        {
+            Session::flash('error', $e->getMessage());
+            return Redirect::route('larapress.home.reset.password.get');
+        }
+
+        Session::flash('success', 'Now please check your email account for the new password!');
         return Redirect::route('larapress.home.login.get');
     }
 

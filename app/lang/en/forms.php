@@ -10,4 +10,6 @@ return array(
 
     'Login' => 'Login',
 
+    'Reset my password' => 'Reset my password'
+
 );
