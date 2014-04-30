@@ -1,10 +1,12 @@
-Hello!
+@lang('email.Hello!')
 
-Below we've got the new password for you:
+
+@lang('email.Below we\'ve got the new password for you:')
+
 
 {{ $new_password }}
 
 
-Please consider changing it in the control panel as sending passwords via email is a potential security issue.
+@lang('email.Please consider changing it in the control panel as sending passwords via email is a potential security flaw.')
 
-Have fun!
+@lang('email.Have a nice day!')
