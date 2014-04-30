@@ -44,6 +44,7 @@ Route::group(
             'getLogin' => 'larapress.home.login.get',
             'getLogout' => 'larapress.home.logout.get',
             'getResetPassword' => 'larapress.home.reset.password.get',
+            'postResetPassword' => 'larapress.home.reset.password.post',
             'getSendNewPassword' => 'larapress.home.send.new.password.get',
         ));
 

@@ -2,6 +2,7 @@
 
 use Config;
 use Larapress\Tests\TestCase;
+use Narrator;
 use Permission;
 use Sentry;
 
@@ -201,6 +202,63 @@ class HomeControllerTest extends TestCase
 
         $this->assertRedirectedToRoute('larapress.home.login.get');
         $this->assertSessionHas('success', 'You have successfully logged out.');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | HomeController@getResetPassword Tests
+    |--------------------------------------------------------------------------
+    |
+    | Here is where you can test the HomeController@getResetPassword method
+    |
+    */
+
+    public function test_can_browse_the_get_reset_password_route()
+    {
+        $this->route('GET', 'larapress.home.reset.password.get');
+
+        $this->assertResponseOk();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | HomeController@postResetPassword Tests
+    |--------------------------------------------------------------------------
+    |
+    | Here is where you can test the HomeController@postResetPassword method
+    |
+    */
+
+    public function test_can_redirect_on_user_not_found_exception_with_flash_message_and_old_input()
+    {
+        Narrator::shouldReceive('resetPassword')->once()->andThrow('Cartalyst\Sentry\Users\UserNotFoundException');
+
+        $this->route('POST', 'larapress.home.reset.password.post');
+
+        $this->assertRedirectedToRoute('larapress.home.reset.password.get');
+        $this->assertSessionHas('error', 'User was not found.');
+        $this->assertHasOldInput();
+    }
+
+    public function test_can_redirect_on_mail_exception_with_flash_message_and_old_input()
+    {
+        Narrator::shouldReceive('resetPassword')->once()->andThrow('Larapress\Exceptions\MailException', 'foo');
+
+        $this->route('POST', 'larapress.home.reset.password.post');
+
+        $this->assertRedirectedToRoute('larapress.home.reset.password.get');
+        $this->assertSessionHas('error', 'foo');
+        $this->assertHasOldInput();
+    }
+
+    public function test_can_redirect_success_with_flash_message()
+    {
+        Narrator::shouldReceive('resetPassword')->once()->andReturnNull();
+
+        $this->route('POST', 'larapress.home.reset.password.post');
+
+        $this->assertRedirectedToRoute('larapress.home.reset.password.get');
+        $this->assertSessionHas('success', 'Now please check your email account for further instructions!');
     }
 
 }
