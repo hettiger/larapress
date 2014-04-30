@@ -103,4 +103,11 @@ class HomeController extends BaseController
         return Redirect::route('larapress.home.login.get');
     }
 
+    public function getResetPassword()
+    {
+        // TODO thats not really a reset password method yet ...
+
+        return 'reset your password here ...';
+    }
+
 }

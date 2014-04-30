@@ -8,4 +8,6 @@ return array(
 
     '404 Error' => '404 Error',
 
+    'Click to reset your password' => 'Click to reset your password',
+
 );
