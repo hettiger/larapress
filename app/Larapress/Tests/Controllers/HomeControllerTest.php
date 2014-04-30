@@ -54,7 +54,7 @@ class HomeControllerTest extends TestCase
 
     public function test_can_browse_the_login_page()
     {
-        $this->call('GET', $this->backend_route . '/login');
+        $this->route('GET', 'larapress.home.login.get');
 
         $this->assertResponseOk();
     }
@@ -75,7 +75,7 @@ class HomeControllerTest extends TestCase
             ->once()
             ->andThrow('Cartalyst\Sentry\Users\LoginRequiredException');
 
-        $this->call('POST', $this->backend_route . '/login', array('email' => 'foo', 'password' => 'bar'));
+        $this->route('POST', 'larapress.home.login.post', array(), array('email' => 'foo', 'password' => 'bar'));
 
         $this->assertRedirectedToRoute('larapress.home.login.get');
         $this->assertHasOldInput();
@@ -89,7 +89,7 @@ class HomeControllerTest extends TestCase
             ->once()
             ->andThrow('Cartalyst\Sentry\Users\PasswordRequiredException');
 
-        $this->call('POST', $this->backend_route . '/login', array('email' => 'foo', 'password' => 'bar'));
+        $this->route('POST', 'larapress.home.login.post', array(), array('email' => 'foo', 'password' => 'bar'));
 
         $this->assertRedirectedToRoute('larapress.home.login.get');
         $this->assertHasOldInput();
@@ -103,7 +103,7 @@ class HomeControllerTest extends TestCase
             ->once()
             ->andThrow('Cartalyst\Sentry\Users\WrongPasswordException');
 
-        $this->call('POST', $this->backend_route . '/login', array('email' => 'foo', 'password' => 'bar'));
+        $this->route('POST', 'larapress.home.login.post', array(), array('email' => 'foo', 'password' => 'bar'));
 
         $this->assertRedirectedToRoute('larapress.home.login.get');
         $this->assertHasOldInput();
@@ -117,7 +117,7 @@ class HomeControllerTest extends TestCase
             ->once()
             ->andThrow('Cartalyst\Sentry\Users\UserNotFoundException');
 
-        $this->call('POST', $this->backend_route . '/login', array('email' => 'foo', 'password' => 'bar'));
+        $this->route('POST', 'larapress.home.login.post', array(), array('email' => 'foo', 'password' => 'bar'));
 
         $this->assertRedirectedToRoute('larapress.home.login.get');
         $this->assertHasOldInput();
@@ -131,7 +131,7 @@ class HomeControllerTest extends TestCase
             ->once()
             ->andThrow('Cartalyst\Sentry\Users\UserNotActivatedException');
 
-        $this->call('POST', $this->backend_route . '/login', array('email' => 'foo', 'password' => 'bar'));
+        $this->route('POST', 'larapress.home.login.post', array(), array('email' => 'foo', 'password' => 'bar'));
 
         $this->assertRedirectedToRoute('larapress.home.login.get');
         $this->assertHasOldInput();
@@ -145,7 +145,7 @@ class HomeControllerTest extends TestCase
             ->once()
             ->andThrow('Cartalyst\Sentry\Throttling\UserSuspendedException');
 
-        $this->call('POST', $this->backend_route . '/login', array('email' => 'foo', 'password' => 'bar'));
+        $this->route('POST', 'larapress.home.login.post', array(), array('email' => 'foo', 'password' => 'bar'));
 
         $this->assertRedirectedToRoute('larapress.home.login.get');
         $this->assertHasOldInput();
@@ -159,7 +159,7 @@ class HomeControllerTest extends TestCase
             ->once()
             ->andThrow('Cartalyst\Sentry\Throttling\UserBannedException');
 
-        $this->call('POST', $this->backend_route . '/login', array('email' => 'foo', 'password' => 'bar'));
+        $this->route('POST', 'larapress.home.login.post', array(), array('email' => 'foo', 'password' => 'bar'));
 
         $this->assertRedirectedToRoute('larapress.home.login.get');
         $this->assertHasOldInput();
@@ -170,7 +170,7 @@ class HomeControllerTest extends TestCase
     {
         Sentry::shouldReceive('authenticate')->with(array('email' => 'foo', 'password' => 'bar'), false)->once();
 
-        $this->call('POST', $this->backend_route . '/login', array('email' => 'foo', 'password' => 'bar'));
+        $this->route('POST', 'larapress.home.login.post', array(), array('email' => 'foo', 'password' => 'bar'));
 
         $this->assertRedirectedToRoute('larapress.cp.dashboard.get');
     }
@@ -189,7 +189,7 @@ class HomeControllerTest extends TestCase
         Sentry::shouldReceive('check')->once()->andReturn(false);
         Sentry::shouldReceive('logout')->never();
 
-        $this->call('GET', $this->backend_route . '/logout');
+        $this->route('GET', 'larapress.home.logout.get');
 
         $this->assertRedirectedToRoute('larapress.home.login.get');
     }
@@ -199,7 +199,7 @@ class HomeControllerTest extends TestCase
         Sentry::shouldReceive('check')->once()->andReturn(true);
         Sentry::shouldReceive('logout')->once();
 
-        $this->call('GET', $this->backend_route . '/logout');
+        $this->route('GET', 'larapress.home.logout.get');
 
         $this->assertRedirectedToRoute('larapress.home.login.get');
         $this->assertSessionHas('success', 'You have successfully logged out.');

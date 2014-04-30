@@ -25,7 +25,7 @@ class ControlPanelControllerTest extends TestCase
 
     public function test_can_browse_the_dashboard()
     {
-        $this->call('GET', $this->backend_route . '/cp/dashboard');
+        $this->route('GET', 'larapress.cp.dashboard.get');
 
         $this->assertResponseOk();
     }
