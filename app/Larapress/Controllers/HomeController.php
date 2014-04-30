@@ -105,9 +105,9 @@ class HomeController extends BaseController
 
     public function getResetPassword()
     {
-        // TODO thats not really a reset password method yet ...
+        Helpers::setPageTitle('Reset Password');
 
-        return 'reset your password here ...';
+        return View::make('larapress.pages.home.reset-password');
     }
 
 }

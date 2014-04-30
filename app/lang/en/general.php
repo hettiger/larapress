@@ -10,4 +10,6 @@ return array(
 
     'Click to reset your password' => 'Click to reset your password',
 
+    'Reset Password' => 'Reset Password',
+
 );
