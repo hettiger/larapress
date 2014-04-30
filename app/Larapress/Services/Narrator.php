@@ -5,6 +5,8 @@ use Config;
 use Input;
 use Lang;
 use Larapress\Exceptions\MailException;
+use Larapress\Exceptions\PasswordResetCodeInvalidException;
+use Larapress\Exceptions\PasswordResetFailedException;
 use Larapress\Interfaces\NarratorInterface;
 use Mail;
 use Sentry;
@@ -69,6 +71,7 @@ class Narrator implements NarratorInterface
      * @param Input|null $input Passing Input::all() can be omitted
      * @throws MailException Throws an exception containing further information as message
      * @throws UserNotFoundException Throws a UserNotFoundException if Sentry cannot find the given user.
+     * @throws MailException Throws an exception containing further information as message
      * @return bool Returns true on success
      */
     public function resetPassword($input = null)
@@ -87,12 +90,85 @@ class Narrator implements NarratorInterface
 
         $data = array(
             'cms_name' => $cms_name,
-            'url' => route('larapress.home.send.new.password.get', array($reset_code)),
+            'url' => route('larapress.home.send.new.password.get', array($user['id'], $reset_code)),
         );
 
         $view = array('text' => 'larapress.emails.reset-password');
 
         $mail_error_message = 'Sending the email containing the reset key failed. ' .
+            'Please try again later or contact the administrator.';
+
+        $this->sendMail($to, $subject, $data, $view, $mail_error_message);
+    }
+
+    /**
+     * Attempt to reset a user
+     *
+     * This will unsuspend a user and give him a new password.
+     *
+     * @param int $id The user id
+     * @param string $reset_code The password reset code
+     * @throws PasswordResetFailedException Throws an exception without further information on failure
+     * @throws PasswordResetCodeInvalidException Throws an exception without further information on failure
+     * @return string $new_password Returns the new password on success
+     */
+    protected function attemptToReset($id, $reset_code)
+    {
+        $user = Sentry::findUserById($id);
+
+        if ($user->checkResetPasswordCode($reset_code))
+        {
+            $throttle = Sentry::findThrottlerByUserId($id);
+            $throttle->unsuspend();
+
+            $new_password = str_random(16);
+
+            if ($user->attemptResetPassword($reset_code, $new_password))
+            {
+                return $new_password;
+            }
+            else
+            {
+                throw new PasswordResetFailedException;
+            }
+        }
+        else
+        {
+            throw new PasswordResetCodeInvalidException;
+        }
+    }
+
+    /**
+     * Attempt to reset a user and send him a new password
+     *
+     * This will unsuspend a user and give him a new password.
+     *
+     * @param int $id The user id
+     * @param string $reset_code The password reset code
+     * @throws PasswordResetFailedException Throws an exception without further information on failure
+     * @throws PasswordResetCodeInvalidException Throws an exception without further information on failure
+     * @throws MailException Throws an exception containing further information as message
+     * @throws UserNotFoundException Throws an exception without further information on failure
+     * @return void
+     */
+    public function sendNewPassword($id, $reset_code)
+    {
+        $user = Sentry::findUserById($id);
+
+        $to = array(
+            'address' => $user['email'],
+            'name' => $user['first_name'] . ' ' . $user['last_name'],
+        );
+
+        $subject = Config::get('larapress.names.cms') . ' | ' . Lang::get('email.Password Reset!');
+
+        $data = array(
+            'new_password' => $this->attemptToReset($id, $reset_code),
+        );
+
+        $view = array('text' => 'larapress.emails.new-password');
+
+        $mail_error_message = 'Sending the email containing the new password failed. ' .
             'Please try again later or contact the administrator.';
 
         $this->sendMail($to, $subject, $data, $view, $mail_error_message);

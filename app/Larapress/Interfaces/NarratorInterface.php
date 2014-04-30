@@ -3,6 +3,8 @@
 use Cartalyst\Sentry\Users\UserNotFoundException;
 use Input;
 use Larapress\Exceptions\MailException;
+use Larapress\Exceptions\PasswordResetCodeInvalidException;
+use Larapress\Exceptions\PasswordResetFailedException;
 
 interface NarratorInterface {
 
@@ -29,8 +31,24 @@ interface NarratorInterface {
      * @param Input|null $input Passing Input::all() can be omitted
      * @throws MailException Throws an exception containing further information as message
      * @throws UserNotFoundException Throws a UserNotFoundException if Sentry cannot find the given user.
+     * @throws MailException Throws an exception containing further information as message
      * @return bool Returns true on success
      */
     public function resetPassword($input);
+
+    /**
+     * Attempt to reset a user and send him a new password
+     *
+     * This will unsuspend a user and give him a new password.
+     *
+     * @param int $id The user id
+     * @param string $reset_code The password reset code
+     * @throws PasswordResetFailedException Throws an exception without further information on failure
+     * @throws PasswordResetCodeInvalidException Throws an exception without further information on failure
+     * @throws MailException Throws an exception containing further information as message
+     * @throws UserNotFoundException Throws an exception without further information on failure
+     * @return void
+     */
+    public function sendNewPassword($id, $reset_code);
 
 }

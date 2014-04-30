@@ -1,5 +1,6 @@
 <?php namespace Larapress\Controllers;
 
+use App;
 use Cartalyst\Sentry\Throttling\UserBannedException;
 use Cartalyst\Sentry\Throttling\UserSuspendedException;
 use Cartalyst\Sentry\Users\LoginRequiredException;
@@ -10,6 +11,8 @@ use Cartalyst\Sentry\Users\WrongPasswordException;
 use Helpers;
 use Input;
 use Larapress\Exceptions\MailException;
+use Larapress\Exceptions\PasswordResetCodeInvalidException;
+use Larapress\Exceptions\PasswordResetFailedException;
 use Larapress\Exceptions\PermissionMissingException;
 use Narrator;
 use Permission;
@@ -133,11 +136,37 @@ class HomeController extends BaseController
         return Redirect::route('larapress.home.reset.password.get');
     }
 
-    public function getSendNewPassword()
+    public function getSendNewPassword($id = null, $reset_code = null)
     {
-        // TODO Have a look at following return statement
+        try
+        {
+            Narrator::sendNewPassword($id, $reset_code);
+        }
+        catch (UserNotFoundException $e)
+        {
+            $controller = new BaseController;
+            return $controller->missingMethod(array());
+        }
+        catch (PasswordResetFailedException $e)
+        {
+            Session::flash('error', 'Resetting your password failed. ' .
+                'Please try again later or contact the administrator.');
 
-        return 'TODO: Add the new password sending functionality ;-)';
+            return Redirect::route('larapress.home.reset.password.get');
+        }
+        catch (PasswordResetCodeInvalidException $e)
+        {
+            $controller = new BaseController;
+            return $controller->missingMethod(array());
+        }
+        catch (MailException $e)
+        {
+            Session::flash('error', $e->getMessage());
+            return Redirect::route('larapress.home.reset.password.get');
+        }
+
+        Session::flash('success', 'Now please check your email account for the new password!');
+        return Redirect::route('larapress.home.login.get');
     }
 
 }
