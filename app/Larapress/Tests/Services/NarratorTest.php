@@ -6,12 +6,11 @@ use Larapress\Tests\TestCase;
 use Log;
 use Mail;
 use Narrator;
-use Sentry;
 
 class NarratorTest extends TestCase
 {
 
-    protected $log_message;
+    public $log_message;
 
     /*
     |--------------------------------------------------------------------------
