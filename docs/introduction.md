@@ -7,6 +7,7 @@ Here's a list for you where we made changes to the default laravel installation:
 
 * app/Larapress/*
 * app/assets/*
+* app/lang/*/email.php
 * app/lang/*/forms.php
 * app/lang/*/general.php
 * app/lang/*/messages.php

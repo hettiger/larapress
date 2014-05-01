@@ -1,6 +1,7 @@
 <?php namespace Larapress\Interfaces;
 
 use Redirect;
+use Response;
 
 interface HelpersInterface {
 
@@ -25,5 +26,12 @@ interface HelpersInterface {
      * @return null|Redirect Redirects to the https:// protocol if the current request is insecure
      */
     public function forceSSL();
+
+    /**
+     * Abort the app and return the backend 404 response
+     *
+     * @return Response Returns a 404 Response with view
+     */
+    public function force404();
 
 }
