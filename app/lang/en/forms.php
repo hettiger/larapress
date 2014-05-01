@@ -10,6 +10,8 @@ return array(
 
     'Login' => 'Login',
 
-    'Reset my password' => 'Reset my password'
+    'Abort and go back' => 'Abort and go back',
+
+    'Reset my password' => 'Reset my password',
 
 );
