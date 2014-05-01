@@ -24,7 +24,7 @@ Following features are already available and 100% tested + documented:
 4. Logout
 5. Reset a lost password
 
-And there's so __much more__ to come [...] I hope for some discussions with you guys! (e.g. via github issues)
+__And there's so much more to come__ [...] I hope for some discussions with you guys! (e.g. via github issues)
 
 ### Stay in touch
 
