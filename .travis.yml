@@ -8,7 +8,6 @@ php:
   - hhvm
 
 before_script:
-  - php -d apc.enable_cli=Off
   - composer install --dev
 
 script: phpunit -c larapress.phpunit.xml
