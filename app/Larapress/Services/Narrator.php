@@ -56,7 +56,6 @@ class Narrator implements NarratorInterface
             {
                 case 'Cannot send message without a sender address':
                     throw new MailException($e->getMessage());
-                    break;
                 default:
                     throw new MailException($mail_error_message);
             }
