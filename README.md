@@ -24,15 +24,7 @@ Following features are already available and 100% tested + documented:
 4. Logout
 5. Reset a lost password
 
-### Upcoming Features
-
-There are still a lot of decisions to make. I hope for some discussions with you guys! (e.g. via github issues)
-
-Have a look at the [Concept](https://github.com/larapress-cms/concept) if you're looking for more information.
-
-> __Warning__
-> The concept is just a quick collection of ideas.
-> You may contribute to that repo if you have some visions too.
+And there's so __much more__ to come [...] I hope for some discussions with you guys! (e.g. via github issues)
 
 ### Stay in touch
 
