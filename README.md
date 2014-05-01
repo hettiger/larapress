@@ -1,6 +1,6 @@
 ![larapress logo](https://raw.githubusercontent.com/larapress-cms/design/master/Logo/PNG/larapress-logo-greyscale.png)
 =======
-[![Build Status](https://travis-ci.org/larapress-cms/larapress.svg?branch=master)](https://travis-ci.org/larapress-cms/larapress)
+[![Build Status](https://travis-ci.org/larapress-cms/larapress.svg?branch=master)](https://travis-ci.org/larapress-cms/larapress) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/larapress-cms/larapress/badges/quality-score.png?s=3a265a450025d10d867b3c114338c1ce605e356e)](https://scrutinizer-ci.com/g/larapress-cms/larapress/) [![Code Coverage](https://scrutinizer-ci.com/g/larapress-cms/larapress/badges/coverage.png?s=be7a4527c3720723d4e168854e7431bd0c10d2bb)](https://scrutinizer-ci.com/g/larapress-cms/larapress/)
 
 This is the main larapress repository.
 
@@ -16,7 +16,7 @@ __Documentation can be found here:__ `docs`
 
 ### Features (so far ...)
 
-Following features are already available and 100% tested + documented:
+Following features are already available, tested and documented:
 
 1. Artisan command for installing the cms
 2. User roles
