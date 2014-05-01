@@ -19,6 +19,14 @@ class BaseController extends Controller
         View::share('now', $now);
     }
 
+    /**
+     * Missing Method
+     *
+     * Abort the app and return a 404 response
+     *
+     * @param array $parameters
+     * @return Response
+     */
     public function missingMethod($parameters = array())
     {
         Helpers::setPageTitle('404 Error');
