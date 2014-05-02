@@ -14,4 +14,6 @@ return array(
 
     'Reset my password' => 'Reset my password',
 
+    'Verify that you are human' => 'Verify that you are human',
+
 );

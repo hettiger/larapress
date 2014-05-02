@@ -13,7 +13,18 @@
 
 Route::get('/', function()
 {
-	return View::make('hello');
+    /**
+     * Using this closure for testing purposes.
+     *
+     * TODO Revert that back to the laravel default before merge
+     *
+     * Original content: return View::make('hello');
+     */
+
+    Helpers::setPageTitle('testing');
+    View::share('lang', 'en');
+
+    return View::make('larapress.partials.captcha');
 });
 
 /*
