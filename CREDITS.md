@@ -22,6 +22,7 @@ This Application is using following Projects:
 | [Mockery](https://github.com/padraic/mockery) | [BSD-3-Clause](http://opensource.org/licenses/BSD-3-Clause) |
 | [Night sky with twinkling stars](http://www.script-tutorials.com/night-sky-with-twinkling-stars/) | [Custom](http://www.script-tutorials.com/terms-of-use/) |
 | [greggilbert/recaptcha](http://github.com/greggilbert/recaptcha) | [MIT](http://opensource.org/licenses/MIT) |
+| [Twix](https://github.com/neilco/twix) | [MIT](http://opensource.org/licenses/MIT) |
 
 Please be aware that these projects might have their own dependencies that I won't list here.  
 If I forgot any project here please open an issue and I'll add it to this list immediately.

@@ -21,9 +21,6 @@ Route::get('/', function()
      * Original content: return View::make('hello');
      */
 
-    Helpers::setPageTitle('testing');
-    View::share('lang', 'en');
-
     return View::make('larapress.partials.captcha');
 });
 
