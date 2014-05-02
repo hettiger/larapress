@@ -121,6 +121,7 @@ return array(
         'Illuminate\Workbench\WorkbenchServiceProvider',
 
         'Cartalyst\Sentry\SentryServiceProvider',
+        'Greggilbert\Recaptcha\RecaptchaServiceProvider',
 
         'Larapress\Providers\PermissionServiceProvider',
         'Larapress\Providers\HelpersServiceProvider',

@@ -31,4 +31,16 @@ return array(
     'SMTP_USERNAME'     => null,
     'SMTP_PASSWORD'     => null,
 
+    /*
+    |--------------------------------------------------------------------------
+    | Google reCAPTCHA API Keys
+    |--------------------------------------------------------------------------
+    |
+    | Set the public and private API keys as provided by reCAPTCHA.
+    |
+    */
+
+    'RECAPTCHA_PUBLIC'  => 'your-public-key',
+    'RECAPTCHA_PRIVATE' => 'your-private-key',
+
 );

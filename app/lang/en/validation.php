@@ -101,4 +101,16 @@ return array(
 
 	'attributes' => array(),
 
+	/*
+	|--------------------------------------------------------------------------
+	| reCAPTCHA Validation
+	|--------------------------------------------------------------------------
+	|
+	| The dependency greggilbert/recaptcha requires us to add an extra language
+	| line for the captcha validation. This is done below.
+	|
+	*/
+
+	"recaptcha" => 'The :attribute field is not correct.',
+
 );
