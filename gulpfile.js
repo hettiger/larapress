@@ -38,7 +38,6 @@ var paths = {
     ],
     js_per_page: larapress + 'js/pages/**/*.js',
     fallback: [html5shiv, respond],
-    twix: components + 'neilco-twix/twix.js',
     fonts: [bootstrap + 'fonts/*']
 };
 
@@ -87,14 +86,6 @@ gulp.task('fallback', function() {
         .pipe(gulp.dest(destination + 'js'));
 });
 
-gulp.task('twix', function() {
-    return gulp.src(paths.twix)
-        .pipe(js_min())
-        .pipe(gulp.dest(destination + 'js'))
-        .pipe(gzip({threshold: true, gzipOptions: {level: 9}}))
-        .pipe(gulp.dest(destination + 'js'));
-});
-
 gulp.task('fonts', function() {
     return gulp.src(paths.fonts)
         .pipe(gulp.dest(destination + 'fonts'));
@@ -107,7 +98,6 @@ gulp.task('watch', function() {
     gulp.watch(paths.js, ['js']);
     gulp.watch(paths.js_per_page, ['js-per-page']);
     gulp.watch(paths.fallback, ['fallback']);
-    gulp.watch(paths.twix, ['twix']);
     gulp.watch(paths.fonts, ['fonts']);
 });
 
@@ -118,7 +108,6 @@ gulp.task('default',
         'js',
         'js-per-page',
         'fallback',
-        'twix',
         'fonts'
     ]
 );

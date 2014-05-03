@@ -17,7 +17,6 @@ There are several commands you can currently run from the command line:
 * `gulp js`
 * `gulp js-per-page`
 * `gulp fallback`
-* `gulp twix`
 * `gulp fonts`
 
 > Simply running `gulp` will run all the other tasks except `gulp watch` in a row.    
