@@ -1,27 +1,28 @@
-function getValidationResult(captcha_validation_url, token, recaptcha_challenge, recaptcha_response)
+var larapress = larapress || {};
+
+larapress.getValidationResult = function(captcha_validation_url, token, recaptcha_challenge, recaptcha_response)
 {
     var http = new XMLHttpRequest();
-    var url = captcha_validation_url;
     var params = ''
         + '_token=' + encodeURIComponent(token) + '&'
         + 'recaptcha_challenge_field=' + encodeURIComponent(recaptcha_challenge) + '&'
         + 'recaptcha_response_field=' + encodeURIComponent(recaptcha_response);
 
-    http.open('POST', url, true);
+    http.open('POST', captcha_validation_url, true);
     http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 
     http.onreadystatechange = function()
     {
         if ( http.readyState == 4 && http.status == 200 )
         {
-            processResult(http.response);
+            larapress.processResult(http.response);
         }
     };
 
     http.send(params);
-}
+};
 
-function processResult(response)
+larapress.processResult = function(response)
 {
     response = JSON.parse(response);
 
@@ -37,12 +38,14 @@ function processResult(response)
         Recaptcha.reload();
         document.getElementById('captcha-failure').style.display = 'block';
     }
-}
+};
 
 document.getElementById('captcha-submit').onclick = function()
 {
+    document.getElementById('captcha-failure').style.display = 'none';
+
     var token = document.getElementsByName('_token')[0].value;
     var recaptcha_challenge = Recaptcha.get_challenge();
     var recaptcha_response = Recaptcha.get_response();
-    getValidationResult(captcha_validation_url, token, recaptcha_challenge, recaptcha_response);
+    larapress.getValidationResult(captcha_validation_url, token, recaptcha_challenge, recaptcha_response);
 };
