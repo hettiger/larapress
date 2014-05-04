@@ -86,4 +86,14 @@ class Helpers implements HelpersInterface
         return $controller->missingMethod(array());
     }
 
+    /**
+     * Shares the required api url for the reCAPTCHA validation JavaScript
+     *
+     * @return void
+     */
+    public function shareCaptchaValidationUrl()
+    {
+        View::share('captcha_validation_url', route('larapress.api.captcha.validate.post'));
+    }
+
 }

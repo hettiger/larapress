@@ -34,4 +34,11 @@ interface HelpersInterface {
      */
     public function force404();
 
+    /**
+     * Shares the required api url for the reCAPTCHA validation JavaScript
+     *
+     * @return void
+     */
+    public function shareCaptchaValidationUrl();
+
 }

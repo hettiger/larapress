@@ -5,16 +5,16 @@
     <title>Captcha Test</title>
 
     <style type="text/css">
-        button#captcha-submit {
-            width: 318px !important;
+        #captcha-submit {
+            width: 318px;
         }
 
-        span#captcha-success {
+        #captcha-success {
             display: none;
             color: #008000;
         }
 
-        span#captcha-failure {
+        #captcha-failure {
             display: none;
             color: #ff0000;
         }
@@ -26,10 +26,14 @@
 {{ Form::token() }}
 {{ Form::button(trans('forms.Verify that you are human'), array('id' => 'captcha-submit')) }}
 
-{{ HTML::script('larapress/assets/js/pages/captcha/captcha.js') }}
+<div id="captcha-success">Sucess</div>
+<div id="captcha-failure">Failure</div>
 
-<span id="captcha-success">Sucess</span>
-<span id="captcha-failure">Failure</span>
+<script type="text/javascript">
+    var captcha_validation_url = '{{ $captcha_validation_url }}';
+</script>
+
+{{ HTML::script('larapress/assets/js/pages/captcha/captcha.js') }}
 
 </body>
 </html>

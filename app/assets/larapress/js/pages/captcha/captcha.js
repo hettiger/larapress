@@ -1,7 +1,7 @@
-function getValidationResult(token, recaptcha_challenge, recaptcha_response)
+function getValidationResult(captcha_validation_url, token, recaptcha_challenge, recaptcha_response)
 {
     var http = new XMLHttpRequest();
-    var url = 'https://larapress.dev/admin/api/captcha/validate';
+    var url = captcha_validation_url;
     var params = ''
         + '_token=' + encodeURIComponent(token) + '&'
         + 'recaptcha_challenge_field=' + encodeURIComponent(recaptcha_challenge) + '&'
@@ -44,5 +44,5 @@ document.getElementById('captcha-submit').onclick = function()
     var token = document.getElementsByName('_token')[0].value;
     var recaptcha_challenge = Recaptcha.get_challenge();
     var recaptcha_response = Recaptcha.get_response();
-    getValidationResult(token, recaptcha_challenge, recaptcha_response);
+    getValidationResult(captcha_validation_url, token, recaptcha_challenge, recaptcha_response);
 };
