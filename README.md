@@ -8,6 +8,7 @@ __Warning: This Application is under development and not yet production ready!__
 
 ### Important Links
 
+* [Installation](docs/install.md)
 * [Contribution Guidelines](CONTRIBUTING.md)
 * [License (MIT)](LICENSE.md)
 * [Credits](CREDITS.md)
