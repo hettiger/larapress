@@ -4,6 +4,8 @@
 
 __Bower and Gulp are not required to use this CMS! Anyways, if you want to make a new build you'll need both of them.__
 
+To get started you'll need npm. Installer packages can be found [here](http://nodejs.org).
+
 ### Bower
 
 In order to keep all the frontend dependencies up to date we're utilizing [bower](http://bower.io).
