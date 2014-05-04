@@ -7,6 +7,7 @@ Clone this repository and setup your development environment configuration:
 1. Duplicate the file `.env.example.php` and name it `.env.local.php`
 2. Apply your configuration
 3. Make sure you never commit this file. (It should be git ignored per default)
+4. If you want to use MySQL you'll also need to change the default database connection in `app/config/local/database.php`
 
 __Important: Have a look at the docs directory. Else you'll be missing some important instructions.__
 
