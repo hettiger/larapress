@@ -28,4 +28,6 @@ __And there's so much more to come__ [...] I hope for some discussions with you 
 
 ### Stay in touch
 
+Join the discussion on "What do you want larapress to be?" here: #22
+
 Follow me on Twitter: [@martinHettiger](https://twitter.com/martinHettiger)
