@@ -11,6 +11,28 @@ Clone this repository and run following commands from the project root in your t
 ```bash
 composer install --no-dev -o
 chmod -R 777 app/storage
+```
+
+1. Duplicate the file `.env.example.php` and name it `.env.php`
+2. Apply your configuration in `.env.php`
+3. If you want to use MySQL you'll also need to change the default database connection in `app/config/database.php`
+
+__Example for 3.__
+
+```php
+// app/config/database.php
+
+/*
+ * Change following line like shown below this comment block:
+ * 'default' => 'sqlite',
+ */
+
+'default' => 'mysql',
+```
+
+__Finally install larapress from the project root in your terminal:__
+
+```bash
 php artisan larapress:install
 ```
 
