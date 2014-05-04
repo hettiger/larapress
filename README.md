@@ -8,6 +8,7 @@ __Warning: This Application is under development and not yet production ready!__
 
 ### Important Links
 
+* [Installation](docs/install.md)
 * [Contribution Guidelines](CONTRIBUTING.md)
 * [License (MIT)](LICENSE.md)
 * [Credits](CREDITS.md)
@@ -27,5 +28,7 @@ Following features are already available, tested and documented:
 __And there's so much more to come__ [...] I hope for some discussions with you guys! (e.g. via github issues)
 
 ### Stay in touch
+
+Join the discussion on ["What do you want larapress to be?"](https://github.com/larapress-cms/larapress/issues/22)
 
 Follow me on Twitter: [@martinHettiger](https://twitter.com/martinHettiger)
