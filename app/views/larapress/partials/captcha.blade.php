@@ -22,9 +22,10 @@
 </head>
 <body>
 
-{{ Form::captcha() }}
-{{ Form::token() }}
-{{ Form::button(trans('forms.Verify that you are human'), array('id' => 'captcha-submit')) }}
+{{ Form::open(array('onsubmit' => 'return larapress.formSubmit();')) }}
+    {{ Form::captcha() }}
+    {{ Form::submit(trans('forms.Verify that you are human'), array('id' => 'captcha-submit')) }}
+{{ Form::close() }}
 
 <div id="captcha-success">Sucess</div>
 <div id="captcha-failure">Failure</div>

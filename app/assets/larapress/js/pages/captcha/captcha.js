@@ -40,7 +40,7 @@ larapress.processResult = function(response)
     }
 };
 
-document.getElementById('captcha-submit').onclick = function()
+larapress.formSubmit = function()
 {
     document.getElementById('captcha-failure').style.display = 'none';
 
@@ -48,4 +48,6 @@ document.getElementById('captcha-submit').onclick = function()
     var recaptcha_challenge = Recaptcha.get_challenge();
     var recaptcha_response = Recaptcha.get_response();
     larapress.getValidationResult(captcha_validation_url, token, recaptcha_challenge, recaptcha_response);
+
+    return false;
 };
