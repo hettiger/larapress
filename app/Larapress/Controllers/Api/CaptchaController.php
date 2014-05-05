@@ -4,7 +4,7 @@ use Input;
 use Response;
 use Validator;
 
-class CaptchaApiController extends BaseApiController
+class CaptchaController extends BaseController
 {
 
     public function postValidate()

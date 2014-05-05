@@ -45,7 +45,7 @@ Route::group(
     function () {
 
         Route::group(array('namespace' => 'Api', 'prefix' => 'api'), function() {
-            Route::controller('/captcha', 'CaptchaApiController', array(
+            Route::controller('/captcha', 'CaptchaController', array(
                 'postValidate' => 'larapress.api.captcha.validate.post',
             ));
         });

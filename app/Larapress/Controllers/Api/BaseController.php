@@ -4,7 +4,7 @@ use Controller;
 use Helpers;
 use Response;
 
-class BaseApiController extends Controller
+class BaseController extends Controller
 {
 
     /**
