@@ -32,6 +32,9 @@ return array(
     'Resetting your password failed. Please try again later or contact the administrator.'
         => 'Resetting your password failed. Please try again later or contact the administrator.',
 
+    'You didn\'t enter the correct captcha text. Please try again.'
+        => 'You didn\'t enter the correct captcha text. Please try again.',
+
     // Success
 
     'Success' => 'Success',
@@ -43,5 +46,8 @@ return array(
 
     'Now please check your email account for the new password!'
         => 'Now please check your email account for the new password!',
+
+    'A captcha can\'t stop you. We wont ask again for a while now.'
+        => 'A captcha can\'t stop you. We wont ask again for a while now.',
 
 );
