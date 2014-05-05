@@ -2,6 +2,7 @@
 
 use Input;
 use Response;
+use Session;
 use Validator;
 
 class CaptchaController extends BaseController
@@ -18,6 +19,8 @@ class CaptchaController extends BaseController
         {
             return Response::json(array('result' => 'failed'));
         }
+
+        Session::put('captcha.passed.time', microtime(true));
 
         return Response::json(array('result' => 'success'));
     }

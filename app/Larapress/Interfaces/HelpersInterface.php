@@ -1,5 +1,6 @@
 <?php namespace Larapress\Interfaces;
 
+use BadMethodCallException;
 use Redirect;
 use Response;
 
@@ -12,6 +13,16 @@ interface HelpersInterface {
      * @return void
      */
     public function setPageTitle($page_name);
+
+    /**
+     * Get the time difference of a time record compared to the present
+     *
+     * @param float $time_record A record of microtime(true) in the past
+     * @param string $unit Can be either 'ms', 's' or 'm' (milliseconds, seconds, minutes)
+     * @return int Returns the time difference in the given unit
+     * @throws BadMethodCallException
+     */
+    public function getCurrentTimeDifference($time_record, $unit = 'm');
 
     /**
      * Writes performance related statistics into the log file
@@ -35,10 +46,10 @@ interface HelpersInterface {
     public function force404();
 
     /**
-     * Shares the required api url for the reCAPTCHA validation JavaScript
+     * Shares the required data for the reCAPTCHA
      *
      * @return void
      */
-    public function shareCaptchaValidationUrl();
+    public function shareCaptchaData();
 
 }
