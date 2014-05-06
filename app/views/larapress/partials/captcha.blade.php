@@ -1,28 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>Captcha Test</title>
-
-    <style type="text/css">
-        #captcha-submit {
-            width: 318px;
-        }
-
-        #captcha-success {
-            display: none;
-            color: #008000;
-        }
-
-        #captcha-failure {
-            display: none;
-            color: #ff0000;
-        }
-    </style>
-</head>
-<body>
-
 @if ( Captcha::isRequired() )
+    {{ HTML::style('larapress/assets/css/pages/captcha/captcha.css') }}
+
     {{ Form::open(array('onsubmit' => 'return larapress.formSubmit();')) }}
         {{ Form::captcha() }}
         {{ Form::submit(trans('forms.Verify that you are human'), array('id' => 'captcha-submit')) }}
@@ -43,6 +21,3 @@
 
     {{ HTML::script('larapress/assets/js/pages/captcha/captcha.js') }}
 @endif
-
-</body>
-</html>

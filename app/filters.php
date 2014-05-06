@@ -133,6 +133,17 @@ Route::filter('force.ssl', function()
     return null; // SSL is not enabled
 });
 
+Route::filter('force.human', function()
+{
+    if ( Captcha::isRequired() )
+    {
+        Session::flash('error', 'Please verify that you are human first.');
+        return Redirect::back();
+    }
+
+    return null; // Captcha is not required, proceed
+});
+
 /*
 |--------------------------------------------------------------------------
 | Pattern Filters for the larapress backend
@@ -145,4 +156,5 @@ Route::filter('force.ssl', function()
 $backend_url = Config::get('larapress.urls.backend');
 
 Route::when($backend_url . '/cp*', 'access.backend');
+Route::when($backend_url . '/reset-password', 'force.human', array('post'));
 Route::when($backend_url . '*', 'force.ssl');

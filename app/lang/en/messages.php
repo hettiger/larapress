@@ -35,6 +35,8 @@ return array(
     'You didn\'t enter the correct captcha text. Please try again.'
         => 'You didn\'t enter the correct captcha text. Please try again.',
 
+    'Please verify that you are human first.' => 'Please verify that you are human first.',
+
     // Success
 
     'Success' => 'Success',
