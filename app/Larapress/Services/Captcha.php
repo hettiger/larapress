@@ -10,6 +10,23 @@ class Captcha implements CaptchaInterface
 {
 
     /**
+     * Check if the reCAPTCHA is required
+     *
+     * @return bool Returns true if the captcha is required
+     */
+    public function isRequired()
+    {
+        $timer = Config::get('larapress.settings.captcha.timer');
+
+        if ( HelpersService::getCurrentTimeDifference(Session::get('captcha.passed.time', 0), 'm') >= $timer )
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Shares the required data for the reCAPTCHA
      *
      * @return void
@@ -17,17 +34,6 @@ class Captcha implements CaptchaInterface
     public function shareDataToViews()
     {
         View::share('captcha_validation_url', route('larapress.api.captcha.validate.post'));
-
-        $timer = Config::get('larapress.settings.captcha.timer');
-
-        if ( HelpersService::getCurrentTimeDifference(Session::get('captcha.passed.time', 0), 'm') >= $timer )
-        {
-            View::share('captcha_required', true);
-        }
-        else
-        {
-            View::share('captcha_required', false);
-        }
     }
 
 }

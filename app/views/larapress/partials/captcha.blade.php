@@ -22,7 +22,7 @@
 </head>
 <body>
 
-@if ( $captcha_required )
+@if ( Captcha::isRequired() )
     {{ Form::open(array('onsubmit' => 'return larapress.formSubmit();')) }}
         {{ Form::captcha() }}
         {{ Form::submit(trans('forms.Verify that you are human'), array('id' => 'captcha-submit')) }}
