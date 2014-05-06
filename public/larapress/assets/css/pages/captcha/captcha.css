@@ -1,1 +1,1 @@
-#captcha-submit{width:318px}#captcha-success{display:none;color:green}#captcha-failure{display:none;color:red}
+#captcha-failure,#captcha-success{display:none}#captcha-form{margin-bottom:1.5em}#captcha-submit{margin:.5em 0 0 3px}
