@@ -10,6 +10,7 @@ use Log;
 use Redirect;
 use Request;
 use Response;
+use Mockably as MockablyService;
 use Session;
 use View;
 
@@ -38,7 +39,7 @@ class Helpers implements HelpersInterface
      */
     public function getCurrentTimeDifference($time_record, $unit = 'm')
     {
-        $current_time = microtime(true);
+        $current_time = MockablyService::microtime();
 
         switch ( $unit )
         {

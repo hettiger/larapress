@@ -14,7 +14,7 @@
 App::before(function($request)
 {
     // Record the starting time for logging the application performance
-    Session::put('start.time', microtime(true));
+    Session::put('start.time', Mockably::microtime());
 
     // Get the Throttle Provider
     $throttleProvider = Sentry::getThrottleProvider();
