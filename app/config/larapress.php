@@ -19,6 +19,8 @@ return array(
 
         'captcha' => array(
 
+            'active' => true, // Decide if you want to use the captcha
+
             'timer' => 10, // Minutes until a passed captcha expires
 
         ),

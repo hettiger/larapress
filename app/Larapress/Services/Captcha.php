@@ -16,6 +16,11 @@ class Captcha implements CaptchaInterface
      */
     public function isRequired()
     {
+        if ( ! Config::get('larapress.settings.captcha.active') )
+        {
+            return false;
+        }
+
         $timer = Config::get('larapress.settings.captcha.timer');
 
         if ( HelpersService::getCurrentTimeDifference(Session::get('captcha.passed.time', 0), 'm') >= $timer )
