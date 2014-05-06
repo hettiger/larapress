@@ -45,11 +45,4 @@ interface HelpersInterface {
      */
     public function force404();
 
-    /**
-     * Shares the required data for the reCAPTCHA
-     *
-     * @return void
-     */
-    public function shareCaptchaData();
-
 }
