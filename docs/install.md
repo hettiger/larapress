@@ -6,10 +6,10 @@ __Warning: These instructions are for the production build__
 
 Make sure you have installed composer. If you need help with that visit the [projects website](https://getcomposer.org).
 
-Clone this repository and run following commands from the project root in your terminal:
+Run following commands from the project root in your terminal:
 
 ```bash
-composer install --no-dev -o
+composer create --no-dev larapress-cms/larapress my-project-name
 chmod -R 777 app/storage
 ```
 
