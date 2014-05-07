@@ -1,6 +1,7 @@
 <?php namespace Larapress\Controllers\Api;
 
 use Input;
+use Mockably;
 use Response;
 use Session;
 use Validator;
@@ -20,7 +21,7 @@ class CaptchaController extends BaseController
             return Response::json(array('result' => 'failed'));
         }
 
-        Session::put('captcha.passed.time', microtime(true));
+        Session::put('captcha.passed.time', Mockably::microtime());
 
         return Response::json(array('result' => 'success'));
     }
