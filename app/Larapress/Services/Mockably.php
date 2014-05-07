@@ -16,7 +16,7 @@ class Mockably implements MockablyInterface
 {
 
     /**
-     * Return current Unix timestamp with microseconds as float
+     * Return current Unix timestamp in seconds with microseconds as float
      *
      * @return float
      */
