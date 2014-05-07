@@ -13,20 +13,22 @@
         @lang('messages.You didn\'t enter the correct captcha text. Please try again.')
     </div>
 
-    <p>
-        <strong>@lang('forms.Please verify that you are human first.')</strong>
-    </p>
+    <div id="captcha-wrapper">
+        <p>
+            <strong>@lang('forms.Please verify that you are human first.')</strong>
+        </p>
 
-    {{ Form::open(array(
-        'id'       => 'captcha-form',
-        'onsubmit' => 'return larapress.formSubmit();'
-    )) }}
-        {{ Form::captcha() }}
-        {{ Form::submit(trans('forms.Verify that you are human'), array(
-            'id'    => 'captcha-submit',
-            'class' => 'btn btn-danger btn-xs'
+        {{ Form::open(array(
+            'id'       => 'captcha-form',
+            'onsubmit' => 'return larapress.formSubmit();'
         )) }}
-    {{ Form::close() }}
+            {{ Form::captcha() }}
+            {{ Form::submit(trans('forms.Verify that you are human'), array(
+                'id'    => 'captcha-submit',
+                'class' => 'btn btn-danger btn-xs'
+            )) }}
+        {{ Form::close() }}
+    </div>
 
     <script type="text/javascript">
         var captcha_validation_url = '{{ $captcha_validation_url }}';

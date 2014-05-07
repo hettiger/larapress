@@ -1,5 +1,11 @@
 var larapress = larapress || {};
 
+larapress.removeElementById = function(id)
+{
+    var element = document.getElementById(id);
+    element.parentNode.removeChild(element);
+};
+
 larapress.getValidationResult = function(captcha_validation_url, token, recaptcha_challenge, recaptcha_response)
 {
     var http = new XMLHttpRequest();
@@ -29,8 +35,10 @@ larapress.processResult = function(response)
     if ( response.result === 'success' )
     {
         Recaptcha.destroy();
-        document.getElementById('captcha-submit').style.display = 'none';
-        document.getElementById('captcha-failure').style.display = 'none';
+
+        larapress.removeElementById('captcha-wrapper');
+        larapress.removeElementById('captcha-failure');
+
         document.getElementById('captcha-success').style.display = 'block';
     }
     else
