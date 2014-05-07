@@ -20,7 +20,7 @@ sudo npm install -g bower
 bower install
 ```
 
-__Make sure you `bower install` before running gulp tasks as they are required for the taskrunner to work!__
+__Make sure you `bower install` before running gulp tasks because they will use the frontend dependencies!__
 
 ### Gulp
 
