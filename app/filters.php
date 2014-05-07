@@ -99,6 +99,27 @@ Route::when('*', 'csrf', array('post', 'put', 'patch', 'delete'));
 
 /*
 |--------------------------------------------------------------------------
+| Special larapress Filters
+|--------------------------------------------------------------------------
+|
+| The following filters are developed for larapress but may be also useful
+| for your website. You can apply them to any route you'd like.
+|
+*/
+
+Route::filter('force.human', function()
+{
+    if ( Captcha::isRequired() )
+    {
+        Session::flash('error', 'Please verify that you are human first.');
+        return Redirect::back();
+    }
+
+    return null; // Captcha is not required, proceed
+});
+
+/*
+|--------------------------------------------------------------------------
 | Filters for the larapress backend
 |--------------------------------------------------------------------------
 |
@@ -131,17 +152,6 @@ Route::filter('force.ssl', function()
     }
 
     return null; // SSL is not enabled
-});
-
-Route::filter('force.human', function()
-{
-    if ( Captcha::isRequired() )
-    {
-        Session::flash('error', 'Please verify that you are human first.');
-        return Redirect::back();
-    }
-
-    return null; // Captcha is not required, proceed
 });
 
 /*
