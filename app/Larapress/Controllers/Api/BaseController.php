@@ -17,9 +17,7 @@ class BaseController extends Controller
      */
     public function missingMethod($parameters = array())
     {
-        Helpers::setPageTitle('404 Error');
-
-        return Response::view('larapress.errors.404', array(), 404);
+        Helpers::force404();
     }
 
 }
