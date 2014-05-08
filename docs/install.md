@@ -17,7 +17,7 @@ chmod -R 777 app/storage
 2. Apply your configuration in `.env.php`
 3. If you want to use MySQL you'll also need to change the default database connection in `app/config/database.php`
 
-__Example for 3.__
+__Example for using MySQL__
 
 ```php
 // app/config/database.php
@@ -37,3 +37,6 @@ php artisan larapress:install
 ```
 
 Further instructions will be printed by the terminal.
+
+__Warning:      
+Per default larapress is configured to run without SSL. This puts the application under high risk and should be changed if possible. Have a look at `app/config/larapress.php` to change this and other behaviours of larapress.__
