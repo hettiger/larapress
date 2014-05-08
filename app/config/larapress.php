@@ -15,7 +15,7 @@ return array(
 
         'log' => false, // Logs the application performance
 
-        'ssl' => true, // Force to use https:// requests in the backend
+        'ssl' => false, // Force to use https:// requests in the backend
 
         'captcha' => array(
 
