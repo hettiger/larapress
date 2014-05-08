@@ -91,6 +91,10 @@ __Example__
 Route::when($backend_url . '/reset-password', 'force.human', array('post'));
 ```
 
+### No JavaScript Fallback (Optional)
+
+The larapress backend has it's own fallback, no worries about that ... Anyways if you integrate this captcha into your website you'll likely want to add a no JavaScript fallback. (JavaScript is required without further modifications ...)
+
 ## Customization
 
 If you want to customize this in any way you can simple duplicate and edit the `larapress.partials.captcha` view.
