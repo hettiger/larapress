@@ -31,6 +31,10 @@ Route::when('*', 'force.ssl');
 
 > Remember: The `force.ssl` filter will only force SSL if you've set the `larapress.settings.ssl` configuration to `true`.
 
+#### captcha.active
+
+__Be aware that setting this to `false` will lower the security of the reset password feature.__
+
 ### Names
 
 #### cms
