@@ -38,6 +38,9 @@ return array(
     |
     | Set the public and private API keys as provided by reCAPTCHA.
     |
+    | Get your pair of reCAPTCHA keys here:
+    | https://www.google.com/recaptcha/admin#whyrecaptcha
+    |
     */
 
     'RECAPTCHA_PUBLIC'  => 'your-public-key',
