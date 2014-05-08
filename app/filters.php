@@ -107,16 +107,7 @@ Route::when('*', 'csrf', array('post', 'put', 'patch', 'delete'));
 |
 */
 
-Route::filter('force.human', function()
-{
-    if ( Captcha::isRequired() )
-    {
-        Session::flash('error', 'Please verify that you are human first.');
-        return Redirect::back();
-    }
-
-    return null; // Captcha is not required, proceed
-});
+Route::filter('force.human', 'Larapress\Filters\Special\ForceHumanFilter');
 
 /*
 |--------------------------------------------------------------------------
@@ -129,30 +120,8 @@ Route::filter('force.human', function()
 |
 */
 
-Route::filter('access.backend', function()
-{
-    try
-    {
-        Permission::has('access.backend');
-    }
-    catch (\Larapress\Exceptions\PermissionMissingException $e)
-    {
-        Session::flash('error', $e->getMessage());
-        return Redirect::route('larapress.home.login.get');
-    }
-
-    return null; // User has access
-});
-
-Route::filter('force.ssl', function()
-{
-    if ( Config::get('larapress.settings.ssl') )
-    {
-        return Helpers::forceSSL();
-    }
-
-    return null; // SSL is not enabled
-});
+Route::filter('access.backend', 'Larapress\Filters\Backend\AccessBackendFilter');
+Route::filter('force.ssl', 'Larapress\Filters\Backend\ForceSSLFilter');
 
 /*
 |--------------------------------------------------------------------------
