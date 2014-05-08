@@ -13,6 +13,11 @@
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">./app/Larapress</directory>
+            <exclude>
+                <directory suffix=".php">./app/Larapress/Exceptions</directory>
+                <directory suffix=".php">./app/Larapress/Facades</directory>
+                <directory suffix=".php">./app/Larapress/Providers</directory>
+            </exclude>
         </whitelist>
     </filter>
     <testsuites>

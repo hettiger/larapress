@@ -36,6 +36,7 @@ var paths = {
         bootstrap + 'js/carousel.js',
         bootstrap + 'js/affix.js'
     ],
+    js_per_page: larapress + 'js/pages/**/*.js',
     fallback: [html5shiv, respond],
     fonts: [bootstrap + 'fonts/*']
 };
@@ -68,6 +69,14 @@ gulp.task('js', function() {
         .pipe(gulp.dest(destination + 'js'));
 });
 
+gulp.task('js-per-page', function() {
+    return gulp.src(paths.js_per_page)
+        .pipe(js_min())
+        .pipe(gulp.dest(destination + 'js/pages'))
+        .pipe(gzip({threshold: true, gzipOptions: {level: 9}}))
+        .pipe(gulp.dest(destination + 'js/pages'));
+});
+
 gulp.task('fallback', function() {
     return gulp.src(paths.fallback)
         .pipe(concat('fallback.js'))
@@ -87,6 +96,7 @@ gulp.task('watch', function() {
     gulp.watch(larapress + 'less/app/**/*.less', ['less']);
     gulp.watch(paths.less_per_page, ['less-per-page']);
     gulp.watch(paths.js, ['js']);
+    gulp.watch(paths.js_per_page, ['js-per-page']);
     gulp.watch(paths.fallback, ['fallback']);
     gulp.watch(paths.fonts, ['fonts']);
 });
@@ -96,6 +106,7 @@ gulp.task('default',
         'less',
         'less-per-page',
         'js',
+        'js-per-page',
         'fallback',
         'fonts'
     ]

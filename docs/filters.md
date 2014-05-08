@@ -30,12 +30,20 @@ There are comments, study them ;-)
 > As you can see it's already disabled because you're looking at the production configuration file.  
 > If you still want to disable this have a look at `app/config/local/larapress.php`.
 
+## Special larapress Filters
+
+Use these filters for any routes you could need them for.     
+
+__Anyways:__    
+You better don't touch this stuff unless you find a bug.    
+You can easily leverage the complete security arrangement here.
+
 ## Filters for the larapress backend
 
-You better don't touch this stuff unless you find a bug.
+You better don't touch this stuff unless you find a bug.    
 You can easily leverage the complete security arrangement here.
 
 ## Pattern Filters for the larapress backend
 
-You better don't touch this stuff unless you find a bug.
+You better don't touch this stuff unless you find a bug.    
 You can easily leverage the complete security arrangement here.

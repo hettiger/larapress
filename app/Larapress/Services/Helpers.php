@@ -1,5 +1,6 @@
 <?php namespace Larapress\Services;
 
+use BadMethodCallException;
 use Config;
 use DB;
 use Lang;
@@ -9,6 +10,7 @@ use Log;
 use Redirect;
 use Request;
 use Response;
+use Mockably as MockablyService;
 use Session;
 use View;
 
@@ -28,18 +30,33 @@ class Helpers implements HelpersInterface
     }
 
     /**
-     * Get the time it took to create the response in ms
+     * Get the time difference of a time record compared to the present
      *
-     * @return float Returns the time in ms
+     * @param float $time_record A record of microtime(true) in the past
+     * @param string $unit Can be either 'ms', 's' or 'm' (milliseconds, seconds, minutes)
+     * @return int Returns the time difference in the given unit
+     * @throws BadMethodCallException
      */
-    protected function responseCreationTime()
+    public function getCurrentTimeDifference($time_record, $unit = 'm')
     {
-        $starting_time = Session::get('start.time');
-        $current_time = microtime(true);
+        $current_time = MockablyService::microtime();
 
-        $creation_time = round(($current_time - $starting_time) * 1000, 2);
+        switch ( $unit )
+        {
+            case 'ms':
+                $difference = round(($current_time - $time_record) * 1000);
+                break;
+            case 's':
+                $difference = round($current_time - $time_record);
+                break;
+            case 'm':
+                $difference = floor(round(($current_time - $time_record)) / 60);
+                break;
+            default:
+                throw new BadMethodCallException;
+        }
 
-        return $creation_time;
+        return (int) $difference;
     }
 
     /**
@@ -53,7 +70,8 @@ class Helpers implements HelpersInterface
             PHP_EOL . 'Performance Statistics:' . PHP_EOL .
             'Current Route: ' . Request::getRequestUri()
             . PHP_EOL .
-            'Time to create the Response: ' . $this->responseCreationTime() . ' ms'
+            'Time to create the Response: '
+            . $this->getCurrentTimeDifference(Session::get('start.time'), 'ms') . ' ms'
             . PHP_EOL .
             'Total performed DB Queries: ' . count(DB::getQueryLog())
             . PHP_EOL

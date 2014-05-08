@@ -1,10 +1,12 @@
 <?php namespace Larapress\Tests\Services;
 
+use BadMethodCallException;
 use Config;
 use DB;
 use Helpers;
 use Lang;
 use Log;
+use Mockably;
 use Mockery;
 use Larapress\Tests\TestCase;
 use Redirect;
@@ -30,6 +32,73 @@ class HelpersTest extends TestCase
         View::shouldReceive('share')->with('title', 'foo | bar')->once();
 
         Helpers::setPageTitle('bar');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Helpers::getCurrentTimeDifference() Tests
+    |--------------------------------------------------------------------------
+    |
+    | Here is where you can test the Helpers::getCurrentTimeDifference() method
+    |
+    */
+
+    public function test_can_return_the_current_time_difference_in_minutes_per_default()
+    {
+        Mockably::shouldReceive('microtime')->once()->andReturn(60.00);
+
+        $e = 1;
+        $a = Helpers::getCurrentTimeDifference(0.00);
+
+        $this->assertEquals($e, $a);
+    }
+
+    public function test_can_return_the_current_time_difference_in_minutes_on_parameter()
+    {
+        Mockably::shouldReceive('microtime')->once()->andReturn(60.00);
+
+        $e = 1;
+        $a = Helpers::getCurrentTimeDifference(0.00, 'm');
+
+        $this->assertEquals($e, $a);
+    }
+
+    public function test_can_round_minutes_correctly()
+    {
+        Mockably::shouldReceive('microtime')->once()->andReturn(100.00);
+
+        $e = 1;
+        $a = Helpers::getCurrentTimeDifference(0.00, 'm');
+
+        $this->assertEquals($e, $a);
+    }
+
+    public function test_can_return_the_current_time_difference_in_seconds_on_parameter()
+    {
+        Mockably::shouldReceive('microtime')->once()->andReturn(60.00);
+
+        $e = 30;
+        $a = Helpers::getCurrentTimeDifference(30.00, 's');
+
+        $this->assertEquals($e, $a);
+    }
+
+    public function test_can_return_the_current_time_difference_in_milliseconds_on_parameter()
+    {
+        Mockably::shouldReceive('microtime')->once()->andReturn(60.00);
+
+        $e = 30000; // 1 second = 1000 milliseconds
+        $a = Helpers::getCurrentTimeDifference(30.00, 'ms');
+
+        $this->assertEquals($e, $a);
+    }
+
+    /**
+     * @expectedException BadMethodCallException
+     */
+    public function test_can_throw_a_bad_method_call_exception()
+    {
+        Helpers::getCurrentTimeDifference(microtime(true), 'foo');
     }
 
     /*

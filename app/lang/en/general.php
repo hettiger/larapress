@@ -12,4 +12,7 @@ return array(
 
     'Reset Password' => 'Reset Password',
 
+    'The control panel requires JavaScript support. Here are the <a href="http://www.enable-javascript.com/" target="_blank">instructions how to enable JavaScript in your web browser</a>.'
+        => 'The control panel requires JavaScript support. Here are the <a href="http://www.enable-javascript.com/" target="_blank">instructions how to enable JavaScript in your web browser</a>.',
+
 );

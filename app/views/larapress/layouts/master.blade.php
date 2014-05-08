@@ -18,6 +18,13 @@
 </head>
 <body>
 
+<noscript id="larapress-noscript">
+    {{ trans('general.The control panel requires JavaScript support. '
+    . 'Here are the '
+    . '<a href="http://www.enable-javascript.com/" target="_blank">'
+    . 'instructions how to enable JavaScript in your web browser</a>.') }}
+</noscript>
+
 @yield('body')
 
 {{-- Include all compiled plugins below (including jQuery) --}}

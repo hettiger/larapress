@@ -14,7 +14,7 @@
 App::before(function($request)
 {
     // Record the starting time for logging the application performance
-    Session::put('start.time', microtime(true));
+    Session::put('start.time', Mockably::microtime());
 
     // Get the Throttle Provider
     $throttleProvider = Sentry::getThrottleProvider();
@@ -99,6 +99,18 @@ Route::when('*', 'csrf', array('post', 'put', 'patch', 'delete'));
 
 /*
 |--------------------------------------------------------------------------
+| Special larapress Filters
+|--------------------------------------------------------------------------
+|
+| The following filters are developed for larapress but may be also useful
+| for your website. You can apply them to any route you'd like.
+|
+*/
+
+Route::filter('force.human', 'Larapress\Filters\Special\ForceHumanFilter');
+
+/*
+|--------------------------------------------------------------------------
 | Filters for the larapress backend
 |--------------------------------------------------------------------------
 |
@@ -108,30 +120,8 @@ Route::when('*', 'csrf', array('post', 'put', 'patch', 'delete'));
 |
 */
 
-Route::filter('access.backend', function()
-{
-    try
-    {
-        Permission::has('access.backend');
-    }
-    catch (\Larapress\Exceptions\PermissionMissingException $e)
-    {
-        Session::flash('error', $e->getMessage());
-        return Redirect::route('larapress.home.login.get');
-    }
-
-    return null; // User has access
-});
-
-Route::filter('force.ssl', function()
-{
-    if ( Config::get('larapress.settings.ssl') )
-    {
-        return Helpers::forceSSL();
-    }
-
-    return null; // SSL is not enabled
-});
+Route::filter('access.backend', 'Larapress\Filters\Backend\AccessBackendFilter');
+Route::filter('force.ssl', 'Larapress\Filters\Backend\ForceSSLFilter');
 
 /*
 |--------------------------------------------------------------------------
@@ -145,4 +135,5 @@ Route::filter('force.ssl', function()
 $backend_url = Config::get('larapress.urls.backend');
 
 Route::when($backend_url . '/cp*', 'access.backend');
+Route::when($backend_url . '/reset-password', 'force.human', array('post'));
 Route::when($backend_url . '*', 'force.ssl');
