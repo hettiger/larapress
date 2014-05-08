@@ -14,7 +14,7 @@
 App::before(function($request)
 {
     // Record the starting time for logging the application performance
-    Session::put('start.time', microtime(true));
+    Session::put('start.time', Mockably::microtime());
 
     // Get the Throttle Provider
     $throttleProvider = Sentry::getThrottleProvider();
@@ -99,6 +99,27 @@ Route::when('*', 'csrf', array('post', 'put', 'patch', 'delete'));
 
 /*
 |--------------------------------------------------------------------------
+| Special larapress Filters
+|--------------------------------------------------------------------------
+|
+| The following filters are developed for larapress but may be also useful
+| for your website. You can apply them to any route you'd like.
+|
+*/
+
+Route::filter('force.human', function()
+{
+    if ( Captcha::isRequired() )
+    {
+        Session::flash('error', 'Please verify that you are human first.');
+        return Redirect::back();
+    }
+
+    return null; // Captcha is not required, proceed
+});
+
+/*
+|--------------------------------------------------------------------------
 | Filters for the larapress backend
 |--------------------------------------------------------------------------
 |
@@ -145,4 +166,5 @@ Route::filter('force.ssl', function()
 $backend_url = Config::get('larapress.urls.backend');
 
 Route::when($backend_url . '/cp*', 'access.backend');
+Route::when($backend_url . '/reset-password', 'force.human', array('post'));
 Route::when($backend_url . '*', 'force.ssl');

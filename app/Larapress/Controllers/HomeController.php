@@ -1,5 +1,6 @@
 <?php namespace Larapress\Controllers;
 
+use Captcha;
 use Cartalyst\Sentry\Throttling\UserBannedException;
 use Cartalyst\Sentry\Throttling\UserSuspendedException;
 use Cartalyst\Sentry\Users\LoginRequiredException;
@@ -148,6 +149,7 @@ class HomeController extends BaseController
     public function getResetPassword()
     {
         Helpers::setPageTitle('Reset Password');
+        Captcha::shareDataToViews();
 
         return View::make('larapress.pages.home.reset-password');
     }

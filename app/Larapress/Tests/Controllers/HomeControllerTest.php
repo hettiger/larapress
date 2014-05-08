@@ -1,5 +1,6 @@
 <?php namespace Larapress\Tests\Controllers;
 
+use Captcha;
 use Config;
 use Helpers;
 use Larapress\Tests\TestCase;
@@ -216,6 +217,9 @@ class HomeControllerTest extends TestCase
 
     public function test_can_browse_the_get_reset_password_route()
     {
+        Captcha::shouldReceive('shareDataToViews')->once();
+        Captcha::shouldReceive('isRequired')->once();
+
         $this->route('GET', 'larapress.home.reset.password.get');
 
         $this->assertResponseOk();

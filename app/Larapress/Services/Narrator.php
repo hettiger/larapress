@@ -70,7 +70,7 @@ class Narrator implements NarratorInterface
      * @param Input|null $input Passing Input::all() can be omitted
      * @throws UserNotFoundException Throws a UserNotFoundException if Sentry cannot find the given user.
      * @throws MailException Throws an exception containing further information as message
-     * @return bool Returns true on success
+     * @return void
      */
     public function resetPassword($input = null)
     {

@@ -17,6 +17,14 @@ return array(
 
         'ssl' => false, // Force to use https:// requests in the backend
 
+        'captcha' => array(
+
+            'active' => true, // Decide if you want to use the captcha
+
+            'timer' => 10, // Minutes until a passed captcha expires
+
+        ),
+
     ),
 
     'email' => array(

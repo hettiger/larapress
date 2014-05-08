@@ -13,7 +13,7 @@
 
 Route::get('/', function()
 {
-	return View::make('hello');
+    return View::make('hello');
 });
 
 /*
@@ -33,6 +33,12 @@ Route::group(
         'prefix' => Config::get('larapress.urls.backend')
     ),
     function () {
+
+        Route::group(array('namespace' => 'Api', 'prefix' => 'api'), function() {
+            Route::controller('/captcha', 'CaptchaController', array(
+                'postValidate' => 'larapress.api.captcha.validate.post',
+            ));
+        });
 
         Route::group(array('prefix' => 'cp'), function() {
             Route::controller('/', 'ControlPanelController', array(

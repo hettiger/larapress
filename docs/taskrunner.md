@@ -35,6 +35,7 @@ There are several commands you can currently run from the command line:
 * `gulp less`
 * `gulp less-per-page`
 * `gulp js`
+* `gulp js-per-page`
 * `gulp fallback`
 * `gulp fonts`
 

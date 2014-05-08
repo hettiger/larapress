@@ -37,10 +37,10 @@ class BaseControllerTest extends TestCase
 
     /*
     |--------------------------------------------------------------------------
-    | ControlPanelController@missingMethod Tests
+    | BaseController@missingMethod Tests
     |--------------------------------------------------------------------------
     |
-    | Here is where you can test the ControlPanelController@missingMethod method
+    | Here is where you can test the BaseController@missingMethod method
     |
     */
 
