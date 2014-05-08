@@ -24,6 +24,7 @@ Following features are already available, tested and documented:
 3. Login
 4. Logout
 5. Reset a lost password
+6. Reusable ajax captcha
 
 __And there's so much more to come__ [...] I hope for some discussions with you guys! (e.g. via github issues)
 
