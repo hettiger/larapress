@@ -1,9 +1,21 @@
-#wrapper {
+@import "../../../../components/bootstrap/less/variables";
 
-    margin-top: 6em;
+body {
+    background-color: #eeeeee;
+}
+
+.jumbotron {
+    text-align: center;
+}
+
+@media (min-width: @screen-sm-min) {
+
+    body {
+        background-color: #ffffff;
+    }
 
     .jumbotron {
-        border-radius: 6px;
+        margin-top: 6em;
     }
 
 }
