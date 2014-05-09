@@ -13,28 +13,13 @@
 
 App::before(function($request)
 {
-    // Record the starting time for logging the application performance
-    Session::put('start.time', Mockably::microtime());
-
-    // Get the Throttle Provider
-    $throttleProvider = Sentry::getThrottleProvider();
-
-    // Enable the Throttling Feature
-    $throttleProvider->enable();
-
-    // Custom additions go below here
+    //
 });
 
 
 App::after(function($request, $response)
 {
-    // Custom additions go below here
-
-    // Write performance related statistics into the log file
-    if ( Config::get('larapress.settings.log') )
-    {
-        Helpers::logPerformance();
-    }
+    //
 });
 
 /*
@@ -96,44 +81,3 @@ Route::filter('csrf', function()
 
 // Apply the csrf filter to all POST, PUT, PATCH and DELETE requests
 Route::when('*', 'csrf', array('post', 'put', 'patch', 'delete'));
-
-/*
-|--------------------------------------------------------------------------
-| Special larapress Filters
-|--------------------------------------------------------------------------
-|
-| The following filters are developed for larapress but may be also useful
-| for your website. You can apply them to any route you'd like.
-|
-*/
-
-Route::filter('force.human', 'Larapress\Filters\Special\ForceHumanFilter');
-
-/*
-|--------------------------------------------------------------------------
-| Filters for the larapress backend
-|--------------------------------------------------------------------------
-|
-| The following filters are used to verify that the user of the current
-| session is logged into this application and has the required permissions
-| for several tasks.
-|
-*/
-
-Route::filter('access.backend', 'Larapress\Filters\Backend\AccessBackendFilter');
-Route::filter('force.ssl', 'Larapress\Filters\Backend\ForceSSLFilter');
-
-/*
-|--------------------------------------------------------------------------
-| Pattern Filters for the larapress backend
-|--------------------------------------------------------------------------
-|
-| The following filters are used to define when to use larapress's filters.
-|
-*/
-
-$backend_url = Config::get('larapress.urls.backend');
-
-Route::when($backend_url . '/cp*', 'access.backend');
-Route::when($backend_url . '/reset-password', 'force.human', array('post'));
-Route::when($backend_url . '*', 'force.ssl');

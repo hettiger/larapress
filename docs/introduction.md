@@ -13,8 +13,8 @@ Here's a list for you where we made changes to the default laravel installation:
 * app/lang/*/messages.php
 * app/start/artisan.php
 * app/views/larapress/*
-* app/filters.php
 * app/start/global.php
+* app/filters.php
 * bootstrap/start.php
 * docs/*
 * public/larapress/*
