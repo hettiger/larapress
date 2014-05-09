@@ -14,7 +14,7 @@ Here's a list for you where we made changes to the default laravel installation:
 * app/start/artisan.php
 * app/views/larapress/*
 * app/filters.php
-* app/routes.php
+* app/start/global.php
 * bootstrap/start.php
 * docs/*
 * public/larapress/*

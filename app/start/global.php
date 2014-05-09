@@ -79,3 +79,16 @@ App::down(function()
 */
 
 require app_path().'/filters.php';
+
+/*
+|--------------------------------------------------------------------------
+| Require The Larapress Start File
+|--------------------------------------------------------------------------
+|
+| In order to keep larapress completely isolated from your application
+| we require an extra start file here. This allows you updating larapress
+| with no worries about breaking your code.
+|
+*/
+
+require app_path().'/Larapress/start.php';
