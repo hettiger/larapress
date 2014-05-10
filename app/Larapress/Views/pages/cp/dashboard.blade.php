@@ -1,4 +1,4 @@
-@extends('larapress.layouts.default')
+@extends('larapress::layouts.default')
 
 @section('content')
     <center>

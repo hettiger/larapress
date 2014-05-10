@@ -1,7 +1,7 @@
-@extends('larapress.layouts.login')
+@extends('larapress::layouts.login')
 
 @section('content')
-    @include('larapress.partials.captcha')
+    @include('larapress::partials.captcha')
 
     {{ Form::open() }}
         <div class="form-group">

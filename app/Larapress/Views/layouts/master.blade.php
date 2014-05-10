@@ -9,7 +9,7 @@
     {{-- Bootstrap --}}
     {{ HTML::style('larapress/assets/css/larapress.css') }}
 
-    @include('larapress.partials.head')
+    @include('larapress::partials.head')
 
     {{-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries --}}
     <!--[if lt IE 9]>

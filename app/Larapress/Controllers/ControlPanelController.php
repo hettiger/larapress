@@ -17,7 +17,7 @@ class ControlPanelController extends BaseController
     {
         Helpers::setPageTitle('Dashboard');
 
-        return View::make('larapress.pages.cp.dashboard');
+        return View::make('larapress::pages.cp.dashboard');
     }
 
 }

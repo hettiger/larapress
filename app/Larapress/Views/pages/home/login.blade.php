@@ -1,4 +1,4 @@
-@extends('larapress.layouts.login')
+@extends('larapress::layouts.login')
 
 @section('content')
     {{ Form::open() }}

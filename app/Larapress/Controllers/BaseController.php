@@ -31,7 +31,7 @@ class BaseController extends Controller
     {
         Helpers::setPageTitle('404 Error');
 
-        return Response::view('larapress.errors.404', array(), 404);
+        return Response::view('larapress::errors.404', array(), 404);
     }
 
 }

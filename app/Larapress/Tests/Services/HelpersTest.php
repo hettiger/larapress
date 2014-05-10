@@ -160,7 +160,7 @@ class HelpersTest extends TestCase
         $result = Helpers::force404();
 
         $this->assertInstanceOf('Illuminate\Http\Response', $result);
-        $this->assertAttributeContains('larapress.errors.404', 'view', $result->getOriginalContent());
+        $this->assertAttributeContains('larapress::errors.404', 'view', $result->getOriginalContent());
     }
 
 }

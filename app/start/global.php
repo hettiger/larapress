@@ -92,3 +92,17 @@ require app_path().'/filters.php';
 */
 
 require app_path().'/Larapress/start.php';
+
+/*
+|--------------------------------------------------------------------------
+| Require The Larapress Views
+|--------------------------------------------------------------------------
+|
+| In order to keep larapress completely isolated from your application we
+| are using our own namespaced views directory. This also comes in handy
+| if you want to apply your own theme to larapress. (You could just
+| duplicate app/Larapress/Views/* and change the directory below)
+|
+*/
+
+View::addNamespace('larapress', __DIR__ . '/../Larapress/Views');

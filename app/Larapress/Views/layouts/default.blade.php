@@ -1,4 +1,4 @@
-@extends('larapress.layouts.master')
+@extends('larapress::layouts.master')
 
 @section('body')
     @yield('content')

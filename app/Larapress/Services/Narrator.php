@@ -91,7 +91,7 @@ class Narrator implements NarratorInterface
             'url' => route('larapress.home.send.new.password.get', array($user['id'], $reset_code)),
         );
 
-        $view = array('text' => 'larapress.emails.reset-password');
+        $view = array('text' => 'larapress::emails.reset-password');
 
         $mail_error_message = 'Sending the email containing the reset key failed. ' .
             'Please try again later or contact the administrator.';
@@ -164,7 +164,7 @@ class Narrator implements NarratorInterface
             'new_password' => $this->attemptToReset($id, $reset_code),
         );
 
-        $view = array('text' => 'larapress.emails.new-password');
+        $view = array('text' => 'larapress::emails.new-password');
 
         $mail_error_message = 'Sending the email containing the new password failed. ' .
             'Please try again later or contact the administrator.';

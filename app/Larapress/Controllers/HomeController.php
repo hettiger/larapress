@@ -57,7 +57,7 @@ class HomeController extends BaseController
     {
         Helpers::setPageTitle('Login');
 
-        return View::make('larapress.pages.home.login');
+        return View::make('larapress::pages.home.login');
     }
 
     /**
@@ -151,7 +151,7 @@ class HomeController extends BaseController
         Helpers::setPageTitle('Reset Password');
         Captcha::shareDataToViews();
 
-        return View::make('larapress.pages.home.reset-password');
+        return View::make('larapress::pages.home.reset-password');
     }
 
     /**

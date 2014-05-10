@@ -1,4 +1,4 @@
-@extends('larapress.layouts.default')
+@extends('larapress::layouts.default')
 
 @section('head.extension')
     {{ HTML::style('larapress/assets/css/pages/errors/404.css') }}

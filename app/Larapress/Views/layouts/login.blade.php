@@ -1,4 +1,4 @@
-@extends('larapress.layouts.master')
+@extends('larapress::layouts.master')
 
 @section('head.extension')
     {{ HTML::style('larapress/assets/css/pages/home/login.css') }}
