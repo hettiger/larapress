@@ -84,7 +84,7 @@ class Narrator implements NarratorInterface
             'name' => $user['first_name'] . ' ' . $user['last_name'],
         );
 
-        $subject = $cms_name . ' | ' . Lang::get('email.Password Reset!');
+        $subject = $cms_name . ' | ' . Lang::get('larapress::email.Password Reset!');
 
         $data = array(
             'cms_name' => $cms_name,
@@ -158,7 +158,7 @@ class Narrator implements NarratorInterface
             'name' => $user['first_name'] . ' ' . $user['last_name'],
         );
 
-        $subject = Config::get('larapress.names.cms') . ' | ' . Lang::get('email.Password Reset!');
+        $subject = Config::get('larapress.names.cms') . ' | ' . Lang::get('larapress::email.Password Reset!');
 
         $data = array(
             'new_password' => $this->attemptToReset($id, $reset_code),

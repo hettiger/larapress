@@ -70,8 +70,8 @@ the next step of this guide. Here's a example of how that could be accomplished:
 
 @if ( Session::has('error') )
     <div class="alert alert-danger">
-        <strong>@lang('messages.Error')!</strong>
-        @lang('messages.' . Session::get('error'))
+        <strong>@lang('larapress::messages.Error')!</strong>
+        @lang('larapress::messages.' . Session::get('error'))
     </div>
 @endif
 ```

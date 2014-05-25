@@ -6,10 +6,10 @@
 
 @section('content')
     <div class="jumbotron">
-        <h1>@lang('general.404 Error')</h1>
-        <p>@lang('general.This page does not exist.')</p>
+        <h1>@lang('larapress::general.404 Error')</h1>
+        <p>@lang('larapress::general.This page does not exist.')</p>
         <p>
-            {{ HTML::link('/', trans('general.Homepage'), array(
+            {{ HTML::link('/', trans('larapress::general.Homepage'), array(
                 'class' => 'btn btn-primary btn-lg',
                 'role'  => 'button'
             )) }}

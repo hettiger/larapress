@@ -95,7 +95,7 @@ require app_path().'/Larapress/start.php';
 
 /*
 |--------------------------------------------------------------------------
-| Require The Larapress Views
+| Namespace The Larapress Views
 |--------------------------------------------------------------------------
 |
 | In order to keep larapress completely isolated from your application we
@@ -106,3 +106,17 @@ require app_path().'/Larapress/start.php';
 */
 
 View::addNamespace('larapress', __DIR__ . '/../Larapress/Views');
+
+/*
+|--------------------------------------------------------------------------
+| Namespace The Larapress Lang Files
+|--------------------------------------------------------------------------
+|
+| In order to keep larapress completely isolated from your application we
+| are using our own namespaced lang directory. This also comes in handy
+| if you want to apply your own translations to larapress. (You could just
+| duplicate app/Larapress/Lang/* and change the directory below)
+|
+*/
+
+Lang::addNamespace('larapress', __DIR__ . '/../Larapress/Lang');

@@ -15,15 +15,15 @@
             @if ( Session::has('error') )
                 <div class="alert alert-danger alert-dismissable fade in">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                    <strong>@lang('messages.Error')!</strong>
-                    @lang('messages.' . Session::get('error'))
+                    <strong>@lang('larapress::messages.Error')!</strong>
+                    @lang('larapress::messages.' . Session::get('error'))
                 </div>
             @endif
             @if ( Session::has('success') )
                 <div class="alert alert-success alert-dismissable fade in">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                    <strong>@lang('messages.Success')!</strong>
-                    @lang('messages.' . Session::get('success'))
+                    <strong>@lang('larapress::messages.Success')!</strong>
+                    @lang('larapress::messages.' . Session::get('success'))
                 </div>
             @endif
 

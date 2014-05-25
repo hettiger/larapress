@@ -1,12 +1,12 @@
-@lang('email.Hello!')
+@lang('larapress::email.Hello!')
 
 
-@lang('email.Below we\'ve got the new password for you:')
+@lang('larapress::email.Below we\'ve got the new password for you:')
 
 
 {{ $new_password }}
 
 
-@lang('email.Please consider changing it in the control panel as sending passwords via email is a potential security flaw.')
+@lang('larapress::email.Please consider changing it in the control panel as sending passwords via email is a potential security flaw.')
 
-@lang('email.Have a nice day!')
+@lang('larapress::email.Have a nice day!')

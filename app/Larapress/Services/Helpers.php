@@ -25,7 +25,7 @@ class Helpers implements HelpersInterface
      */
     public function setPageTitle($page_name)
     {
-        $title = Config::get('larapress.names.cms') . ' | ' . Lang::get('general.' . $page_name);
+        $title = Config::get('larapress.names.cms') . ' | ' . Lang::get('larapress::general.' . $page_name);
         View::share('title', $title);
     }
 

@@ -28,7 +28,7 @@ class HelpersTest extends TestCase
     public function test_can_set_page_title()
     {
         Config::shouldReceive('get')->with('larapress.names.cms')->once()->andReturn('foo')->shouldReceive('offsetGet');
-        Lang::shouldReceive('get')->with('general.bar')->once()->andReturn('bar');
+        Lang::shouldReceive('get')->with('larapress::general.bar')->once()->andReturn('bar');
         View::shouldReceive('share')->with('title', 'foo | bar')->once();
 
         Helpers::setPageTitle('bar');
