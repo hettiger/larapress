@@ -1,0 +1,26 @@
+filter:
+    excluded_paths: [
+        vendor/*,
+        app/tests/*,
+        app/Larapress/Tests/*,
+        app/assets/*,
+        docs/*,
+        _ide_helper.php,
+        app/start/*,
+        app/filters.php,
+        bootstrap/*
+    ]
+
+tools:
+    # Similar Code Detector
+    php_sim: true
+
+    # Metrics
+    php_pdepend: true
+
+    # Some Metrics + Bug Detection/Auto-Fixes
+    php_analyzer: true
+
+    # External Code Coverage
+    external_code_coverage:
+        timeout: 1000
