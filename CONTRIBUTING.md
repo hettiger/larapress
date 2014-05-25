@@ -16,8 +16,8 @@ Larapress is set to run in the production environment by default. To take contro
 
 1. Create a new file called `.env_name.php` in the app root
 2. Make it return the environment you want to apply for the cli as well as the browser
+3. Make sure you never commit this file. (It should be git ignored per default)
 
-Example:
 ```php
 <?php
 
