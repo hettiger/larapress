@@ -30,3 +30,5 @@ As you've seen we've introduced a second tests directory.
 To run our tests you'll need to use our configuration:
 
 `larapress.phpunit.xml`
+
+Have a look at `docs/taskrunner.md` as you can use the taskrunner for running tests to make things easier.
