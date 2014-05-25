@@ -10,3 +10,4 @@ Thumbs.db
 _ide_helper.php
 node_modules
 app/assets/components
+.env_name.php

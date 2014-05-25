@@ -27,7 +27,11 @@ $app = new Illuminate\Foundation\Application;
 $env = $app->detectEnvironment(
     function () {
 
-        return getenv('APP_ENV') ? : 'production';
+        if ( file_exists(__DIR__ . '/../.env_name.php') ) {
+            return require_once __DIR__ . '/../.env_name.php';
+        } else {
+            return 'production';
+        }
 
     }
 );
