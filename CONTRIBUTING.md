@@ -7,20 +7,26 @@ Clone this repository and setup your development environment configuration:
 1. Duplicate the file `.env.example.php` and name it `.env.local.php`
 2. Apply your configuration
 3. Make sure you never commit this file. (It should be git ignored per default)
-4. If you want to use MySQL you'll also need to change the default database connection in `app/config/local/database.php`
 
 __Important: Have a look at the docs directory. Else you'll be missing some important instructions like for our [taskrunner](docs/taskrunner.md).__
 
 ### Set the environment to local
 
-Currently the app is configured to use either the variable `$_ENV['APP_ENV']` to set the environment or fall back to `production`. To make it short: The whole Application runs in the `production` environment if you don't apply the following changes.
+Larapress is set to run in the production environment by default. To take control over the environment you can do the following:
 
-- For Apache: Use `SetEnv APP_ENV local` in your vhost configuration or `.htaccess` file.
-- For nginx with php-fpm: Use `env[APP_ENV] = local` in the `php-fpm.conf` file. (Usually located at `/etc/php5/fpm/php-fpm.conf`)
-- For nginx with php-cgi: Use `fastcgi_param APP_ENV local;` in your site configuration. (Context: location)
-- Run `export APP_ENV="local"` in the command line to temporarily set the environment or add it to your `~/.bash_profile` for a permanent setup.
+1. Create a new file called `.env_name.php` in the app root
+2. Make it return the environment you want to apply for the cli as well as the browser
 
-If you set the environment in the command line you could run into trouble trying to install the production version on your system. You can always check the currently set environment using `echo $APP_ENV` in the command line. Even if you've set a permanent environment in your `~/.bash_profile` you could just temporarily change it running `export APP_ENV="production"` for example.
+Example:
+```php
+<?php
+
+// This is the complete content of the .env_name.php file
+
+return 'local';
+```
+
+The example above will obviously change the environment to local. (which is the default development environment we use)
 
 ### Run following code in your command line:
 
