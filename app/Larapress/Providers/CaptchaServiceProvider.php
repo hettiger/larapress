@@ -2,6 +2,7 @@
 
 use Illuminate\Support\ServiceProvider;
 use Larapress\Services\Captcha;
+use Larapress\Services\Helpers;
 
 class CaptchaServiceProvider extends ServiceProvider {
 
@@ -14,7 +15,12 @@ class CaptchaServiceProvider extends ServiceProvider {
     {
         $this->app->bind('captcha', function()
         {
-            return new Captcha;
+            return new Captcha(
+                $this->app->make('view'),
+                $this->app->make('config'),
+                $this->app->make('session'),
+                new Helpers
+            );
         });
     }
 
