@@ -180,9 +180,10 @@ class HelpersTest extends PHPUnit_Framework_TestCase
      */
     public function test_can_throw_a_bad_method_call_exception()
     {
+        $this->mockably->shouldReceive('microtime')->once();
         $helpers = $this->getHelpersInstance();
 
-        $helpers->getCurrentTimeDifference(microtime(true), 'foo');
+        $helpers->getCurrentTimeDifference(microtime(true), 'default');
     }
 
     /*
