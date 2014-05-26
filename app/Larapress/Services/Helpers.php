@@ -1,21 +1,98 @@
 <?php namespace Larapress\Services;
 
+use Illuminate\Config\Repository as Config;
+use Illuminate\Translation\Translator as Lang;
+use Illuminate\View\Environment as View;
+use Monolog\Logger as Log;
+use Illuminate\Http\Request;
+use Illuminate\Session\Store as Session;
+use Illuminate\Database\Connection as DB;
+use Illuminate\Routing\Redirector as Redirect;
 use BadMethodCallException;
-use Config;
-use DB;
-use Lang;
 use Larapress\Controllers\BaseController;
 use Larapress\Interfaces\HelpersInterface;
-use Log;
-use Redirect;
-use Request;
 use Response;
-use Mockably as MockablyService;
-use Session;
-use View;
 
 class Helpers implements HelpersInterface
 {
+
+    /**
+     * @var \Illuminate\Config\Repository
+     */
+    private $config;
+
+    /**
+     * @var \Illuminate\Translation\Translator
+     */
+    private $lang;
+
+    /**
+     * @var \Illuminate\View\Environment
+     */
+    private $view;
+
+    /**
+     * @var Mockably
+     */
+    private $mockably;
+
+    /**
+     * @var \Monolog\Logger
+     */
+    private $log;
+
+    /**
+     * @var \Illuminate\Http\Request
+     */
+    private $request;
+
+    /**
+     * @var \Illuminate\Session\Store
+     */
+    private $session;
+
+    /**
+     * @var \Illuminate\Database\Connection
+     */
+    private $db;
+
+    /**
+     * @var \Illuminate\Routing\Redirector
+     */
+    private $redirect;
+
+    /**
+     * @param \Illuminate\Config\Repository $config
+     * @param \Illuminate\Translation\Translator $lang
+     * @param \Illuminate\View\Environment $view
+     * @param Mockably $mockably
+     * @param \Monolog\Logger $log
+     * @param \Illuminate\Http\Request $request
+     * @param \Illuminate\Session\Store $session
+     * @param \Illuminate\Database\Connection $db
+     * @param \Illuminate\Routing\Redirector $redirect
+     */
+    public function __construct(
+        Config $config,
+        Lang $lang,
+        View $view,
+        Mockably $mockably,
+        Log $log,
+        Request $request,
+        Session $session,
+        DB $db,
+        Redirect $redirect
+    ) {
+        $this->config = $config;
+        $this->lang = $lang;
+        $this->view = $view;
+        $this->mockably = $mockably;
+        $this->log = $log;
+        $this->request = $request;
+        $this->session = $session;
+        $this->db = $db;
+        $this->redirect = $redirect;
+    }
 
     /**
      * Sets the page title (Shares the title variable for the view)
@@ -25,8 +102,10 @@ class Helpers implements HelpersInterface
      */
     public function setPageTitle($page_name)
     {
-        $title = Config::get('larapress.names.cms') . ' | ' . Lang::get('larapress::general.' . $page_name);
-        View::share('title', $title);
+        $title = $this->config->get('larapress.names.cms') . ' | '
+            . $this->lang->get('larapress::general.' . $page_name);
+
+        $this->view->share('title', $title);
     }
 
     /**
@@ -39,7 +118,7 @@ class Helpers implements HelpersInterface
      */
     public function getCurrentTimeDifference($time_record, $unit = 'm')
     {
-        $current_time = MockablyService::microtime();
+        $current_time = $this->mockably->microtime();
 
         switch ( $unit )
         {
@@ -66,14 +145,14 @@ class Helpers implements HelpersInterface
      */
     public function logPerformance()
     {
-        Log::info(
+        $this->log->info(
             PHP_EOL . 'Performance Statistics:' . PHP_EOL .
-            'Current Route: ' . Request::getRequestUri()
+            'Current Route: ' . $this->request->getRequestUri()
             . PHP_EOL .
             'Time to create the Response: '
-            . $this->getCurrentTimeDifference(Session::get('start.time'), 'ms') . ' ms'
+            . $this->getCurrentTimeDifference($this->session->get('start.time'), 'ms') . ' ms'
             . PHP_EOL .
-            'Total performed DB Queries: ' . count(DB::getQueryLog())
+            'Total performed DB Queries: ' . count($this->db->getQueryLog())
             . PHP_EOL
         );
     }
@@ -85,9 +164,9 @@ class Helpers implements HelpersInterface
      */
     public function forceSSL()
     {
-        if ( ! Request::secure() )
+        if ( ! $this->request->secure() )
         {
-            return Redirect::secure(Request::getRequestUri());
+            return $this->redirect->secure($this->request->getRequestUri());
         }
 
         return null; // The request is already secure

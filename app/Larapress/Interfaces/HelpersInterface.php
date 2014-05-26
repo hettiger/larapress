@@ -1,10 +1,41 @@
 <?php namespace Larapress\Interfaces;
 
+use Illuminate\Config\Repository as Config;
+use Illuminate\Translation\Translator as Lang;
+use Illuminate\View\Environment as View;
+use Monolog\Logger as Log;
+use Illuminate\Http\Request;
+use Illuminate\Session\Store as Session;
+use Illuminate\Database\Connection as DB;
+use Illuminate\Routing\Redirector as Redirect;
+use Larapress\Services\Mockably;
 use BadMethodCallException;
-use Redirect;
 use Response;
 
 interface HelpersInterface {
+
+    /**
+     * @param \Illuminate\Config\Repository $config
+     * @param \Illuminate\Translation\Translator $lang
+     * @param \Illuminate\View\Environment $view
+     * @param Mockably $mockably
+     * @param \Monolog\Logger $log
+     * @param \Illuminate\Http\Request $request
+     * @param \Illuminate\Session\Store $session
+     * @param \Illuminate\Database\Connection $db
+     * @param \Illuminate\Routing\Redirector $redirect
+     */
+    public function __construct(
+        Config $config,
+        Lang $lang,
+        View $view,
+        Mockably $mockably,
+        Log $log,
+        Request $request,
+        Session $session,
+        DB $db,
+        Redirect $redirect
+    );
 
     /**
      * Sets the page title (Shares the title variable for the view)

@@ -13,14 +13,14 @@ class PermissionTest extends PHPUnit_Framework_TestCase
      */
     protected $sentry;
 
-    protected function setUp()
+    public function setUp()
     {
         parent::setUp();
 
         $this->sentry = Mockery::mock('Cartalyst\Sentry\Sentry');
     }
 
-    protected function tearDown()
+    public function tearDown()
     {
         parent::tearDown();
 

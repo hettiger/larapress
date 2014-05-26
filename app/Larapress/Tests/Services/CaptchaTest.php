@@ -28,7 +28,7 @@ class CaptchaTest extends PHPUnit_Framework_TestCase
      */
     protected $helpers;
 
-    protected function setUp()
+    public function setUp()
     {
         parent::setUp();
 
@@ -38,7 +38,7 @@ class CaptchaTest extends PHPUnit_Framework_TestCase
         $this->helpers = Mockery::mock('Larapress\Services\Helpers');
     }
 
-    protected function tearDown()
+    public function tearDown()
     {
         parent::tearDown();
 

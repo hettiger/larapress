@@ -14,7 +14,19 @@ class HelpersServiceProvider extends ServiceProvider {
     {
         $this->app->bind('helpers', function()
         {
-            return new Helpers;
+            $defaultDbConnection = $this->app->make('db')->getDefaultConnection();
+
+            return new Helpers(
+                $this->app->make('config'),
+                $this->app->make('translator'),
+                $this->app->make('view'),
+                $this->app->make('mockably'),
+                $this->app->make('log')->getMonolog(),
+                $this->app->make('request'),
+                $this->app->make('session.store'),
+                $this->app->make('db')->connection($defaultDbConnection),
+                $this->app->make('redirect')
+            );
         });
     }
 
