@@ -87,11 +87,9 @@ class NarratorTest extends TestCase
         $view = array();
         $mail_error_message = '';
 
-        $self = $this;
-
-        Log::listen(function($level, $message, $context) use ($self)
+        Log::listen(function($level, $message, $context)
         {
-            $self->log_message = $message;
+            $this->log_message = $message;
         });
 
         Narrator::sendMail($to, $subject, $data, $view, $mail_error_message);
@@ -123,11 +121,9 @@ class NarratorTest extends TestCase
         Artisan::call('larapress:install');
         Input::merge(array('email' => 'admin@example.com'));
 
-        $self = $this;
-
-        Log::listen(function($level, $message, $context) use ($self)
+        Log::listen(function($level, $message, $context)
         {
-            $self->log_message = $message;
+            $this->log_message = $message;
         });
 
         Narrator::resetPassword();
@@ -170,11 +166,9 @@ class NarratorTest extends TestCase
         $user = Sentry::findUserById(1);
         $reset_code = $user->getResetPasswordCode();
 
-        $self = $this;
-
-        Log::listen(function($level, $message, $context) use ($self)
+        Log::listen(function($level, $message, $context)
         {
-            $self->log_message = $message;
+            $this->log_message = $message;
         });
 
         Narrator::sendNewPassword(1, $reset_code);

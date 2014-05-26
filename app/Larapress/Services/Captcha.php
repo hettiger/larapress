@@ -33,6 +33,8 @@ class Captcha implements CaptchaInterface
      * @param Config $config
      * @param Session $session
      * @param Helpers $helpers
+     * 
+     * @return void
      */
     public function __construct(View $view, Config $config, Session $session, Helpers $helpers)
     {
