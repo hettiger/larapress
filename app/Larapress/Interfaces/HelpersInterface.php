@@ -24,6 +24,8 @@ interface HelpersInterface {
      * @param \Illuminate\Session\Store $session
      * @param \Illuminate\Database\Connection $db
      * @param \Illuminate\Routing\Redirector $redirect
+     *
+     * @return void
      */
     public function __construct(
         Config $config,

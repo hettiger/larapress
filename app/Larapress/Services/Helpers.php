@@ -9,6 +9,7 @@ use Illuminate\Session\Store as Session;
 use Illuminate\Database\Connection as DB;
 use Illuminate\Routing\Redirector as Redirect;
 use BadMethodCallException;
+use Illuminate\Http\RedirectResponse;
 use Larapress\Controllers\BaseController;
 use Larapress\Interfaces\HelpersInterface;
 use Response;
@@ -71,6 +72,8 @@ class Helpers implements HelpersInterface
      * @param \Illuminate\Session\Store $session
      * @param \Illuminate\Database\Connection $db
      * @param \Illuminate\Routing\Redirector $redirect
+     *
+     * @return void
      */
     public function __construct(
         Config $config,
@@ -160,7 +163,7 @@ class Helpers implements HelpersInterface
     /**
      * Force to use https:// requests
      *
-     * @return null|Redirect Redirects to the https:// protocol if the current request is insecure
+     * @return null|RedirectResponse Redirects to the https:// protocol if the current request is insecure
      */
     public function forceSSL()
     {
