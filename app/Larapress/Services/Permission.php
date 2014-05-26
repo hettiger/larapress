@@ -2,10 +2,25 @@
 
 use Larapress\Exceptions\PermissionMissingException;
 use Larapress\Interfaces\PermissionInterface;
-use Sentry;
+use Cartalyst\Sentry\Sentry;
 
 class Permission implements PermissionInterface
 {
+
+    /**
+     * @var \Cartalyst\Sentry\Sentry
+     */
+    private $sentry;
+
+    /**
+     * @param Sentry $sentry
+     *
+     * @return void
+     */
+    public function __construct(Sentry $sentry)
+    {
+        $this->sentry = $sentry;
+    }
 
     /**
      * Check if a user is logged in and has the desired permissions
@@ -16,13 +31,13 @@ class Permission implements PermissionInterface
      */
     public function has($permission)
     {
-        if ( ! Sentry::check())
+        if ( ! $this->sentry->check())
         {
             throw new PermissionMissingException('User is not logged in.');
         }
         else
         {
-            $user = Sentry::getUser();
+            $user = $this->sentry->getUser();
 
             if ( ! $user->hasAccess($permission) )
             {

@@ -11,22 +11,22 @@ class Captcha implements CaptchaInterface
     /**
      * @var \Illuminate\View\Environment
      */
-    protected $view;
+    private $view;
 
     /**
      * @var \Illuminate\Config\Repository
      */
-    protected $config;
+    private $config;
 
     /**
      * @var \Illuminate\Session\Store
      */
-    protected $session;
+    private $session;
 
     /**
      * @var Helpers
      */
-    protected $helpers;
+    private $helpers;
 
     /**
      * @param View $view

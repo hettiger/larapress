@@ -1,12 +1,36 @@
 <?php namespace Larapress\Tests\Services;
 
-use Larapress\Tests\TestCase;
+use Larapress\Services\Permission;
 use Mockery;
-use Permission;
-use Sentry;
+use Mockery\Mock;
+use PHPUnit_Framework_TestCase;
 
-class PermissionTest extends TestCase
+class PermissionTest extends PHPUnit_Framework_TestCase
 {
+
+    /**
+     * @var Mock
+     */
+    protected $sentry;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->sentry = Mockery::mock('Cartalyst\Sentry\Sentry');
+    }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+
+        Mockery::close();
+    }
+
+    protected function getPermissionInstance()
+    {
+        return new Permission($this->sentry);
+    }
 
     /*
     |--------------------------------------------------------------------------
@@ -23,9 +47,10 @@ class PermissionTest extends TestCase
      */
     public function test_can_throw_an_exception_when_user_is_not_logged_in()
     {
-        Sentry::shouldReceive('check')->once()->andReturn(false);
+        $this->sentry->shouldReceive('check')->once()->andReturn(false);
+        $permission = $this->getPermissionInstance();
 
-        Permission::has('foo');
+        $permission->has('foo');
     }
 
     /**
@@ -34,26 +59,28 @@ class PermissionTest extends TestCase
      */
     public function test_can_throw_an_exception_when_user_is_missing_permissions()
     {
-        Sentry::shouldReceive('check')->once()->andReturn(true);
+        $this->sentry->shouldReceive('check')->once()->andReturn(true);
 
         $get_user_mock = Mockery::mock();
         $get_user_mock->shouldReceive('hasAccess')->once()->andReturn(false);
 
-        Sentry::shouldReceive('getUser')->once()->andReturn($get_user_mock);
+        $this->sentry->shouldReceive('getUser')->once()->andReturn($get_user_mock);
+        $permission = $this->getPermissionInstance();
 
-        Permission::has('foo');
+        $permission->has('foo');
     }
 
     public function test_can_return_true_if_user_is_logged_in_and_has_permissions()
     {
-        Sentry::shouldReceive('check')->once()->andReturn(true);
+        $this->sentry->shouldReceive('check')->once()->andReturn(true);
 
         $get_user_mock = Mockery::mock();
         $get_user_mock->shouldReceive('hasAccess')->once()->andReturn(true);
 
-        Sentry::shouldReceive('getUser')->once()->andReturn($get_user_mock);
+        $this->sentry->shouldReceive('getUser')->once()->andReturn($get_user_mock);
+        $permission = $this->getPermissionInstance();
 
-        $this->assertTrue(Permission::has('foo'));
+        $this->assertTrue($permission->has('foo'));
     }
 
 }

@@ -1,8 +1,16 @@
 <?php namespace Larapress\Interfaces;
 
 use Larapress\Exceptions\PermissionMissingException;
+use Cartalyst\Sentry\Sentry;
 
 interface PermissionInterface {
+
+    /**
+     * @param Sentry $sentry
+     *
+     * @return void
+     */
+    public function __construct(Sentry $sentry);
 
     /**
      * Check if a user is logged in and has the desired permissions
