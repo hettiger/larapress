@@ -16,9 +16,9 @@ class CaptchaServiceProvider extends ServiceProvider {
         $this->app->bind('captcha', function()
         {
             return new Captcha(
-                $this->app->make('view'),
-                $this->app->make('config'),
-                $this->app->make('session'),
+                $this->app['view'],
+                $this->app['config'],
+                $this->app['session.store'],
                 new Helpers
             );
         });

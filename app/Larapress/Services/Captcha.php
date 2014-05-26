@@ -1,7 +1,7 @@
 <?php namespace Larapress\Services;
 
 use Larapress\Interfaces\CaptchaInterface;
-use Illuminate\Session\SessionManager as Session;
+use Illuminate\Session\Store as Session;
 use Illuminate\View\Environment as View;
 use Illuminate\Config\Repository as Config;
 
@@ -28,6 +28,12 @@ class Captcha implements CaptchaInterface
      */
     protected $helpers;
 
+    /**
+     * @param View $view
+     * @param Config $config
+     * @param Session $session
+     * @param Helpers $helpers
+     */
     public function __construct(View $view, Config $config, Session $session, Helpers $helpers)
     {
         $this->view = $view;

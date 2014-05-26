@@ -34,7 +34,7 @@ class CaptchaTest extends PHPUnit_Framework_TestCase
 
         $this->view = Mockery::mock('Illuminate\View\Environment');
         $this->config = Mockery::mock('Illuminate\Config\Repository');
-        $this->session = Mockery::mock('Illuminate\Session\SessionManager');
+        $this->session = Mockery::mock('Illuminate\Session\Store');
         $this->helpers = Mockery::mock('Larapress\Services\Helpers');
     }
 
