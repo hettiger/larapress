@@ -8,20 +8,59 @@ use Larapress\Exceptions\PasswordResetFailedException;
 
 interface NarratorInterface {
 
+    public function __construct();
+
+    /**
+     * Data for the view/-s of your email
+     *
+     * @param array|object $data The data you want to pass to the view
+     */
+    public function setData($data);
+
+    /**
+     * The addressor for the email to send
+     *
+     * @param array $from From details: 'address' and 'name' (Provide strings)
+     */
+    public function setFrom($from);
+
+    /**
+     * This will be the exception message if sending fails
+     *
+     * @param string $mailErrorMessage The error message
+     */
+    public function setMailErrorMessage($mailErrorMessage);
+
+    /**
+     * The email subject
+     *
+     * @param string $subject The translated email subject
+     */
+    public function setSubject($subject);
+
+    /**
+     * The destination address for your mail
+     *
+     * @param array $to To details: 'address' and 'name' (Provide strings)
+     */
+    public function setTo($to);
+
+    /**
+     * The view/-s for your email
+     *
+     * @param array|string $view The view you want to use (Further information can be found in the laravel docs)
+     */
+    public function setView($view);
+
     /**
      * Send a simple email
      *
      * For more complex emails you might write another method
      *
-     * @param array $to To details: 'address' and 'name'
-     * @param string $subject The translated email subject
-     * @param array|object $data The data you want to pass to the view
-     * @param array|string $view The view you want to use (Further information can be found in the laravel docs)
-     * @param string $mail_error_message The error message
      * @throws MailException Throws an exception containing further information as message
      * @return bool Returns true on success
      */
-    public function sendMail($to, $subject, $data, $view, $mail_error_message);
+    public function sendMail();
 
     /**
      * Request an account reset
