@@ -14,11 +14,6 @@ use Sentry;
 use Swift_TransportException;
 use Symfony\Component\Security\Core\Exception\InvalidArgumentException;
 
-/**
- * Class Narrator
- * @package Larapress\Services
- * @property int $id
- */
 class Narrator implements NarratorInterface
 {
     private $cmsName;
@@ -264,15 +259,40 @@ class Narrator implements NarratorInterface
     }
 
     /**
+     * Unsuspend the user and give him a new password
+     *
+     * @param User $user
+     * @param int $id The user id
+     * @param string $reset_code The password reset code
+     * @throws PasswordResetFailedException
+     * @return string Returns the new password on success
+     */
+    protected function unsuspendUserAndResetPassword($user, $id, $reset_code){
+        $throttle = Sentry::findThrottlerByUserId($id);
+        $throttle->unsuspend();
+
+        $new_password = str_random(16);
+
+        if ($user->attemptResetPassword($reset_code, $new_password))
+        {
+            return $new_password;
+        }
+        else
+        {
+            throw new PasswordResetFailedException;
+        }
+    }
+
+    /**
      * Attempt to reset a user
      *
-     * This will unsuspend a user and give him a new password.
+     * Initiate the account reset process
      *
      * @param int $id The user id
      * @param string $reset_code The password reset code
      * @throws PasswordResetFailedException Throws an exception without further information on failure
      * @throws PasswordResetCodeInvalidException Throws an exception without further information on failure
-     * @return string $new_password Returns the new password on success
+     * @return string Returns the new password on success
      */
     protected function attemptToReset($id, $reset_code)
     {
@@ -280,19 +300,7 @@ class Narrator implements NarratorInterface
 
         if ($user->checkResetPasswordCode($reset_code))
         {
-            $throttle = Sentry::findThrottlerByUserId($id);
-            $throttle->unsuspend();
-
-            $new_password = str_random(16);
-
-            if ($user->attemptResetPassword($reset_code, $new_password))
-            {
-                return $new_password;
-            }
-            else
-            {
-                throw new PasswordResetFailedException;
-            }
+            return $this->unsuspendUserAndResetPassword($user, $id, $reset_code);
         }
         else
         {
@@ -304,11 +312,12 @@ class Narrator implements NarratorInterface
      * Prepare an email for account reset results
      *
      * @param User $user
+     * @param int $id The user id
      * @param string $reset_code
      * @throws PasswordResetCodeInvalidException
      * @throws PasswordResetFailedException
      */
-    protected function prepareResetResultMailData($user, $reset_code)
+    protected function prepareResetResultMailData($user, $id, $reset_code)
     {
         $to = array(
             'address' => $user['email'],
@@ -317,7 +326,7 @@ class Narrator implements NarratorInterface
 
         $this->setTo($to);
         $this->setSubject($this->cmsName . ' | ' . Lang::get('larapress::email.Password Reset!'));
-        $this->setData(array('new_password' => $this->attemptToReset($user->id, $reset_code)));
+        $this->setData(array('new_password' => $this->attemptToReset($id, $reset_code)));
         $this->setView(array('text' => 'larapress::emails.new-password'));
     }
 
@@ -338,7 +347,7 @@ class Narrator implements NarratorInterface
     {
         $user = Sentry::findUserById($id);
 
-        $this->prepareResetResultMailData($user, $reset_code);
+        $this->prepareResetResultMailData($user, $id, $reset_code);
         $this->setMailErrorMessage('Sending the email containing the new password failed. ' .
             'Please try again later or contact the administrator.');
 
