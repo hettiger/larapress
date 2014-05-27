@@ -49,6 +49,25 @@ class Narrator implements NarratorInterface
     }
 
     /**
+     * Check if a given variable contains a valid mail recipient
+     *
+     * @param mixed $var
+     * @throws InvalidArgumentException
+     * @return void
+     */
+    protected function validateMailRecipientData($var)
+    {
+        if ( ! is_array($var) )
+        {
+            throw new InvalidArgumentException;
+        }
+        elseif ( ! array_key_exists('address', $var) or ! array_key_exists('name', $var) )
+        {
+            throw new InvalidArgumentException;
+        }
+    }
+
+    /**
      * Set the cms name
      *
      * @param string $cmsName
@@ -82,14 +101,7 @@ class Narrator implements NarratorInterface
      */
     public function setFrom($from)
     {
-        if ( ! is_array($from) )
-        {
-            throw new InvalidArgumentException;
-        }
-        elseif ( ! array_key_exists('address', $from) or ! array_key_exists('name', $from) )
-        {
-            throw new InvalidArgumentException;
-        }
+        $this->validateMailRecipientData($from);
 
         $this->from = $from;
     }
@@ -134,14 +146,7 @@ class Narrator implements NarratorInterface
      */
     public function setTo($to)
     {
-        if ( ! is_array($to) )
-        {
-            throw new InvalidArgumentException;
-        }
-        elseif ( ! array_key_exists('address', $to) or ! array_key_exists('name', $to) )
-        {
-            throw new InvalidArgumentException;
-        }
+        $this->validateMailRecipientData($to);
 
         $this->to = $to;
     }
@@ -185,7 +190,7 @@ class Narrator implements NarratorInterface
      * For more complex emails you might write another method
      *
      * @throws MailException Throws an exception containing further information as message
-     * @return bool Returns true on success
+     * @return bool|void Returns true on success
      */
     public function sendMail()
     {
@@ -208,8 +213,6 @@ class Narrator implements NarratorInterface
         {
             $this->handleTransportExceptions($e);
         }
-
-        return false;
     }
 
     /**
