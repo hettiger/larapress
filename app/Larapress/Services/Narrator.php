@@ -14,11 +14,14 @@ use Sentry;
 use Swift_TransportException;
 use Symfony\Component\Security\Core\Exception\InvalidArgumentException;
 
+/**
+ * Class Narrator
+ * @package Larapress\Services
+ * @property int $id
+ */
 class Narrator implements NarratorInterface
 {
-
     private $cmsName;
-
     private $view;
     private $to;
     private $from;
@@ -26,6 +29,9 @@ class Narrator implements NarratorInterface
     private $data;
     private $mailErrorMessage;
 
+    /**
+     * @return void
+     */
     public function __construct()
     {
         $this->init();
@@ -33,18 +39,30 @@ class Narrator implements NarratorInterface
 
     protected function init()
     {
-        $this->from = array(
+        $from = array(
             'address' => Config::get('larapress.email.from.address'),
             'name' => Config::get('larapress.email.from.name'),
         );
 
-        $this->cmsName = $cms_name = Config::get('larapress.names.cms');
+        $this->setFrom($from);
+        $this->setCmsName($cms_name = Config::get('larapress.names.cms'));
+    }
+
+    /**
+     * Set the cms name
+     *
+     * @param string $cmsName
+     */
+    protected function setCmsName($cmsName)
+    {
+        $this->cmsName = $cmsName;
     }
 
     /**
      * Data for the view/-s of your email
      *
      * @param array|object $data The data you want to pass to the view
+     * @return void
      */
     public function setData($data)
     {
@@ -60,6 +78,7 @@ class Narrator implements NarratorInterface
      * The addressor for the email to send
      *
      * @param array $from From details: 'address' and 'name' (Provide strings)
+     * @return void
      */
     public function setFrom($from)
     {
@@ -79,6 +98,7 @@ class Narrator implements NarratorInterface
      * This will be the exception message if sending fails
      *
      * @param string $mailErrorMessage The error message
+     * @return void
      */
     public function setMailErrorMessage($mailErrorMessage)
     {
@@ -94,6 +114,7 @@ class Narrator implements NarratorInterface
      * The email subject
      *
      * @param string $subject The translated email subject
+     * @return void
      */
     public function setSubject($subject)
     {
@@ -109,6 +130,7 @@ class Narrator implements NarratorInterface
      * The destination address for your mail
      *
      * @param array $to To details: 'address' and 'name' (Provide strings)
+     * @return void
      */
     public function setTo($to)
     {
@@ -128,6 +150,7 @@ class Narrator implements NarratorInterface
      * The view/-s for your email
      *
      * @param array|string $view The view you want to use (Further information can be found in the laravel docs)
+     * @return void
      */
     public function setView($view)
     {

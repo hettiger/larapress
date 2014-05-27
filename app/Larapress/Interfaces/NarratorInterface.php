@@ -8,12 +8,16 @@ use Larapress\Exceptions\PasswordResetFailedException;
 
 interface NarratorInterface {
 
+    /**
+     * @return void
+     */
     public function __construct();
 
     /**
      * Data for the view/-s of your email
      *
      * @param array|object $data The data you want to pass to the view
+     * @return void
      */
     public function setData($data);
 
@@ -21,6 +25,7 @@ interface NarratorInterface {
      * The addressor for the email to send
      *
      * @param array $from From details: 'address' and 'name' (Provide strings)
+     * @return void
      */
     public function setFrom($from);
 
@@ -28,6 +33,7 @@ interface NarratorInterface {
      * This will be the exception message if sending fails
      *
      * @param string $mailErrorMessage The error message
+     * @return void
      */
     public function setMailErrorMessage($mailErrorMessage);
 
@@ -35,6 +41,7 @@ interface NarratorInterface {
      * The email subject
      *
      * @param string $subject The translated email subject
+     * @return void
      */
     public function setSubject($subject);
 
@@ -42,6 +49,7 @@ interface NarratorInterface {
      * The destination address for your mail
      *
      * @param array $to To details: 'address' and 'name' (Provide strings)
+     * @return void
      */
     public function setTo($to);
 
@@ -49,6 +57,7 @@ interface NarratorInterface {
      * The view/-s for your email
      *
      * @param array|string $view The view you want to use (Further information can be found in the laravel docs)
+     * @return void
      */
     public function setView($view);
 
