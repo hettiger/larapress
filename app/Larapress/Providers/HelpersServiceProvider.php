@@ -12,17 +12,11 @@ class HelpersServiceProvider extends ServiceProvider {
      */
     private $db;
 
-    /**
-     * @var Writer
-     */
-    private $log;
-
     private $defaultDbConnection;
 
     protected function init()
     {
         $this->db = $this->app['db'];
-        $this->log = $this->app['log'];
         $this->defaultDbConnection = $this->db->getDefaultConnection();
     }
 
@@ -42,7 +36,7 @@ class HelpersServiceProvider extends ServiceProvider {
                 $this->app['translator'],
                 $this->app['view'],
                 $this->app['mockably'],
-                $this->log->getMonolog(),
+                $this->app->make('log')->getMonolog(),
                 $this->app['request'],
                 $this->app['session.store'],
                 $this->db->connection($this->defaultDbConnection),
