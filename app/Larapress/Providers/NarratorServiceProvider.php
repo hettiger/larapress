@@ -14,7 +14,13 @@ class NarratorServiceProvider extends ServiceProvider {
     {
         $this->app->bind('narrator', function()
         {
-            return new Narrator;
+            return new Narrator(
+                $this->app['config'],
+                $this->app['mailer'],
+                $this->app['translator'],
+                $this->app['request'],
+                $this->app['sentry']
+            );
         });
     }
 

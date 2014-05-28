@@ -15,7 +15,7 @@ class PermissionServiceProvider extends ServiceProvider {
         $this->app->bind('permission', function()
         {
             return new Permission(
-                $this->app->make('sentry')
+                $this->app['sentry']
             );
         });
     }

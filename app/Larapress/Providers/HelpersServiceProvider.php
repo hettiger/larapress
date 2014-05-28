@@ -1,5 +1,7 @@
 <?php namespace Larapress\Providers;
 
+use Illuminate\Database\DatabaseManager;
+use Illuminate\Log\Writer;
 use Illuminate\Support\ServiceProvider;
 use Larapress\Services\Helpers;
 
@@ -14,18 +16,28 @@ class HelpersServiceProvider extends ServiceProvider {
     {
         $this->app->bind('helpers', function()
         {
+            /**
+             * @var DatabaseManager
+             */
+            $db = $this->app['db'];
+
+            /**
+             * @var Writer
+             */
+            $log = $this->app['log'];
+
             $defaultDbConnection = $this->app->make('db')->getDefaultConnection();
 
             return new Helpers(
-                $this->app->make('config'),
-                $this->app->make('translator'),
-                $this->app->make('view'),
-                $this->app->make('mockably'),
-                $this->app->make('log')->getMonolog(),
-                $this->app->make('request'),
-                $this->app->make('session.store'),
-                $this->app->make('db')->connection($defaultDbConnection),
-                $this->app->make('redirect')
+                $this->app['config'],
+                $this->app['translator'],
+                $this->app['view'],
+                $this->app['mockably'],
+                $log->getMonolog(),
+                $this->app['request'],
+                $this->app['session.store'],
+                $db->connection($defaultDbConnection),
+                $this->app['redirect']
             );
         });
     }

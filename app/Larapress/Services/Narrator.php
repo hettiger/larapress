@@ -1,16 +1,16 @@
 <?php namespace Larapress\Services;
 
+use Larapress\Interfaces\NarratorInterface;
+use Illuminate\Config\Repository as Config;
+use Illuminate\Mail\Mailer as Mail;
+use Illuminate\Translation\Translator as Lang;
+use Illuminate\Http\Request as Input;
+use Cartalyst\Sentry\Sentry;
 use Cartalyst\Sentry\Users\Eloquent\User;
 use Cartalyst\Sentry\Users\UserNotFoundException;
-use Config;
-use Input;
-use Lang;
 use Larapress\Exceptions\MailException;
 use Larapress\Exceptions\PasswordResetCodeInvalidException;
 use Larapress\Exceptions\PasswordResetFailedException;
-use Larapress\Interfaces\NarratorInterface;
-use Mail;
-use Sentry;
 use Swift_TransportException;
 use Symfony\Component\Security\Core\Exception\InvalidArgumentException;
 
@@ -25,22 +25,58 @@ class Narrator implements NarratorInterface
     private $mailErrorMessage;
 
     /**
-     * @return void
+     * @var \Illuminate\Config\Repository
      */
-    public function __construct()
+    private $config;
+
+    /**
+     * @var \Illuminate\Mail\Mailer
+     */
+    private $mail;
+
+    /**
+     * @var \Illuminate\Translation\Translator
+     */
+    private $lang;
+
+    /**
+     * @var \Illuminate\Http\Request
+     */
+    private $input;
+
+    /**
+     * @var \Cartalyst\Sentry\Sentry
+     */
+    private $sentry;
+
+    /**
+     * @param \Illuminate\Config\Repository $config
+     * @param \Illuminate\Mail\Mailer $mail
+     * @param \Illuminate\Translation\Translator $lang
+     * @param \Illuminate\Http\Request $input
+     * @param \Cartalyst\Sentry\Sentry $sentry
+     * @return \Larapress\Services\Narrator
+     */
+    public function __construct(Config $config, Mail $mail, Lang $lang, Input $input, Sentry $sentry)
     {
+        $this->config = $config;
+        $this->mail = $mail;
+        $this->lang = $lang;
+        $this->input = $input;
+        $this->sentry = $sentry;
+
         $this->init();
     }
 
     protected function init()
     {
         $from = array(
-            'address' => Config::get('larapress.email.from.address'),
-            'name' => Config::get('larapress.email.from.name'),
+            'address' => $this->config->get('larapress.email.from.address'),
+            'name' => $this->config->get('larapress.email.from.name'),
         );
 
         $this->setFrom($from);
-        $this->setCmsName($cms_name = Config::get('larapress.names.cms'));
+        $this->setCmsName($cms_name = $this->config->get('larapress.names.cms'));
     }
 
     /**
@@ -191,7 +227,7 @@ class Narrator implements NarratorInterface
     {
         try
         {
-            $result = Mail::send($this->view, $this->data,
+            $result = $this->mail->send($this->view, $this->data,
                 function ($message) {
                     $message->from($this->from['address'], $this->from['name']);
                     $message->to($this->to['address'], $this->to['name'])->subject($this->subject);
@@ -221,16 +257,16 @@ class Narrator implements NarratorInterface
     {
         $to = array(
             'address' => $input['email'],
-            'name' => $user['first_name'] . ' ' . $user['last_name']
+            'name' => $user->getAttribute('first_name') . ' ' . $user->getAttribute('last_name')
         );
 
         $data = array(
             'cms_name' => $this->cmsName,
-            'url' => route('larapress.home.send.new.password.get', array($user['id'], $reset_code)),
+            'url' => route('larapress.home.send.new.password.get', array($user->getId(), $reset_code)),
         );
 
         $this->setTo($to);
-        $this->setSubject($this->cmsName . ' | ' . Lang::get('larapress::email.Password Reset!'));
+        $this->setSubject($this->cmsName . ' | ' . $this->lang->get('larapress::email.Password Reset!'));
         $this->setData($data);
         $this->setView(array('text' => 'larapress::emails.reset-password'));
     }
@@ -247,8 +283,8 @@ class Narrator implements NarratorInterface
      */
     public function resetPassword($input = null)
     {
-        $input = $input ? : Input::all();
-        $user = Sentry::findUserByLogin($input['email']);
+        $input = $input ? : $this->input->all();
+        $user = $this->sentry->findUserByLogin($input['email']);
         $reset_code = $user->getResetPasswordCode();
 
         $this->prepareResetRequestMailData($input, $user, $reset_code);
@@ -262,13 +298,12 @@ class Narrator implements NarratorInterface
      * Unsuspend the user and give him a new password
      *
      * @param User $user
-     * @param int $id The user id
      * @param string $reset_code The password reset code
      * @throws PasswordResetFailedException
      * @return string Returns the new password on success
      */
-    protected function unsuspendUserAndResetPassword($user, $id, $reset_code){
-        $throttle = Sentry::findThrottlerByUserId($id);
+    protected function unsuspendUserAndResetPassword($user, $reset_code){
+        $throttle = $this->sentry->findThrottlerByUserId($user->getId());
         $throttle->unsuspend();
 
         $new_password = str_random(16);
@@ -288,19 +323,17 @@ class Narrator implements NarratorInterface
      *
      * Initiate the account reset process
      *
-     * @param int $id The user id
+     * @param User $user
      * @param string $reset_code The password reset code
      * @throws PasswordResetFailedException Throws an exception without further information on failure
      * @throws PasswordResetCodeInvalidException Throws an exception without further information on failure
      * @return string Returns the new password on success
      */
-    protected function attemptToReset($id, $reset_code)
+    protected function attemptToReset($user, $reset_code)
     {
-        $user = Sentry::findUserById($id);
-
         if ($user->checkResetPasswordCode($reset_code))
         {
-            return $this->unsuspendUserAndResetPassword($user, $id, $reset_code);
+            return $this->unsuspendUserAndResetPassword($user, $reset_code);
         }
         else
         {
@@ -312,21 +345,20 @@ class Narrator implements NarratorInterface
      * Prepare an email for account reset results
      *
      * @param User $user
-     * @param int $id The user id
      * @param string $reset_code
      * @throws PasswordResetCodeInvalidException
      * @throws PasswordResetFailedException
      */
-    protected function prepareResetResultMailData($user, $id, $reset_code)
+    protected function prepareResetResultMailData($user, $reset_code)
     {
         $to = array(
-            'address' => $user['email'],
-            'name' => $user['first_name'] . ' ' . $user['last_name'],
+            'address' => $user->getAttribute('email'),
+            'name' => $user->getAttribute('first_name') . ' ' . $user->getAttribute('last_name'),
         );
 
         $this->setTo($to);
-        $this->setSubject($this->cmsName . ' | ' . Lang::get('larapress::email.Password Reset!'));
-        $this->setData(array('new_password' => $this->attemptToReset($id, $reset_code)));
+        $this->setSubject($this->cmsName . ' | ' . $this->lang->get('larapress::email.Password Reset!'));
+        $this->setData(array('new_password' => $this->attemptToReset($user, $reset_code)));
         $this->setView(array('text' => 'larapress::emails.new-password'));
     }
 
@@ -345,9 +377,9 @@ class Narrator implements NarratorInterface
      */
     public function sendNewPassword($id, $reset_code)
     {
-        $user = Sentry::findUserById($id);
+        $user = $this->sentry->findUserById($id);
 
-        $this->prepareResetResultMailData($user, $id, $reset_code);
+        $this->prepareResetResultMailData($user, $reset_code);
         $this->setMailErrorMessage('Sending the email containing the new password failed. ' .
             'Please try again later or contact the administrator.');
 

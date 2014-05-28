@@ -1,7 +1,11 @@
 <?php namespace Larapress\Interfaces;
 
+use Illuminate\Config\Repository as Config;
+use Illuminate\Mail\Mailer as Mail;
+use Illuminate\Translation\Translator as Lang;
+use Illuminate\Http\Request as Input;
+use Cartalyst\Sentry\Sentry;
 use Cartalyst\Sentry\Users\UserNotFoundException;
-use Input;
 use Larapress\Exceptions\MailException;
 use Larapress\Exceptions\PasswordResetCodeInvalidException;
 use Larapress\Exceptions\PasswordResetFailedException;
@@ -9,9 +13,14 @@ use Larapress\Exceptions\PasswordResetFailedException;
 interface NarratorInterface {
 
     /**
-     * @return void
+     * @param \Illuminate\Config\Repository $config
+     * @param \Illuminate\Mail\Mailer $mail
+     * @param \Illuminate\Translation\Translator $lang
+     * @param \Illuminate\Http\Request $input
+     * @param \Cartalyst\Sentry\Sentry $sentry
+     * @return \Larapress\Services\Narrator
      */
-    public function __construct();
+    public function __construct(Config $config, Mail $mail, Lang $lang, Input $input, Sentry $sentry);
 
     /**
      * Data for the view/-s of your email
