@@ -8,6 +8,25 @@ use Larapress\Services\Helpers;
 class HelpersServiceProvider extends ServiceProvider {
 
     /**
+     * @var DatabaseManager
+     */
+    private $db;
+
+    /**
+     * @var Writer
+     */
+    private $log;
+
+    private $defaultDbConnection;
+
+    public function __construct()
+    {
+        $this->db = $this->app['db'];
+        $this->log = $this->app['log'];
+        $this->defaultDbConnection = $this->db->getDefaultConnection();
+    }
+
+    /**
      * Register the service provider.
      *
      * @return void
@@ -16,27 +35,15 @@ class HelpersServiceProvider extends ServiceProvider {
     {
         $this->app->bind('helpers', function()
         {
-            /**
-             * @var DatabaseManager
-             */
-            $db = $this->app['db'];
-
-            /**
-             * @var Writer
-             */
-            $log = $this->app['log'];
-
-            $defaultDbConnection = $this->app->make('db')->getDefaultConnection();
-
             return new Helpers(
                 $this->app['config'],
                 $this->app['translator'],
                 $this->app['view'],
                 $this->app['mockably'],
-                $log->getMonolog(),
+                $this->log->getMonolog(),
                 $this->app['request'],
                 $this->app['session.store'],
-                $db->connection($defaultDbConnection),
+                $this->db->connection($this->defaultDbConnection),
                 $this->app['redirect']
             );
         });

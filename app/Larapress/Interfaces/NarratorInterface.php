@@ -9,6 +9,7 @@ use Cartalyst\Sentry\Users\UserNotFoundException;
 use Larapress\Exceptions\MailException;
 use Larapress\Exceptions\PasswordResetCodeInvalidException;
 use Larapress\Exceptions\PasswordResetFailedException;
+use Symfony\Component\Security\Core\Exception\InvalidArgumentException;
 
 interface NarratorInterface {
 
@@ -25,7 +26,8 @@ interface NarratorInterface {
     /**
      * Data for the view/-s of your email
      *
-     * @param array|object $data The data you want to pass to the view
+     * @param array $data The data you want to pass to the view
+     * @throws InvalidArgumentException
      * @return void
      */
     public function setData($data);

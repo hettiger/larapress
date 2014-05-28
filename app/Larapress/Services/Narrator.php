@@ -6,7 +6,7 @@ use Illuminate\Mail\Mailer as Mail;
 use Illuminate\Translation\Translator as Lang;
 use Illuminate\Http\Request as Input;
 use Cartalyst\Sentry\Sentry;
-use Cartalyst\Sentry\Users\Eloquent\User;
+use Cartalyst\Sentry\Users\UserInterface as User;
 use Cartalyst\Sentry\Users\UserNotFoundException;
 use Larapress\Exceptions\MailException;
 use Larapress\Exceptions\PasswordResetCodeInvalidException;
@@ -111,7 +111,8 @@ class Narrator implements NarratorInterface
     /**
      * Data for the view/-s of your email
      *
-     * @param array|object $data The data you want to pass to the view
+     * @param array $data The data you want to pass to the view
+     * @throws InvalidArgumentException
      * @return void
      */
     public function setData($data)
@@ -249,7 +250,7 @@ class Narrator implements NarratorInterface
     /**
      * Prepare an email for account reset requests
      *
-     * @param Input $input
+     * @param Input|array $input
      * @param User $user
      * @param string $reset_code
      */
