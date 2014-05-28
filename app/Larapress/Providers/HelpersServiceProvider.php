@@ -1,7 +1,6 @@
 <?php namespace Larapress\Providers;
 
 use Illuminate\Database\DatabaseManager;
-use Illuminate\Log\Writer;
 use Illuminate\Support\ServiceProvider;
 use Larapress\Services\Helpers;
 
