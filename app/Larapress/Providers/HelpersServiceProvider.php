@@ -19,7 +19,7 @@ class HelpersServiceProvider extends ServiceProvider {
 
     private $defaultDbConnection;
 
-    public function __construct()
+    protected function init()
     {
         $this->db = $this->app['db'];
         $this->log = $this->app['log'];
@@ -33,6 +33,8 @@ class HelpersServiceProvider extends ServiceProvider {
      */
     public function register()
     {
+        $this->init();
+
         $this->app->bind('helpers', function()
         {
             return new Helpers(
