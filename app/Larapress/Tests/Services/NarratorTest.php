@@ -162,7 +162,7 @@ class NarratorTest extends PHPUnit_Framework_TestCase
         $narrator->setView(array());
         $narrator->setMailErrorMessage('');
 
-        $this->assertTrue($narrator->sendMail());
+        $narrator->sendMail(); // No exception -> Success
     }
 
     /*

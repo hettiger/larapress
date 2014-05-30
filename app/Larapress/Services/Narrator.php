@@ -55,7 +55,7 @@ class Narrator implements NarratorInterface
      * @param \Illuminate\Translation\Translator $lang
      * @param \Illuminate\Http\Request $input
      * @param \Cartalyst\Sentry\Sentry $sentry
-     * @return \Larapress\Services\Narrator
+     * @return Narrator
      */
     public function __construct(Config $config, Mail $mail, Lang $lang, Input $input, Sentry $sentry)
     {
@@ -142,6 +142,7 @@ class Narrator implements NarratorInterface
      * This will be the exception message if sending fails
      *
      * @param string $mailErrorMessage The error message
+     * @throws InvalidArgumentException
      * @return void
      */
     public function setMailErrorMessage($mailErrorMessage)
@@ -158,6 +159,7 @@ class Narrator implements NarratorInterface
      * The email subject
      *
      * @param string $subject The translated email subject
+     * @throws InvalidArgumentException
      * @return void
      */
     public function setSubject($subject)
@@ -187,6 +189,7 @@ class Narrator implements NarratorInterface
      * The view/-s for your email
      *
      * @param array|string $view The view you want to use (Further information can be found in the laravel docs)
+     * @throws InvalidArgumentException
      * @return void
      */
     public function setView($view)
@@ -222,7 +225,7 @@ class Narrator implements NarratorInterface
      * For more complex emails you might write another method
      *
      * @throws MailException Throws an exception containing further information as message
-     * @return bool|void Returns true on success
+     * @return void
      */
     public function sendMail()
     {
@@ -238,8 +241,6 @@ class Narrator implements NarratorInterface
             if ( ! $result ) {
                 throw new MailException($this->mailErrorMessage);
             }
-
-            return true;
         }
         catch (Swift_TransportException $e)
         {
