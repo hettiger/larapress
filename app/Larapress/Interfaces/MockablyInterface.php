@@ -9,4 +9,12 @@ interface MockablyInterface {
      */
     public function microtime();
 
+	/**
+	 * Return a random string of given length
+	 *
+	 * @param int $length
+	 * @return string
+	 */
+	public function str_random($length);
+
 }

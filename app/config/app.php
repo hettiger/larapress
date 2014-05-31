@@ -124,6 +124,7 @@ return array(
         'Greggilbert\Recaptcha\RecaptchaServiceProvider',
 
         'Larapress\Providers\MockablyServiceProvider',
+		'Larapress\Providers\NullObjectServiceProvider',
         'Larapress\Providers\PermissionServiceProvider',
         'Larapress\Providers\HelpersServiceProvider',
         'Larapress\Providers\NarratorServiceProvider',
@@ -198,6 +199,7 @@ return array(
         'Sentry'            => 'Cartalyst\Sentry\Facades\Laravel\Sentry',
 
         'Mockably'          => 'Larapress\Facades\Mockably',
+		'NullObject'		=> 'Larapress\Facades\NullObject',
         'Permission'        => 'Larapress\Facades\Permission',
         'Helpers'           => 'Larapress\Facades\Helpers',
         'Narrator'          => 'Larapress\Facades\Narrator',

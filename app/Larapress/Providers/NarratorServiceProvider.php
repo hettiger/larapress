@@ -19,7 +19,9 @@ class NarratorServiceProvider extends ServiceProvider {
                 $this->app['mailer'],
                 $this->app['translator'],
                 $this->app['request'],
-                $this->app['sentry']
+                $this->app['sentry'],
+				$this->app['null.object'],
+				$this->app['mockably']
             );
         });
     }

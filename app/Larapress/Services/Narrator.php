@@ -16,13 +16,13 @@ use Symfony\Component\Security\Core\Exception\InvalidArgumentException;
 
 class Narrator implements NarratorInterface
 {
-    private $cmsName;
-    private $view;
-    private $to;
-    private $from;
-    private $subject;
-    private $data;
-    private $mailErrorMessage;
+    protected $cmsName;
+    protected $view;
+    protected $to;
+    protected $from;
+    protected $subject;
+    protected $data;
+    protected $mailErrorMessage;
 
     /**
      * @var \Illuminate\Config\Repository
@@ -49,24 +49,40 @@ class Narrator implements NarratorInterface
      */
     private $sentry;
 
-    /**
-     * @param \Illuminate\Config\Repository $config
-     * @param \Illuminate\Mail\Mailer $mail
-     * @param \Illuminate\Translation\Translator $lang
-     * @param \Illuminate\Http\Request $input
-     * @param \Cartalyst\Sentry\Sentry $sentry
-     * @return Narrator
-     */
-    public function __construct(Config $config, Mail $mail, Lang $lang, Input $input, Sentry $sentry)
-    {
-        $this->config = $config;
-        $this->mail = $mail;
-        $this->lang = $lang;
-        $this->input = $input;
-        $this->sentry = $sentry;
+	/**
+	 * @var NullObject
+	 */
+	private $nullObject;
 
-        $this->init();
-    }
+	/**
+	 * @var Mockably
+	 */
+	private $mockably;
+
+	/**
+	 * @param \Illuminate\Config\Repository $config
+	 * @param \Illuminate\Mail\Mailer $mail
+	 * @param \Illuminate\Translation\Translator $lang
+	 * @param \Illuminate\Http\Request $input
+	 * @param \Cartalyst\Sentry\Sentry $sentry
+	 * @param NullObject $nullObject
+	 * @param Mockably $mockably
+	 *
+	 * @return Narrator
+	 */
+	public function __construct(Config $config, Mail $mail, Lang $lang, Input $input, Sentry $sentry,
+								NullObject $nullObject, Mockably $mockably)
+	{
+		$this->config = $config;
+		$this->mail = $mail;
+		$this->lang = $lang;
+		$this->input = $input;
+		$this->sentry = $sentry;
+		$this->nullObject = $nullObject;
+		$this->mockably = $mockably;
+
+		$this->init();
+	}
 
     protected function init()
     {
@@ -77,25 +93,6 @@ class Narrator implements NarratorInterface
 
         $this->setFrom($from);
         $this->setCmsName($cms_name = $this->config->get('larapress.names.cms'));
-    }
-
-    /**
-     * Check if a given variable contains a valid mail recipient
-     *
-     * @param mixed $var
-     * @throws InvalidArgumentException
-     * @return void
-     */
-    protected function validateMailRecipientData($var)
-    {
-        if ( ! is_array($var) )
-        {
-            throw new InvalidArgumentException;
-        }
-        elseif ( ! array_key_exists('address', $var) or ! array_key_exists('name', $var) )
-        {
-            throw new InvalidArgumentException;
-        }
     }
 
     /**
@@ -117,10 +114,7 @@ class Narrator implements NarratorInterface
      */
     public function setData($data)
     {
-        if ( ! is_array($data) and ! is_object($data) )
-        {
-            throw new InvalidArgumentException;
-        }
+        $this->nullObject->validateVarIsArray($data);
 
         $this->data = $data;
     }
@@ -133,7 +127,7 @@ class Narrator implements NarratorInterface
      */
     public function setFrom($from)
     {
-        $this->validateMailRecipientData($from);
+        $this->nullObject->validateMailRecipientData($from);
 
         $this->from = $from;
     }
@@ -147,10 +141,7 @@ class Narrator implements NarratorInterface
      */
     public function setMailErrorMessage($mailErrorMessage)
     {
-        if ( ! is_string($mailErrorMessage) )
-        {
-            throw new InvalidArgumentException;
-        }
+        $this->nullObject->validateVarIsString($mailErrorMessage);
 
         $this->mailErrorMessage = $mailErrorMessage;
     }
@@ -164,10 +155,7 @@ class Narrator implements NarratorInterface
      */
     public function setSubject($subject)
     {
-        if ( ! is_string($subject) )
-        {
-            throw new InvalidArgumentException;
-        }
+        $this->nullObject->validateVarIsString($subject);
 
         $this->subject = $subject;
     }
@@ -180,7 +168,7 @@ class Narrator implements NarratorInterface
      */
     public function setTo($to)
     {
-        $this->validateMailRecipientData($to);
+        $this->nullObject->validateMailRecipientData($to);
 
         $this->to = $to;
     }
@@ -194,10 +182,7 @@ class Narrator implements NarratorInterface
      */
     public function setView($view)
     {
-        if ( ! is_array($view) and ! is_string($view) )
-        {
-            throw new InvalidArgumentException;
-        }
+        $this->nullObject->validateMailViewDetails($view);
 
         $this->view = $view;
     }
@@ -232,10 +217,12 @@ class Narrator implements NarratorInterface
         try
         {
             $result = $this->mail->send($this->view, $this->data,
+				// @codeCoverageIgnoreStart
                 function ($message) {
                     $message->from($this->from['address'], $this->from['name']);
                     $message->to($this->to['address'], $this->to['name'])->subject($this->subject);
                 }
+				// @codeCoverageIgnoreEnd
             );
 
             if ( ! $result ) {
@@ -308,9 +295,9 @@ class Narrator implements NarratorInterface
         $throttle = $this->sentry->findThrottlerByUserId($user->getId());
         $throttle->unsuspend();
 
-        $new_password = str_random(16);
+        $new_password = $this->mockably->str_random(16);
 
-        if ($user->attemptResetPassword($reset_code, $new_password))
+		if ( $user->attemptResetPassword($reset_code, $new_password) )
         {
             return $new_password;
         }
@@ -333,7 +320,7 @@ class Narrator implements NarratorInterface
      */
     protected function attemptToReset($user, $reset_code)
     {
-        if ($user->checkResetPasswordCode($reset_code))
+        if ( $user->checkResetPasswordCode($reset_code) )
         {
             return $this->unsuspendUserAndResetPassword($user, $reset_code);
         }

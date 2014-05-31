@@ -9,20 +9,26 @@ use Cartalyst\Sentry\Users\UserNotFoundException;
 use Larapress\Exceptions\MailException;
 use Larapress\Exceptions\PasswordResetCodeInvalidException;
 use Larapress\Exceptions\PasswordResetFailedException;
+use Larapress\Services\Mockably;
+use Larapress\Services\NullObject;
 use Symfony\Component\Security\Core\Exception\InvalidArgumentException;
 use \Larapress\Interfaces\NarratorInterface as Narrator;
 
 interface NarratorInterface {
 
-    /**
-     * @param \Illuminate\Config\Repository $config
-     * @param \Illuminate\Mail\Mailer $mail
-     * @param \Illuminate\Translation\Translator $lang
-     * @param \Illuminate\Http\Request $input
-     * @param \Cartalyst\Sentry\Sentry $sentry
-     * @return Narrator
-     */
-    public function __construct(Config $config, Mail $mail, Lang $lang, Input $input, Sentry $sentry);
+	/**
+	 * @param \Illuminate\Config\Repository $config
+	 * @param \Illuminate\Mail\Mailer $mail
+	 * @param \Illuminate\Translation\Translator $lang
+	 * @param \Illuminate\Http\Request $input
+	 * @param \Cartalyst\Sentry\Sentry $sentry
+	 * @param NullObject $nullObject
+	 * @param Mockably $mockably
+	 *
+	 * @return Narrator
+	 */
+	public function __construct(Config $config, Mail $mail, Lang $lang, Input $input, Sentry $sentry,
+								NullObject $nullObject, Mockably $mockably);
 
     /**
      * Data for the view/-s of your email

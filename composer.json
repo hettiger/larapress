@@ -10,7 +10,7 @@
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "1.*",
-        "phpunit/phpunit": "3.7.*",
+        "phpunit/phpunit": "4.1.*",
         "mockery/mockery": "0.9.*"
     },
     "autoload": {
