@@ -6,8 +6,6 @@ use Cartalyst\Sentry\Groups\NameRequiredException;
 use Config;
 use Illuminate\Console\Command;
 use Sentry;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 use UnexpectedValueException;
 
 class InstallCommand extends Command {
@@ -217,30 +215,6 @@ class InstallCommand extends Command {
 		$this->info('E-Mail: ' . $this->email);
 		$this->info('Password: ' . $this->password . PHP_EOL);
 		$this->info('Make sure you instantly update your credentials!');
-	}
-
-	/**
-	 * Get the console command arguments.
-	 *
-	 * @return array
-	 */
-	protected function getArguments()
-	{
-		return array(
-			array('example', InputArgument::OPTIONAL, 'An example argument.'),
-		);
-	}
-
-	/**
-	 * Get the console command options.
-	 *
-	 * @return array
-	 */
-	protected function getOptions()
-	{
-		return array(
-			array('example', null, InputOption::VALUE_OPTIONAL, 'An example option.', null),
-		);
 	}
 
 }
