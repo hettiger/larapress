@@ -20,7 +20,8 @@ class InstallCommand extends Command {
 	protected $url;
 
 	protected $groups = array(
-		'administrator' => array(
+		'administrator' => array
+		(
 			'name'        => 'Administrator',
 			'permissions' => array(
 				'access.backend'       => 1,
@@ -39,7 +40,8 @@ class InstallCommand extends Command {
 				'partial.edit'         => 1,
 			),
 		),
-		'owner'         => array(
+		'owner' => array
+		(
 			'name'        => 'Owner',
 			'permissions' => array(
 				'access.backend'       => 1,
@@ -58,7 +60,8 @@ class InstallCommand extends Command {
 				'partial.edit'         => 1,
 			),
 		),
-		'moderator'     => array(
+		'moderator' => array
+		(
 			'name'        => 'Moderator',
 			'permissions' => array(
 				'access.backend'       => 1,
@@ -154,7 +157,6 @@ class InstallCommand extends Command {
 	{
 		try
 		{
-			// Create the user
 			$user = Sentry::createUser(
 				array(
 					'email'     => $this->email,
@@ -163,7 +165,6 @@ class InstallCommand extends Command {
 				)
 			);
 
-			// Assign the group to the user
 			$user->addGroup($admin_group);
 		}
 		catch (LoginRequiredException $e)
@@ -193,23 +194,18 @@ class InstallCommand extends Command {
 	{
 		$this->info('Installing larapress ...' . PHP_EOL);
 
-		// Run migrations
 		$this->call('migrate', array('--package' => 'cartalyst/sentry'));
-
-		// Create User Groups / Roles
 		$admin_group = $this->create_user_groups();
 
-		if ( ! $admin_group instanceof GroupInterface )
+		if ($admin_group instanceof GroupInterface)
+		{
+			$this->add_the_admin_user($admin_group);
+		}
+		else
 		{
 			$this->abort_command('Failed creating the user groups.');
 		}
 
-		// Add the admin user
-		$this->add_the_admin_user($admin_group);
-
-		/**
-		 * Notify the user about the successful install and tell him how to continue
-		 */
 		$this->info(PHP_EOL . 'Installation complete!' . PHP_EOL);
 		$this->info('Now please visit ' . $this->url . ' and login.' . PHP_EOL);
 		$this->info('Credentials:');
