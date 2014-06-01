@@ -147,18 +147,12 @@ class InstallCommand extends Command {
 	/**
 	 * Provide more specific error messages on unexpected value exceptions
 	 *
-	 * @param object $e
+	 * @param UnexpectedValueException $e
 	 */
 	protected function handle_unexpected_value_exception($e)
 	{
 		switch (get_class($e))
 		{
-			case 'Cartalyst\Sentry\Users\LoginRequiredException':
-				$this->abort_command('Login field is required.');
-				break;
-			case 'Cartalyst\Sentry\Users\PasswordRequiredException':
-				$this->abort_command('Password field is required.');
-				break;
 			case 'Cartalyst\Sentry\Users\UserExistsException':
 				$this->abort_command('User with this login already exists.');
 				break;
@@ -167,7 +161,7 @@ class InstallCommand extends Command {
 				break;
 		}
 
-		$this->abort_command('An unexpected value exception was thrown.');
+		$this->abort_command('Unexpected value error.');
 	}
 
 	/**
