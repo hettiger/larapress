@@ -2,16 +2,13 @@
 
 use Cartalyst\Sentry\Groups\GroupExistsException;
 use Cartalyst\Sentry\Groups\GroupInterface;
-use Cartalyst\Sentry\Groups\GroupNotFoundException;
 use Cartalyst\Sentry\Groups\NameRequiredException;
-use Cartalyst\Sentry\Users\LoginRequiredException;
-use Cartalyst\Sentry\Users\PasswordRequiredException;
-use Cartalyst\Sentry\Users\UserExistsException;
 use Config;
 use Illuminate\Console\Command;
 use Sentry;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
+use UnexpectedValueException;
 
 class InstallCommand extends Command {
 
@@ -148,6 +145,32 @@ class InstallCommand extends Command {
 	}
 
 	/**
+	 * Provide more specific error messages on unexpected value exceptions
+	 *
+	 * @param object $e
+	 */
+	protected function handle_unexpected_value_exception($e)
+	{
+		switch (get_class($e))
+		{
+			case 'Cartalyst\Sentry\Users\LoginRequiredException':
+				$this->abort_command('Login field is required.');
+				break;
+			case 'Cartalyst\Sentry\Users\PasswordRequiredException':
+				$this->abort_command('Password field is required.');
+				break;
+			case 'Cartalyst\Sentry\Users\UserExistsException':
+				$this->abort_command('User with this login already exists.');
+				break;
+			case 'Cartalyst\Sentry\Groups\GroupNotFoundException':
+				$this->abort_command('Group was not found.');
+				break;
+		}
+
+		$this->abort_command('An unexpected value exception was thrown.');
+	}
+
+	/**
 	 * Add the admin user
 	 *
 	 * @param GroupInterface $admin_group The Administrator group
@@ -167,21 +190,9 @@ class InstallCommand extends Command {
 
 			$user->addGroup($admin_group);
 		}
-		catch (LoginRequiredException $e)
+		catch (UnexpectedValueException $e)
 		{
-			$this->abort_command('Login field is required.');
-		}
-		catch (PasswordRequiredException $e)
-		{
-			$this->abort_command('Password field is required.');
-		}
-		catch (UserExistsException $e)
-		{
-			$this->abort_command('User with this login already exists.');
-		}
-		catch (GroupNotFoundException $e)
-		{
-			$this->abort_command('Group was not found.');
+			$this->handle_unexpected_value_exception($e);
 		}
 	}
 
