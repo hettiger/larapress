@@ -42,7 +42,7 @@ class NullObject implements NullObjectInterface {
 	/**
 	 * Check if a given variable contains a string
 	 *
-	 * @param mixed $var
+	 * @param string $var
 	 * @throws InvalidArgumentException
 	 * @return void
 	 */

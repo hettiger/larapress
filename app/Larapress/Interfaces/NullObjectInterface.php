@@ -29,6 +29,7 @@ interface NullObjectInterface {
 	 *
 	 * @param mixed $var
 	 * @throws InvalidArgumentException
+	 * @return void
 	 */
 	public function validateVarIsArray($var);
 
