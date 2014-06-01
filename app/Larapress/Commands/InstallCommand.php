@@ -19,6 +19,66 @@ class InstallCommand extends Command
     protected $password = 'password';
     protected $url;
 
+	protected $groups = array(
+		'administrator' => array(
+			'name' => 'Administrator',
+			'permissions' => array(
+				'access.backend' => 1,
+				'administrator.edit' => 1,
+				'owner.add' => 1,
+				'owner.remove' => 1,
+				'owner.edit' => 1,
+				'moderator.add' => 1,
+				'moderator.remove' => 1,
+				'moderator.edit' => 1,
+				'self.remove' => 0,
+				'content.administrate' => 1,
+				'content.manage' => 1,
+				'configuration.edit' => 1,
+				'partial.add' => 1,
+				'partial.edit' => 1,
+			),
+		),
+		'owner' => array(
+			'name' => 'Owner',
+			'permissions' => array(
+				'access.backend' => 1,
+				'administrator.edit' => 0,
+				'owner.add' => 0,
+				'owner.remove' => 0,
+				'owner.edit' => 1,
+				'moderator.add' => 1,
+				'moderator.remove' => 1,
+				'moderator.edit' => 1,
+				'self.remove' => 0,
+				'content.administrate' => 0,
+				'content.manage' => 1,
+				'configuration.edit' => 1,
+				'partial.add' => 0,
+				'partial.edit' => 1,
+			),
+		),
+		'moderator' => array(
+			'name' => 'Moderator',
+			'permissions' => array(
+				'access.backend' => 1,
+				'administrator.edit' => 0,
+				'owner.add' => 0,
+				'owner.remove' => 0,
+				'owner.edit' => 0,
+				'moderator.add' => 0,
+				'moderator.remove' => 0,
+				'moderator.edit' => 0,
+				'self.remove' => 1,
+				'content.administrate' => 0,
+				'content.manage' => 1,
+				'configuration.edit' => 0,
+				'partial.add' => 0,
+				'partial.edit' => 0,
+			),
+		)
+	);
+
     /**
      * The console command name.
      *
@@ -45,98 +105,6 @@ class InstallCommand extends Command
         $this->url = url(Config::get('larapress.urls.backend'));
     }
 
-	/**
-	 * Create The Administrator Group
-	 *
-	 * @return GroupInterface Returns the Administrator group
-	 */
-	protected function create_the_administrator_group()
-	{
-		$admin_group = Sentry::createGroup(
-			array(
-				'name' => 'Administrator',
-				'permissions' => array(
-					'access.backend' => 1,
-					'administrator.edit' => 1,
-					'owner.add' => 1,
-					'owner.remove' => 1,
-					'owner.edit' => 1,
-					'moderator.add' => 1,
-					'moderator.remove' => 1,
-					'moderator.edit' => 1,
-					'self.remove' => 0,
-					'content.administrate' => 1,
-					'content.manage' => 1,
-					'configuration.edit' => 1,
-					'partial.add' => 1,
-					'partial.edit' => 1,
-				),
-			)
-		);
-
-		return $admin_group;
-	}
-
-	/**
-	 * Create The Owner Group
-	 *
-	 * @return void
-	 */
-	protected function create_the_owner_group()
-	{
-		Sentry::createGroup(
-			array(
-				'name' => 'Owner',
-				'permissions' => array(
-					'access.backend' => 1,
-					'administrator.edit' => 0,
-					'owner.add' => 0,
-					'owner.remove' => 0,
-					'owner.edit' => 1,
-					'moderator.add' => 1,
-					'moderator.remove' => 1,
-					'moderator.edit' => 1,
-					'self.remove' => 0,
-					'content.administrate' => 0,
-					'content.manage' => 1,
-					'configuration.edit' => 1,
-					'partial.add' => 0,
-					'partial.edit' => 1,
-				),
-			)
-		);
-	}
-
-	/**
-	 * Create The Moderator Group
-	 *
-	 * @return void
-	 */
-	protected function create_the_moderator_group()
-	{
-		Sentry::createGroup(
-			array(
-				'name' => 'Moderator',
-				'permissions' => array(
-					'access.backend' => 1,
-					'administrator.edit' => 0,
-					'owner.add' => 0,
-					'owner.remove' => 0,
-					'owner.edit' => 0,
-					'moderator.add' => 0,
-					'moderator.remove' => 0,
-					'moderator.edit' => 0,
-					'self.remove' => 1,
-					'content.administrate' => 0,
-					'content.manage' => 1,
-					'configuration.edit' => 0,
-					'partial.add' => 0,
-					'partial.edit' => 0,
-				),
-			)
-		);
-	}
-
     /**
      * Create User Groups / Roles
      *
@@ -145,9 +113,9 @@ class InstallCommand extends Command
     public function create_user_groups()
     {
         try {
-            $admin_group = $this->create_the_administrator_group();
-            $this->create_the_owner_group();
-			$this->create_the_moderator_group();
+			$admin_group = Sentry::createGroup($this->groups['administrator']);
+			Sentry::createGroup($this->groups['owner']);
+			Sentry::createGroup($this->groups['moderator']);
         }
 		catch (NameRequiredException $e)
 		{
