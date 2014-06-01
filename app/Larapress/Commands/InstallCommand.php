@@ -3,9 +3,9 @@
 use Cartalyst\Sentry\Groups\GroupExistsException;
 use Cartalyst\Sentry\Groups\GroupInterface;
 use Cartalyst\Sentry\Groups\NameRequiredException;
-use Config;
+use Illuminate\Config\Repository as Config;
 use Illuminate\Console\Command;
-use Sentry;
+use Cartalyst\Sentry\Sentry;
 use UnexpectedValueException;
 
 class InstallCommand extends Command {
@@ -92,15 +92,29 @@ class InstallCommand extends Command {
 	protected $description = 'Install larapress.';
 
 	/**
+	 * @var \Illuminate\Config\Repository
+	 */
+	private $config;
+
+	/**
+	 * @var \Cartalyst\Sentry\Sentry
+	 */
+	private $sentry;
+
+	/**
 	 * Create a new command instance.
 	 *
+	 * @param \Illuminate\Config\Repository $config
+	 * @param \Cartalyst\Sentry\Sentry $sentry
 	 * @return InstallCommand
 	 */
-	public function __construct()
+	public function __construct(Config $config, Sentry $sentry)
 	{
 		parent::__construct();
 
-		$this->url = url(Config::get('larapress.urls.backend'));
+		$this->config = $config;
+		$this->sentry = $sentry;
+		$this->url = url($config->get('larapress.urls.backend'));
 	}
 
 	/**
@@ -126,9 +140,9 @@ class InstallCommand extends Command {
 
 		try
 		{
-			$admin_group = Sentry::createGroup($this->groups['administrator']);
-			Sentry::createGroup($this->groups['owner']);
-			Sentry::createGroup($this->groups['moderator']);
+			$admin_group = $this->sentry->createGroup($this->groups['administrator']);
+			$this->sentry->createGroup($this->groups['owner']);
+			$this->sentry->createGroup($this->groups['moderator']);
 		}
 		catch (NameRequiredException $e)
 		{
@@ -172,7 +186,7 @@ class InstallCommand extends Command {
 	{
 		try
 		{
-			$user = Sentry::createUser(
+			$user = $this->sentry->createUser(
 				array(
 					'email'     => $this->email,
 					'password'  => $this->password,

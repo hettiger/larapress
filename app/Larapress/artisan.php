@@ -11,4 +11,4 @@
 |
 */
 
-Artisan::add(new \Larapress\Commands\InstallCommand);
+Artisan::add(new \Larapress\Commands\InstallCommand(app('config'), app('sentry')));
