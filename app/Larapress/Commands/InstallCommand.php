@@ -3,9 +3,9 @@
 use Cartalyst\Sentry\Groups\GroupExistsException;
 use Cartalyst\Sentry\Groups\GroupInterface;
 use Cartalyst\Sentry\Groups\NameRequiredException;
-use Illuminate\Config\Repository as Config;
 use Illuminate\Console\Command;
 use Cartalyst\Sentry\Sentry;
+use Larapress\Services\Mockably;
 use UnexpectedValueException;
 
 class InstallCommand extends Command {
@@ -92,29 +92,29 @@ class InstallCommand extends Command {
 	protected $description = 'Install larapress.';
 
 	/**
-	 * @var \Illuminate\Config\Repository
-	 */
-	private $config;
-
-	/**
 	 * @var \Cartalyst\Sentry\Sentry
 	 */
 	private $sentry;
 
 	/**
+	 * @var \Larapress\Services\Mockably
+	 */
+	private $mockably;
+
+	/**
 	 * Create a new command instance.
 	 *
-	 * @param \Illuminate\Config\Repository $config
 	 * @param \Cartalyst\Sentry\Sentry $sentry
+	 * @param \Larapress\Services\Mockably $mockably
 	 * @return InstallCommand
 	 */
-	public function __construct(Config $config, Sentry $sentry)
+	public function __construct(Sentry $sentry, Mockably $mockably)
 	{
 		parent::__construct();
 
-		$this->config = $config;
 		$this->sentry = $sentry;
-		$this->url = url($config->get('larapress.urls.backend'));
+		$this->mockably = $mockably;
+		$this->url = $mockably->route('larapress.home.login.get');
 	}
 
 	/**
@@ -126,7 +126,7 @@ class InstallCommand extends Command {
 	{
 		$this->call('migrate:reset');
 		$this->error($message);
-		die();
+		$this->mockably->mockable_die();
 	}
 
 	/**
