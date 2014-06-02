@@ -12,13 +12,14 @@ class CaptchaServiceProvider extends ServiceProvider {
      */
     public function register()
     {
-        $this->app->bind('captcha', function()
+        $this->app->singleton('captcha', function()
         {
             return new Captcha(
                 $this->app['view'],
                 $this->app['config'],
                 $this->app['session.store'],
-                $this->app['helpers']
+                $this->app['helpers'],
+				$this->app['mockably']
             );
         });
     }
