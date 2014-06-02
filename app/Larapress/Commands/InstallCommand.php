@@ -132,7 +132,7 @@ class InstallCommand extends Command {
 	/**
 	 * Create User Groups / Roles
 	 *
-	 * @return null|GroupInterface Returns the Administrator group
+	 * @return GroupInterface Returns the Administrator group
 	 */
 	public function create_user_groups()
 	{
