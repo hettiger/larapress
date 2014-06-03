@@ -12,11 +12,11 @@ class Permission implements PermissionInterface
      */
     private $sentry;
 
-    /**
-     * @param Sentry $sentry
-     *
-     * @return void
-     */
+	/**
+	 * @param Sentry $sentry
+	 *
+	 * @return \Larapress\Services\Permission
+	 */
     public function __construct(Sentry $sentry)
     {
         $this->sentry = $sentry;

@@ -5,11 +5,11 @@ use Cartalyst\Sentry\Sentry;
 
 interface PermissionInterface {
 
-    /**
-     * @param Sentry $sentry
-     *
-     * @return void
-     */
+	/**
+	 * @param Sentry $sentry
+	 *
+	 * @return \Larapress\Interfaces\PermissionInterface
+	 */
     public function __construct(Sentry $sentry);
 
     /**

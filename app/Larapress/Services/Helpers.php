@@ -62,19 +62,19 @@ class Helpers implements HelpersInterface
      */
     private $redirect;
 
-    /**
-     * @param \Illuminate\Config\Repository $config
-     * @param \Illuminate\Translation\Translator $lang
-     * @param \Illuminate\View\Environment $view
-     * @param Mockably $mockably
-     * @param \Monolog\Logger $log
-     * @param \Illuminate\Http\Request $request
-     * @param \Illuminate\Session\Store $session
-     * @param \Illuminate\Database\Connection $db
-     * @param \Illuminate\Routing\Redirector $redirect
-     *
-     * @return void
-     */
+	/**
+	 * @param \Illuminate\Config\Repository $config
+	 * @param \Illuminate\Translation\Translator $lang
+	 * @param \Illuminate\View\Environment $view
+	 * @param Mockably $mockably
+	 * @param \Monolog\Logger $log
+	 * @param \Illuminate\Http\Request $request
+	 * @param \Illuminate\Session\Store $session
+	 * @param \Illuminate\Database\Connection $db
+	 * @param \Illuminate\Routing\Redirector $redirect
+	 *
+	 * @return \Larapress\Services\Helpers
+	 */
     public function __construct(
         Config $config,
         Lang $lang,
