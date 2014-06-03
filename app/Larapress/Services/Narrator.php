@@ -250,7 +250,7 @@ class Narrator implements NarratorInterface
 
         $data = array(
             'cms_name' => $this->cmsName,
-            'url' => route('larapress.home.send.new.password.get', array($user->getId(), $reset_code)),
+            'url' => $this->mockably->route('larapress.home.send.new.password.get', array($user->getId(), $reset_code)),
         );
 
         $this->setTo($to);

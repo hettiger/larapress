@@ -286,6 +286,8 @@ class NarratorTest extends PHPUnit_Framework_TestCase {
 		$user_mock->shouldReceive('getAttribute')->with('last_name')->once()->andReturn('Doe');
 		$user_mock->shouldReceive('getId')->withNoArgs()->once()->andReturn(1);
 		$this->lang->shouldReceive('get')->with('larapress::email.Password Reset!')->once()->andReturn('Subject');
+		$this->mockably->shouldReceive('route')->with('larapress.home.send.new.password.get', array(1, 'bar'))
+			->once()->andReturn('url');
 
 		$narrator->prepareResetRequestMailData($user_mock, 'bar');
 
@@ -293,7 +295,7 @@ class NarratorTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(' | Subject', $narrator->getSubject());
 		$this->assertEquals(array(
 			'cms_name' => null,
-			'url' => route('larapress.home.send.new.password.get', array(1, 'bar'))
+			'url' => 'url'
 		), $narrator->getData());
 		$this->assertEquals(array('text' => 'larapress::emails.reset-password'), $narrator->getView());
 	}
@@ -308,6 +310,7 @@ class NarratorTest extends PHPUnit_Framework_TestCase {
 		$this->sentry->shouldReceive('findUserByLogin')->once()->andReturn($this->getResetPasswordCodeMock());
 		$this->lang->shouldReceive('get')->withAnyArgs()->once()->andReturn('Subject');
 		$this->mail->shouldReceive('send')->once()->andReturn(true);
+		$this->mockably->shouldReceive('route')->once();
 		$narrator = $this->getNarratorInstance();
 
 		$narrator->resetPassword();
