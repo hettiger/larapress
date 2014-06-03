@@ -89,7 +89,7 @@ class NarratorTest extends PHPUnit_Framework_TestCase {
 	{
 		$m = Mockery::mock();
 		$m->shouldReceive('getResetPasswordCode')->once()->withNoArgs()->andReturn('foo');
-		$m->shouldReceive('getAttribute')->withAnyArgs()->twice();
+		$m->shouldReceive('getAttribute')->withAnyArgs()->times(3);
 		$m->shouldReceive('getId')->withNoArgs()->once();
 
 		return $m;
@@ -281,12 +281,13 @@ class NarratorTest extends PHPUnit_Framework_TestCase {
 		$this->applyConfigFixture();
 		$narrator = $this->getNarratorInstance();
 		$user_mock = Mockery::mock();
+		$user_mock->shouldReceive('getAttribute')->with('email')->once()->andReturn('baz');
 		$user_mock->shouldReceive('getAttribute')->with('first_name')->once()->andReturn('John');
 		$user_mock->shouldReceive('getAttribute')->with('last_name')->once()->andReturn('Doe');
 		$user_mock->shouldReceive('getId')->withNoArgs()->once()->andReturn(1);
 		$this->lang->shouldReceive('get')->with('larapress::email.Password Reset!')->once()->andReturn('Subject');
 
-		$narrator->prepareResetRequestMailData(array('email' => 'baz'), $user_mock, 'bar');
+		$narrator->prepareResetRequestMailData($user_mock, 'bar');
 
 		$this->assertEquals(array('address' => 'baz', 'name' => 'John Doe'), $narrator->getTo());
 		$this->assertEquals(' | Subject', $narrator->getSubject());

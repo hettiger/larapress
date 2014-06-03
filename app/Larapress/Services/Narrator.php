@@ -238,14 +238,13 @@ class Narrator implements NarratorInterface
     /**
      * Prepare an email for account reset requests
      *
-     * @param Input|array $input
      * @param User $user
      * @param string $reset_code
      */
-    protected function prepareResetRequestMailData($input, $user, $reset_code)
+    protected function prepareResetRequestMailData($user, $reset_code)
     {
         $to = array(
-            'address' => $input['email'],
+            'address' => $user->getAttribute('email'),
             'name' => $user->getAttribute('first_name') . ' ' . $user->getAttribute('last_name')
         );
 
@@ -276,7 +275,7 @@ class Narrator implements NarratorInterface
         $user = $this->sentry->findUserByLogin($input['email']);
         $reset_code = $user->getResetPasswordCode();
 
-        $this->prepareResetRequestMailData($input, $user, $reset_code);
+        $this->prepareResetRequestMailData($user, $reset_code);
         $this->setMailErrorMessage('Sending the email containing the reset key failed. ' .
             'Please try again later or contact the administrator.');
 

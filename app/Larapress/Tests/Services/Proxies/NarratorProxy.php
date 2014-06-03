@@ -51,13 +51,12 @@ class NarratorProxy extends Narrator {
 	}
 
 	/**
-	 * @param array $input
 	 * @param Mock $user
 	 * @param string $reset_code
 	 */
-	public function prepareResetRequestMailData($input, $user, $reset_code)
+	public function prepareResetRequestMailData($user, $reset_code)
 	{
-		parent::prepareResetRequestMailData($input, $user, $reset_code);
+		parent::prepareResetRequestMailData($user, $reset_code);
 	}
 
 	/**
