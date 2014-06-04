@@ -2,6 +2,7 @@
 
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\ServiceProvider;
+use Larapress\Controllers\BaseController;
 use Larapress\Services\Helpers;
 
 class HelpersServiceProvider extends ServiceProvider {
@@ -39,7 +40,8 @@ class HelpersServiceProvider extends ServiceProvider {
                 $this->app['request'],
                 $this->app['session.store'],
                 $this->db->connection($this->defaultDbConnection),
-                $this->app['redirect']
+                $this->app['redirect'],
+				new BaseController
             );
         });
     }

@@ -54,7 +54,12 @@ class HelpersTest extends PHPUnit_Framework_TestCase
      */
     protected $redirect;
 
-    public function setUp()
+	/**
+	 * @var Mock
+	 */
+	private $baseController;
+
+	public function setUp()
     {
         parent::setUp();
 
@@ -67,6 +72,7 @@ class HelpersTest extends PHPUnit_Framework_TestCase
         $this->session = Mockery::mock('\Illuminate\Session\Store');
         $this->db = Mockery::mock('\Illuminate\Database\Connection');
         $this->redirect = Mockery::mock('\Illuminate\Routing\Redirector');
+		$this->baseController = Mockery::mock('\Larapress\Controllers\BaseController');
     }
 
     public function tearDown()
@@ -87,172 +93,143 @@ class HelpersTest extends PHPUnit_Framework_TestCase
             $this->request,
             $this->session,
             $this->db,
-            $this->redirect
+            $this->redirect,
+			$this->baseController
         );
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Helpers::setPageTitle() Tests
-    |--------------------------------------------------------------------------
-    |
-    | Here is where you can test the Helpers::setPageTitle() method
-    |
-    */
+	/**
+	 * @test setPageTitle()
+	 */
+	public function setPageTitle()
+	{
+		$this->config->shouldReceive('get')->with('larapress.names.cms')->once()->andReturn('foo');
+		$this->lang->shouldReceive('get')->with('larapress::general.bar')->once()->andReturn('bar');
+		$this->view->shouldReceive('share')->with('title', 'foo | bar')->once();
+		$helpers = $this->getHelpersInstance();
 
-    public function test_can_set_page_title()
-    {
-        $this->config->shouldReceive('get')->with('larapress.names.cms')->once()->andReturn('foo');
-        $this->config->shouldReceive('offsetGet');
-        $this->lang->shouldReceive('get')->with('larapress::general.bar')->once()->andReturn('bar');
-        $this->view->shouldReceive('share')->with('title', 'foo | bar')->once();
-        $helpers = $this->getHelpersInstance();
+		$helpers->setPageTitle('bar');
+	}
 
-        $helpers->setPageTitle('bar');
-    }
+	/**
+	 * @test getCurrentTimeDifference() can throw an exception on bad calls
+	 * @expectedException BadMethodCallException
+	 */
+	public function getCurrentTimeDifference_can_throw_an_exception_on_bad_calls()
+	{
+		$this->mockably->shouldDeferMissing();
+		$helpers = $this->getHelpersInstance();
 
-    /*
-    |--------------------------------------------------------------------------
-    | Helpers::getCurrentTimeDifference() Tests
-    |--------------------------------------------------------------------------
-    |
-    | Here is where you can test the Helpers::getCurrentTimeDifference() method
-    |
-    */
+		$helpers->getCurrentTimeDifference(0.00, 'foo');
+	}
 
-    public function test_can_return_the_current_time_difference_in_minutes_per_default()
-    {
-        $this->mockably->shouldReceive('microtime')->once()->andReturn(60.00);
-        $helpers = $this->getHelpersInstance();
+	/**
+	 * @test getCurrentTimeDifference() returns difference in minutes per default
+	 */
+	public function getCurrentTimeDifference_returns_difference_in_minutes_per_default()
+	{
+		$this->mockably->shouldReceive('microtime')->once()->andReturn(60.00);
+		$helpers = $this->getHelpersInstance();
 
-        $e = 1;
-        $a = $helpers->getCurrentTimeDifference(0.00);
+		$this->assertEquals(1, $helpers->getCurrentTimeDifference(0.00));
+	}
 
-        $this->assertEquals($e, $a);
-    }
+	/**
+	 * @test getCurrentTimeDifference() can return difference in minutes
+	 */
+	public function getCurrentTimeDifference_can_return_difference_in_minutes()
+	{
+		$this->mockably->shouldReceive('microtime')->once()->andReturn(60.00);
+		$helpers = $this->getHelpersInstance();
 
-    public function test_can_return_the_current_time_difference_in_minutes_on_parameter()
-    {
-        $this->mockably->shouldReceive('microtime')->once()->andReturn(60.00);
-        $helpers = $this->getHelpersInstance();
+		$this->assertEquals(1, $helpers->getCurrentTimeDifference(0.00, 'm'));
+	}
 
-        $e = 1;
-        $a = $helpers->getCurrentTimeDifference(0.00, 'm');
+	/**
+	 * @test getCurrentTimeDifference() rounds minutes correctly
+	 */
+	public function getCurrentTimeDifference_rounds_minutes_correctly()
+	{
+		$this->mockably->shouldReceive('microtime')->once()->andReturn(100.00);
+		$helpers = $this->getHelpersInstance();
 
-        $this->assertEquals($e, $a);
-    }
+		$this->assertEquals(1, $helpers->getCurrentTimeDifference(0.00, 'm'));
+	}
 
-    public function test_can_round_minutes_correctly()
-    {
-        $this->mockably->shouldReceive('microtime')->once()->andReturn(100.00);
-        $helpers = $this->getHelpersInstance();
+	/**
+	 * @test getCurrentTimeDifference() can return difference in seconds
+	 */
+	public function getCurrentTimeDifference_can_return_difference_in_seconds()
+	{
+		$this->mockably->shouldReceive('microtime')->once()->andReturn(60.00);
+		$helpers = $this->getHelpersInstance();
 
-        $e = 1;
-        $a = $helpers->getCurrentTimeDifference(0.00, 'm');
+		$this->assertEquals(30, $helpers->getCurrentTimeDifference(30.00, 's'));
+	}
 
-        $this->assertEquals($e, $a);
-    }
+	/**
+	 * @test getCurrentTimeDifference() can return difference in milliseconds
+	 */
+	public function getCurrentTimeDifference_can_return_difference_in_milliseconds()
+	{
+		$this->mockably->shouldReceive('microtime')->once()->andReturn(60.00);
+		$helpers = $this->getHelpersInstance();
 
-    public function test_can_return_the_current_time_difference_in_seconds_on_parameter()
-    {
-        $this->mockably->shouldReceive('microtime')->once()->andReturn(60.00);
-        $helpers = $this->getHelpersInstance();
+		$this->assertEquals(30000, $helpers->getCurrentTimeDifference(30.00, 'ms'));
+	}
 
-        $e = 30;
-        $a = $helpers->getCurrentTimeDifference(30.00, 's');
+	/**
+	 * @test logPerformance()
+	 */
+	public function logPerformance()
+	{
+		$this->request->shouldReceive('getRequestUri')->once()->andReturn('url');
+		$this->session->shouldReceive('get')->with('start.time')->once()->andReturn(30.00);
+		$this->mockably->shouldReceive('microtime')->once()->andReturn(60.00);
+		$this->db->shouldReceive('getQueryLog')->once()->andReturn(array('1', '2'));
+		$this->log->shouldReceive('info')->with(
+			PHP_EOL . 'Performance Statistics:' . PHP_EOL . 'Current Route: url' . PHP_EOL
+			. 'Time to create the Response: 30000 ms' . PHP_EOL . 'Total performed DB Queries: 2' . PHP_EOL
+		)->once();
+		$helpers = $this->getHelpersInstance();
 
-        $this->assertEquals($e, $a);
-    }
+		$helpers->logPerformance();
+	}
 
-    public function test_can_return_the_current_time_difference_in_milliseconds_on_parameter()
-    {
-        $this->mockably->shouldReceive('microtime')->once()->andReturn(60.00);
-        $helpers = $this->getHelpersInstance();
+	/**
+	 * @test forceSSL() can redirect to secure
+	 */
+	public function forceSSL_can_redirect_to_secure()
+	{
+		$this->request->shouldReceive('secure')->once()->andReturn(false);
+		$this->request->shouldReceive('getRequestUri')->once()->andReturn('url');
+		$this->redirect->shouldReceive('secure')->with('url')->once();
+		$helpers = $this->getHelpersInstance();
 
-        $e = 30000; // 1 second = 1000 milliseconds
-        $a = $helpers->getCurrentTimeDifference(30.00, 'ms');
+		$helpers->forceSSL();
+	}
 
-        $this->assertEquals($e, $a);
-    }
+	/**
+	 * @test forceSSL() can return null
+	 */
+	public function forceSSL_can_return_null()
+	{
+		$this->request->shouldReceive('secure')->once()->andReturn(true);
+		$this->redirect->shouldReceive('secure')->never();
+		$helpers = $this->getHelpersInstance();
 
-    /**
-     * @expectedException BadMethodCallException
-     */
-    public function test_can_throw_a_bad_method_call_exception()
-    {
-        $this->mockably->shouldReceive('microtime')->once();
-        $helpers = $this->getHelpersInstance();
+		$this->assertNull($helpers->forceSSL());
+	}
 
-        $helpers->getCurrentTimeDifference(microtime(true), 'default');
-    }
+	/**
+	 * @test force404() can abort the app returning the backend 404 view
+	 */
+	public function force404_can_abort_the_app_returning_the_backend_404_view()
+	{
+		$this->baseController->shouldReceive('missingMethod')->with(array())->once()->andReturn('foo');
+		$helpers = $this->getHelpersInstance();
 
-    /*
-    |--------------------------------------------------------------------------
-    | Helpers::logPerformance() Tests
-    |--------------------------------------------------------------------------
-    |
-    | Here is where you can test the Helpers::logPerformance() method
-    |
-    */
-
-    public function test_can_log_the_applications_performance()
-    {
-        $this->log->shouldReceive('info')->once();
-        $this->request->shouldReceive('getRequestUri')->once();
-        $this->db->shouldReceive('getQueryLog')->once();
-        $helpers = $this->getHelpersInstance();
-        $this->session->shouldReceive('get')->with('start.time')->once();
-        $this->mockably->shouldReceive('microtime')->withNoArgs()->once();
-
-        $helpers->logPerformance();
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Helpers::forceSSL() Tests
-    |--------------------------------------------------------------------------
-    |
-    | Here is where you can test the Helpers::forceSSL() method
-    |
-    */
-
-    public function test_can_force_ssl()
-    {
-        $this->request->shouldReceive('secure')->once()->andReturn(false);
-        $this->request->shouldReceive('getRequestUri')->once()->andReturn('foo');
-        $this->request->shouldReceive('root');
-        $this->redirect->shouldReceive('secure')->with('foo')->once();
-        $helpers = $this->getHelpersInstance();
-
-        $helpers->forceSSL();
-    }
-
-    public function test_can_remain_silent()
-    {
-        $this->request->shouldReceive('secure')->once()->andReturn(true);
-        $this->redirect->shouldReceive('secure')->never();
-        $helpers = $this->getHelpersInstance();
-
-        $this->assertNull($helpers->forceSSL());
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Helpers::force404() Tests
-    |--------------------------------------------------------------------------
-    |
-    | Here is where you can test the Helpers::force404() method
-    |
-    */
-
-    public function test_can_abort_the_app_and_return_the_backend_404_view()
-    {
-        $helpers = $this->getHelpersInstance();
-
-        $result = $helpers->force404();
-
-        $this->assertInstanceOf('Illuminate\Http\Response', $result);
-        $this->assertAttributeContains('larapress::errors.404', 'view', $result->getOriginalContent());
-    }
+		$this->assertEquals('foo', $helpers->force404());
+	}
 
 }

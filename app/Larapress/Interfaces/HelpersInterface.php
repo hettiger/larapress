@@ -3,6 +3,7 @@
 use Illuminate\Config\Repository as Config;
 use Illuminate\Translation\Translator as Lang;
 use Illuminate\View\Environment as View;
+use Larapress\Controllers\BaseController;
 use Monolog\Logger as Log;
 use Illuminate\Http\Request;
 use Illuminate\Session\Store as Session;
@@ -24,20 +25,22 @@ interface HelpersInterface {
 	 * @param \Illuminate\Session\Store $session
 	 * @param \Illuminate\Database\Connection $db
 	 * @param \Illuminate\Routing\Redirector $redirect
+	 * @param \Larapress\Controllers\BaseController $baseController
 	 *
 	 * @return \Larapress\Interfaces\HelpersInterface
 	 */
-    public function __construct(
-        Config $config,
-        Lang $lang,
-        View $view,
-        Mockably $mockably,
-        Log $log,
-        Request $request,
-        Session $session,
-        DB $db,
-        Redirect $redirect
-    );
+	public function __construct(
+		Config $config,
+		Lang $lang,
+		View $view,
+		Mockably $mockably,
+		Log $log,
+		Request $request,
+		Session $session,
+		DB $db,
+		Redirect $redirect,
+		BaseController $baseController
+	);
 
     /**
      * Sets the page title (Shares the title variable for the view)

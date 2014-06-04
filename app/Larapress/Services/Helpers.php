@@ -63,6 +63,11 @@ class Helpers implements HelpersInterface
     private $redirect;
 
 	/**
+	 * @var \Larapress\Controllers\BaseController
+	 */
+	private $baseController;
+
+	/**
 	 * @param \Illuminate\Config\Repository $config
 	 * @param \Illuminate\Translation\Translator $lang
 	 * @param \Illuminate\View\Environment $view
@@ -72,6 +77,7 @@ class Helpers implements HelpersInterface
 	 * @param \Illuminate\Session\Store $session
 	 * @param \Illuminate\Database\Connection $db
 	 * @param \Illuminate\Routing\Redirector $redirect
+	 * @param \Larapress\Controllers\BaseController $baseController
 	 *
 	 * @return \Larapress\Services\Helpers
 	 */
@@ -84,7 +90,8 @@ class Helpers implements HelpersInterface
         Request $request,
         Session $session,
         DB $db,
-        Redirect $redirect
+        Redirect $redirect,
+		BaseController $baseController
     ) {
         $this->config = $config;
         $this->lang = $lang;
@@ -95,7 +102,8 @@ class Helpers implements HelpersInterface
         $this->session = $session;
         $this->db = $db;
         $this->redirect = $redirect;
-    }
+		$this->baseController = $baseController;
+	}
 
     /**
      * Sets the page title (Shares the title variable for the view)
@@ -182,8 +190,7 @@ class Helpers implements HelpersInterface
      */
     public function force404()
     {
-        $controller = new BaseController;
-        return $controller->missingMethod(array());
+        return $this->baseController->missingMethod(array());
     }
 
 }
