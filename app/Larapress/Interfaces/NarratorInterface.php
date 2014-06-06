@@ -20,8 +20,8 @@ interface NarratorInterface {
 	 * @param \Illuminate\Translation\Translator $lang
 	 * @param \Illuminate\Http\Request $input
 	 * @param \Cartalyst\Sentry\Sentry $sentry
-	 * @param \Larapress\Interfaces\NullObjectInterface|\Larapress\Services\NullObject $nullObject
-	 * @param \Larapress\Interfaces\MockablyInterface|\Larapress\Services\Mockably $mockably
+	 * @param \Larapress\Interfaces\NullObjectInterface $nullObject
+	 * @param \Larapress\Interfaces\MockablyInterface $mockably
 	 *
 	 * @return Narrator
 	 */

@@ -13,7 +13,6 @@ use Larapress\Interfaces\BaseControllerInterface;
 use Larapress\Interfaces\HelpersInterface;
 use Larapress\Interfaces\MockablyInterface;
 use Monolog\Logger as Log;
-use Response;
 
 class Helpers implements HelpersInterface {
 
@@ -71,13 +70,13 @@ class Helpers implements HelpersInterface {
 	 * @param \Illuminate\Config\Repository $config
 	 * @param \Illuminate\Translation\Translator $lang
 	 * @param \Illuminate\View\Environment $view
-	 * @param \Larapress\Interfaces\MockablyInterface|\Larapress\Services\Mockably $mockably
+	 * @param \Larapress\Interfaces\MockablyInterface $mockably
 	 * @param \Monolog\Logger $log
 	 * @param \Illuminate\Http\Request $request
 	 * @param \Illuminate\Session\Store $session
 	 * @param \Illuminate\Database\Connection $db
 	 * @param \Illuminate\Routing\Redirector $redirect
-	 * @param \Larapress\Controllers\BaseController|\Larapress\Interfaces\BaseControllerInterface $baseController
+	 * @param \Larapress\Interfaces\BaseControllerInterface $baseController
 	 *
 	 * @return \Larapress\Services\Helpers
 	 */
@@ -167,7 +166,7 @@ class Helpers implements HelpersInterface {
 	 */
 	public function forceSSL()
 	{
-		if (!$this->request->secure())
+		if ( ! $this->request->secure() )
 		{
 			return $this->redirect->secure($this->request->getRequestUri());
 		}
@@ -178,7 +177,7 @@ class Helpers implements HelpersInterface {
 	/**
 	 * Abort the app and return the backend 404 response
 	 *
-	 * @return Response Returns a 404 Response with view
+	 * @return \Illuminate\Http\Response Returns a 404 Response with view
 	 */
 	public function force404()
 	{

@@ -67,8 +67,8 @@ class Narrator implements NarratorInterface {
 	 * @param \Illuminate\Translation\Translator $lang
 	 * @param \Illuminate\Http\Request $input
 	 * @param \Cartalyst\Sentry\Sentry $sentry
-	 * @param \Larapress\Interfaces\NullObjectInterface|\Larapress\Services\NullObject $nullObject
-	 * @param \Larapress\Interfaces\MockablyInterface|\Larapress\Services\Mockably $mockably
+	 * @param \Larapress\Interfaces\NullObjectInterface $nullObject
+	 * @param \Larapress\Interfaces\MockablyInterface $mockably
 	 *
 	 * @return Narrator
 	 */
@@ -218,17 +218,15 @@ class Narrator implements NarratorInterface {
 	{
 		try
 		{
-			$result = $this->mail->send($this->view, $this->data,
-				// @codeCoverageIgnoreStart
+			$result = $this->mail->send($this->view, $this->data, // @codeCoverageIgnoreStart
 				function ($message)
 				{
 					$message->from($this->from['address'], $this->from['name']);
 					$message->to($this->to['address'], $this->to['name'])->subject($this->subject);
-				}
-			// @codeCoverageIgnoreEnd
+				} // @codeCoverageIgnoreEnd
 			);
 
-			if (!$result)
+			if ( ! $result )
 			{
 				throw new MailException($this->mailErrorMessage);
 			}
@@ -301,7 +299,7 @@ class Narrator implements NarratorInterface {
 
 		$new_password = $this->mockably->str_random(16);
 
-		if ($user->attemptResetPassword($reset_code, $new_password))
+		if ( $user->attemptResetPassword($reset_code, $new_password) )
 		{
 			return $new_password;
 		}
@@ -324,7 +322,7 @@ class Narrator implements NarratorInterface {
 	 */
 	protected function attemptToReset($user, $reset_code)
 	{
-		if ($user->checkResetPasswordCode($reset_code))
+		if ( $user->checkResetPasswordCode($reset_code) )
 		{
 			return $this->unsuspendUserAndResetPassword($user, $reset_code);
 		}

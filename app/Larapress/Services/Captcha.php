@@ -38,8 +38,8 @@ class Captcha implements CaptchaInterface {
 	 * @param View $view
 	 * @param Config $config
 	 * @param Session $session
-	 * @param \Larapress\Interfaces\HelpersInterface|\Larapress\Services\Helpers $helpers
-	 * @param \Larapress\Interfaces\MockablyInterface|\Larapress\Services\Mockably $mockably
+	 * @param \Larapress\Interfaces\HelpersInterface $helpers
+	 * @param \Larapress\Interfaces\MockablyInterface $mockably
 	 *
 	 * @return \Larapress\Services\Captcha
 	 */
@@ -60,14 +60,14 @@ class Captcha implements CaptchaInterface {
 	 */
 	public function isRequired()
 	{
-		if (!$this->config->get('larapress.settings.captcha.active'))
+		if ( ! $this->config->get('larapress.settings.captcha.active') )
 		{
 			return false;
 		}
 
 		$timer = $this->config->get('larapress.settings.captcha.timer');
 
-		if ($this->helpers->getCurrentTimeDifference($this->session->get('captcha.passed.time', 0), 'm') >= $timer)
+		if ( $this->helpers->getCurrentTimeDifference($this->session->get('captcha.passed.time', 0), 'm') >= $timer )
 		{
 			return true;
 		}

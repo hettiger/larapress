@@ -9,7 +9,6 @@ use Illuminate\Session\Store as Session;
 use Illuminate\Translation\Translator as Lang;
 use Illuminate\View\Environment as View;
 use Monolog\Logger as Log;
-use Response;
 
 interface HelpersInterface {
 
@@ -17,13 +16,13 @@ interface HelpersInterface {
 	 * @param \Illuminate\Config\Repository $config
 	 * @param \Illuminate\Translation\Translator $lang
 	 * @param \Illuminate\View\Environment $view
-	 * @param \Larapress\Interfaces\MockablyInterface|\Larapress\Services\Mockably $mockably
+	 * @param \Larapress\Interfaces\MockablyInterface $mockably
 	 * @param \Monolog\Logger $log
 	 * @param \Illuminate\Http\Request $request
 	 * @param \Illuminate\Session\Store $session
 	 * @param \Illuminate\Database\Connection $db
 	 * @param \Illuminate\Routing\Redirector $redirect
-	 * @param \Larapress\Controllers\BaseController|\Larapress\Interfaces\BaseControllerInterface $baseController
+	 * @param \Larapress\Interfaces\BaseControllerInterface $baseController
 	 *
 	 * @return \Larapress\Interfaces\HelpersInterface
 	 */
@@ -66,7 +65,7 @@ interface HelpersInterface {
 	/**
 	 * Abort the app and return the backend 404 response
 	 *
-	 * @return Response Returns a 404 Response with view
+	 * @return \Illuminate\Http\Response Returns a 404 Response with view
 	 */
 	public function force404();
 

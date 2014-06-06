@@ -10,8 +10,8 @@ interface CaptchaInterface {
 	 * @param View $view
 	 * @param Config $config
 	 * @param Session $session
-	 * @param \Larapress\Interfaces\HelpersInterface|\Larapress\Services\Helpers $helpers
-	 * @param \Larapress\Interfaces\MockablyInterface|\Larapress\Services\Mockably $mockably
+	 * @param \Larapress\Interfaces\HelpersInterface $helpers
+	 * @param \Larapress\Interfaces\MockablyInterface $mockably
 	 *
 	 * @return \Larapress\Interfaces\CaptchaInterface
 	 */
