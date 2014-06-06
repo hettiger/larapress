@@ -4,6 +4,8 @@ use Illuminate\Config\Repository as Config;
 use Illuminate\Session\Store as Session;
 use Illuminate\View\Environment as View;
 use Larapress\Interfaces\CaptchaInterface;
+use Larapress\Interfaces\HelpersInterface;
+use Larapress\Interfaces\MockablyInterface;
 
 class Captcha implements CaptchaInterface {
 
@@ -36,12 +38,13 @@ class Captcha implements CaptchaInterface {
 	 * @param View $view
 	 * @param Config $config
 	 * @param Session $session
-	 * @param Helpers $helpers
-	 * @param Mockably $mockably
+	 * @param \Larapress\Interfaces\HelpersInterface|\Larapress\Services\Helpers $helpers
+	 * @param \Larapress\Interfaces\MockablyInterface|\Larapress\Services\Mockably $mockably
 	 *
 	 * @return \Larapress\Services\Captcha
 	 */
-	public function __construct(View $view, Config $config, Session $session, Helpers $helpers, Mockably $mockably)
+	public function __construct(View $view, Config $config, Session $session, HelpersInterface $helpers,
+								MockablyInterface $mockably)
 	{
 		$this->view = $view;
 		$this->config = $config;
