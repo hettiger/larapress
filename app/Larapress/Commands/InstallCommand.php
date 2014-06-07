@@ -3,8 +3,8 @@
 use Cartalyst\Sentry\Groups\GroupExistsException;
 use Cartalyst\Sentry\Groups\GroupInterface;
 use Cartalyst\Sentry\Groups\NameRequiredException;
-use Illuminate\Console\Command;
 use Cartalyst\Sentry\Sentry;
+use Illuminate\Console\Command;
 use Larapress\Services\Mockably;
 use UnexpectedValueException;
 
@@ -214,7 +214,7 @@ class InstallCommand extends Command {
 		$this->call('migrate', array('--package' => 'cartalyst/sentry'));
 		$admin_group = $this->create_user_groups();
 
-		if ($admin_group instanceof GroupInterface)
+		if ( $admin_group instanceof GroupInterface )
 		{
 			$this->add_the_admin_user($admin_group);
 		}

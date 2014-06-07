@@ -21,12 +21,12 @@ class InstallCommandTest extends PHPUnit_Framework_TestCase {
 	private $mockably;
 
 	public function setUp()
-    {
-        parent::setUp();
+	{
+		parent::setUp();
 
 		$this->sentry = Mockery::mock('\Cartalyst\Sentry\Sentry');
 		$this->mockably = Mockery::mock('\Larapress\Services\Mockably');
-    }
+	}
 
 	public function tearDown()
 	{
@@ -42,6 +42,7 @@ class InstallCommandTest extends PHPUnit_Framework_TestCase {
 	protected function getInstallCommandInstance()
 	{
 		$this->mockably->shouldReceive('route')->with('larapress.home.login.get')->once()->andReturn('url');
+
 		return new InstallCommandProxy($this->sentry, $this->mockably);
 	}
 
