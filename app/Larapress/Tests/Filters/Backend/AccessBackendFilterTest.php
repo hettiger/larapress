@@ -15,20 +15,14 @@ class AccessBackendFilterTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * @var Mock
 	 */
-	private $session;
-
-	/**
-	 * @var Mock
-	 */
-	private $redirect;
+	private $helpers;
 
 	public function setUp()
 	{
 		parent::setUp();
 
-		$this->permission = Mockery::mock('\Larapress\Services\Permission');
-		$this->session = Mockery::mock('\Illuminate\Session\Store');
-		$this->redirect = Mockery::mock('\Illuminate\Routing\Redirector');
+		$this->permission = Mockery::mock('\Larapress\Interfaces\PermissionInterface');
+		$this->helpers = Mockery::mock('\Larapress\Interfaces\HelpersInterface');
 	}
 
 	public function tearDown()
@@ -40,7 +34,7 @@ class AccessBackendFilterTest extends PHPUnit_Framework_TestCase {
 
 	protected function getAccessBackendFilterInstance()
 	{
-		return new AccessBackendFilterProxy($this->permission, $this->session, $this->redirect);
+		return new AccessBackendFilterProxy($this->permission, $this->helpers);
 	}
 
 	/**
@@ -50,8 +44,8 @@ class AccessBackendFilterTest extends PHPUnit_Framework_TestCase {
 	{
 		$this->permission->shouldReceive('has')->with('access.backend')->once()
 			->andThrow('Larapress\Exceptions\PermissionMissingException', 'foo');
-		$this->session->shouldReceive('flash')->with('error', 'foo')->once();
-		$this->redirect->shouldReceive('route')->with('larapress.home.login.get')->once()->andReturn('bar');
+		$this->helpers->shouldReceive('redirectWithFlashMessage')->with('error', 'foo', 'larapress.home.login.get')
+			->once()->andReturn('bar');
 		$filter = $this->getAccessBackendFilterInstance();
 
 		$this->assertEquals('bar', $filter->filter());

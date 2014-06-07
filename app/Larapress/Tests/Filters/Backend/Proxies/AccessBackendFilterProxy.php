@@ -4,11 +4,10 @@ use Larapress\Filters\Backend\AccessBackendFilter;
 
 class AccessBackendFilterProxy extends AccessBackendFilter {
 
-	public function __construct($permission, $session, $redirect)
+	public function __construct($permission, $helpers)
 	{
 		$this->permission = $permission;
-		$this->session = $session;
-		$this->redirect = $redirect;
+		$this->helpers = $helpers;
 	}
 
 }

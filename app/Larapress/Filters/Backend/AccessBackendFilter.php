@@ -11,14 +11,9 @@ class AccessBackendFilter {
 	protected $permission;
 
 	/**
-	 * @var \Illuminate\Session\Store
+	 * @var \Larapress\Interfaces\HelpersInterface
 	 */
-	protected $session;
-
-	/**
-	 * @var \Illuminate\Routing\Redirector
-	 */
-	protected $redirect;
+	protected $helpers;
 
 	/**
 	 * @codeCoverageIgnore
@@ -28,8 +23,7 @@ class AccessBackendFilter {
 		$app = app();
 
 		$this->permission = $app['permission'];
-		$this->session = $app['session.store'];
-		$this->redirect = $app['redirect'];
+		$this->helpers = $app['helpers'];
 	}
 
 	/**
@@ -46,9 +40,7 @@ class AccessBackendFilter {
 		}
 		catch (PermissionMissingException $e)
 		{
-			$this->session->flash('error', $e->getMessage());
-
-			return $this->redirect->route('larapress.home.login.get');
+			return $this->helpers->redirectWithFlashMessage('error', $e->getMessage(), 'larapress.home.login.get');
 		}
 
 		return null; // User has access
