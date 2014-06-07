@@ -1,4 +1,4 @@
-<?php namespace Larapress\Tests\Filters;
+<?php namespace Larapress\Tests\Filters\Special;
 
 use Captcha;
 use InvalidArgumentException;

@@ -1,4 +1,4 @@
-<?php namespace Larapress\Tests\Filters;
+<?php namespace Larapress\Tests\Filters\Backend;
 
 use Config;
 use Larapress\Tests\TestCase;
