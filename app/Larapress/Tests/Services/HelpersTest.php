@@ -231,4 +231,28 @@ class HelpersTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('foo', $helpers->force404());
 	}
 
+	/**
+	 * @test redirectWithFlashMessage() redirects back per default
+	 */
+	public function redirectWithFlashMessage_redirects_back_per_default()
+	{
+		$this->session->shouldReceive('flash')->with('foo', 'bar')->once();
+		$this->redirect->shouldReceive('back')->withNoArgs()->once()->andReturn('baz');
+		$helpers = $this->getHelpersInstance();
+
+		$this->assertEquals('baz', $helpers->redirectWithFlashMessage('foo', 'bar'));
+	}
+
+	/**
+	 * @test redirectWithFlashMessage() can redirect to a given route
+	 */
+	public function redirectWithFlashMessage_can_redirect_to_a_given_route()
+	{
+		$this->session->shouldReceive('flash')->with('foo', 'bar')->once();
+		$this->redirect->shouldReceive('route')->with('baz', array(), 302, array())->once()->andReturn('route');
+		$helpers = $this->getHelpersInstance();
+
+		$this->assertEquals('route', $helpers->redirectWithFlashMessage('foo', 'bar', 'baz'));
+	}
+
 }

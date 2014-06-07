@@ -192,4 +192,33 @@ class Helpers implements HelpersInterface {
 		return $this->baseController->missingMethod(array());
 	}
 
+	/**
+	 * Set a flash message and either redirect to a given route or the last page
+	 *
+	 * @param string $key The session flash message key
+	 * @param string $message The session flash message value
+	 * @param string|null $route The Route name to redirect to (can be left empty to just redirect back)
+	 * @param array $parameters Parameters for the route (See the Laravel documentation)
+	 * @param int $status Status code for the route (See the Laravel documentation)
+	 * @param array $headers Headers for the route (See the Laravel documentation)
+	 * @return \Illuminate\HTTP\RedirectResponse
+	 */
+	public function redirectWithFlashMessage(
+		$key,
+		$message,
+		$route = null,
+		$parameters = array(),
+		$status = 302,
+		$headers = array()
+	) {
+		$this->session->flash($key, $message);
+
+		if ( ! is_null($route) )
+		{
+			return $this->redirect->route($route, $parameters = array(), $status = 302, $headers = array());
+		}
+
+		return $this->redirect->back();
+	}
+
 }
