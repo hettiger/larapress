@@ -55,7 +55,9 @@ We're prefixing version numbers with the letter "v" like `v1.0.1` and follow the
 
 ## Coding Style
 
-We're following the [PSR-2 Coding Style Guide](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md).
+The larapress coding style is a mix of the [PSR-2 Coding Style Guide](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md), Laravel and my own personal preferences.
+
+> Your best bet is to look at the code and try to adapt right now. Maybe there'll be some style guide later on but let's see if it's actually going to be required at first. Don't fear to send some pull requests I have no problem reformatting them myself at this time.
 
 ## Development Environment
 
