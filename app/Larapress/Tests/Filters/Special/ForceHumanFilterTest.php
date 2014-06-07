@@ -15,20 +15,14 @@ class ForceHumanFilterTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * @var Mock
 	 */
-	private $session;
-
-	/**
-	 * @var Mock
-	 */
-	private $redirect;
+	private $helpers;
 
 	public function setUp()
 	{
 		parent::setUp();
 
 		$this->captcha = Mockery::mock('\Larapress\Interfaces\CaptchaInterface');
-		$this->session = Mockery::mock('\Illuminate\Session\Store');
-		$this->redirect = Mockery::mock('\Illuminate\Routing\Redirector');
+		$this->helpers = Mockery::mock('\Larapress\Interfaces\HelpersInterface');
 	}
 
 	public function tearDown()
@@ -40,7 +34,7 @@ class ForceHumanFilterTest extends PHPUnit_Framework_TestCase {
 
 	protected function getForceHumanFilterInstance()
 	{
-		return new ForceHumanFilterProxy($this->captcha, $this->session, $this->redirect);
+		return new ForceHumanFilterProxy($this->captcha, $this->helpers);
 	}
 
 	/**
@@ -49,9 +43,8 @@ class ForceHumanFilterTest extends PHPUnit_Framework_TestCase {
 	public function filter_can_redirect_back_with_a_flash_message_if_the_captcha_is_required()
 	{
 		$this->captcha->shouldReceive('isRequired')->withNoArgs()->once()->andReturn(true);
-		$this->session->shouldReceive('flash')
-			->with('error', 'Please verify that you are human first.')->once();
-		$this->redirect->shouldReceive('back')->withNoArgs()->once()->andReturn('foo');
+		$this->helpers->shouldReceive('redirectWithFlashMessage')
+			->with('error', 'Please verify that you are human first.')->once()->andReturn('foo');
 		$filter = $this->getForceHumanFilterInstance();
 
 		$this->assertEquals('foo', $filter->filter());

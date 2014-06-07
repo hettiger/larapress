@@ -4,11 +4,10 @@ use Larapress\Filters\Special\ForceHumanFilter;
 
 class ForceHumanFilterProxy extends ForceHumanFilter {
 
-	public function __construct($captcha, $session, $redirect)
+	public function __construct($captcha, $helpers)
 	{
 		$this->captcha = $captcha;
-		$this->session = $session;
-		$this->redirect = $redirect;
+		$this->helpers = $helpers;
 	}
 
 }

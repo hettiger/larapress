@@ -10,14 +10,9 @@ class ForceHumanFilter {
 	protected $captcha;
 
 	/**
-	 * @var \Illuminate\Session\Store
+	 * @var \Larapress\Interfaces\HelpersInterface
 	 */
-	protected $session;
-
-	/**
-	 * @var \Illuminate\Routing\Redirector
-	 */
-	protected $redirect;
+	protected $helpers;
 
 	/**
 	 * @codeCoverageIgnore
@@ -27,8 +22,7 @@ class ForceHumanFilter {
 		$app = app();
 
 		$this->captcha = $app['captcha'];
-		$this->session = $app['session.store'];
-		$this->redirect = $app['redirect'];
+		$this->helpers = $app['helpers'];
 	}
 
 	/**
@@ -41,9 +35,7 @@ class ForceHumanFilter {
 	{
 		if ( $this->captcha->isRequired() )
 		{
-			$this->session->flash('error', 'Please verify that you are human first.');
-
-			return $this->redirect->back();
+			return $this->helpers->redirectWithFlashMessage('error', 'Please verify that you are human first.');
 		}
 
 		return null; // Captcha is not required, proceed
