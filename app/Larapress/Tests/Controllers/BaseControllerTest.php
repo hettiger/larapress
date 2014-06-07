@@ -7,57 +7,56 @@ use Larapress\Tests\TestCase;
 use Str;
 use View;
 
-class BaseControllerTest extends TestCase
-{
+class BaseControllerTest extends TestCase {
 
-    private $backend_route;
+	private $backend_route;
 
-    public function setUp()
-    {
-        parent::setUp();
+	public function setUp()
+	{
+		parent::setUp();
 
-        $this->backend_route = Config::get('larapress.urls.backend');
-    }
+		$this->backend_route = Config::get('larapress.urls.backend');
+	}
 
-    /*
-    |--------------------------------------------------------------------------
-    | Constructor Tests
-    |--------------------------------------------------------------------------
-    |
-    | Here is where you can test the constructor
-    |
-    */
+	/*
+	|--------------------------------------------------------------------------
+	| Constructor Tests
+	|--------------------------------------------------------------------------
+	|
+	| Here is where you can test the constructor
+	|
+	*/
 
-    public function test_constructor_shares_important_data()
-    {
-        View::shouldReceive('share')->times(2);
+	public function test_constructor_shares_important_data()
+	{
+		View::shouldReceive('share')->times(2);
 
-        new BaseController;
-    }
+		new BaseController;
+	}
 
-    /*
-    |--------------------------------------------------------------------------
-    | BaseController@missingMethod Tests
-    |--------------------------------------------------------------------------
-    |
-    | Here is where you can test the BaseController@missingMethod method
-    |
-    */
+	/*
+	|--------------------------------------------------------------------------
+	| BaseController@missingMethod Tests
+	|--------------------------------------------------------------------------
+	|
+	| Here is where you can test the BaseController@missingMethod method
+	|
+	*/
 
-    public function test_can_catch_404_errors()
-    {
-        $this->call('GET', $this->backend_route . '/' . Str::quickRandom(16));
+	public function test_can_catch_404_errors()
+	{
+		$this->call('GET', $this->backend_route . '/' . Str::quickRandom(16));
 
-        $this->assertResponseStatus(404);
-    }
+		$this->assertResponseStatus(404);
+	}
 
-    public function test_can_set_the_correct_page_title()
-    {
-        Helpers::shouldReceive('setPageTitle')->with('404 Error')->once();
-        View::share('title', 'foo'); // Prevent an for this test irrelevant ErrorException
+	public function test_can_set_the_correct_page_title()
+	{
+		Helpers::shouldReceive('setPageTitle')->with('404 Error')->once();
+		View::share('title', 'foo'); // Prevent an for this test irrelevant ErrorException
 
-        $controller = new BaseController;
-        $controller->missingMethod(array());
-    }
+		$controller = new BaseController;
+		$controller->missingMethod(array());
+	}
 
 }
