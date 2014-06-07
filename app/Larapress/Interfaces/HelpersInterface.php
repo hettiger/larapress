@@ -26,9 +26,18 @@ interface HelpersInterface {
 	 *
 	 * @return \Larapress\Interfaces\HelpersInterface
 	 */
-	public function __construct(Config $config, Lang $lang, View $view, MockablyInterface $mockably, Log $log,
-								Request $request, Session $session, DB $db, Redirect $redirect,
-								BaseControllerInterface $baseController);
+	public function __construct(
+		Config $config,
+		Lang $lang,
+		View $view,
+		MockablyInterface $mockably,
+		Log $log,
+		Request $request,
+		Session $session,
+		DB $db,
+		Redirect $redirect,
+		BaseControllerInterface $baseController
+	);
 
 	/**
 	 * Sets the page title (Shares the title variable for the view)

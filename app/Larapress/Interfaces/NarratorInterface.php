@@ -25,8 +25,15 @@ interface NarratorInterface {
 	 *
 	 * @return Narrator
 	 */
-	public function __construct(Config $config, Mail $mail, Lang $lang, Input $input, Sentry $sentry,
-								NullObjectInterface $nullObject, MockablyInterface $mockably);
+	public function __construct(
+		Config $config,
+		Mail $mail,
+		Lang $lang,
+		Input $input,
+		Sentry $sentry,
+		NullObjectInterface $nullObject,
+		MockablyInterface $mockably
+	);
 
 	/**
 	 * Data for the view/-s of your email

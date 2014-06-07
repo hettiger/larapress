@@ -15,8 +15,13 @@ interface CaptchaInterface {
 	 *
 	 * @return \Larapress\Interfaces\CaptchaInterface
 	 */
-	public function __construct(View $view, Config $config, Session $session, HelpersInterface $helpers,
-								MockablyInterface $mockably);
+	public function __construct(
+		View $view,
+		Config $config,
+		Session $session,
+		HelpersInterface $helpers,
+		MockablyInterface $mockably
+	);
 
 	/**
 	 * Check if the reCAPTCHA is required
