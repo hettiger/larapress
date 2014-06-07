@@ -30,7 +30,7 @@ class Permission implements PermissionInterface {
 	 */
 	public function has($permission)
 	{
-		if (!$this->sentry->check())
+		if ( ! $this->sentry->check() )
 		{
 			throw new PermissionMissingException('User is not logged in.');
 		}
@@ -38,7 +38,7 @@ class Permission implements PermissionInterface {
 		{
 			$user = $this->sentry->getUser();
 
-			if (!$user->hasAccess($permission))
+			if ( ! $user->hasAccess($permission) )
 			{
 				throw new PermissionMissingException('User is missing permissions.');
 			}

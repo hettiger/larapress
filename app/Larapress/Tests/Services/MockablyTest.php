@@ -3,8 +3,7 @@
 use Larapress\Services\Mockably;
 use PHPUnit_Framework_TestCase;
 
-class MockablyTest extends PHPUnit_Framework_TestCase
-{
+class MockablyTest extends PHPUnit_Framework_TestCase {
 
 	/**
 	 * @test microtime() can return float

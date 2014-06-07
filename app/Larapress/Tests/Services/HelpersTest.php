@@ -6,53 +6,52 @@ use Mockery;
 use Mockery\Mock;
 use PHPUnit_Framework_TestCase;
 
-class HelpersTest extends PHPUnit_Framework_TestCase
-{
+class HelpersTest extends PHPUnit_Framework_TestCase {
 
-    /**
-     * @var Mock
-     */
-    protected $config;
+	/**
+	 * @var Mock
+	 */
+	protected $config;
 
-    /**
-     * @var Mock
-     */
-    protected $lang;
+	/**
+	 * @var Mock
+	 */
+	protected $lang;
 
-    /**
-     * @var Mock
-     */
-    protected $view;
+	/**
+	 * @var Mock
+	 */
+	protected $view;
 
-    /**
-     * @var Mock
-     */
-    protected $mockably;
+	/**
+	 * @var Mock
+	 */
+	protected $mockably;
 
-    /**
-     * @var Mock
-     */
-    protected $log;
+	/**
+	 * @var Mock
+	 */
+	protected $log;
 
-    /**
-     * @var Mock
-     */
-    protected $request;
+	/**
+	 * @var Mock
+	 */
+	protected $request;
 
-    /**
-     * @var Mock
-     */
-    protected $session;
+	/**
+	 * @var Mock
+	 */
+	protected $session;
 
-    /**
-     * @var Mock
-     */
-    protected $db;
+	/**
+	 * @var Mock
+	 */
+	protected $db;
 
-    /**
-     * @var Mock
-     */
-    protected $redirect;
+	/**
+	 * @var Mock
+	 */
+	protected $redirect;
 
 	/**
 	 * @var Mock
@@ -60,43 +59,43 @@ class HelpersTest extends PHPUnit_Framework_TestCase
 	private $baseController;
 
 	public function setUp()
-    {
-        parent::setUp();
+	{
+		parent::setUp();
 
-        $this->config = Mockery::mock('\Illuminate\Config\Repository');
-        $this->lang = Mockery::mock('\Illuminate\Translation\Translator');
-        $this->view = Mockery::mock('\Illuminate\View\Environment');
-        $this->mockably = Mockery::mock('\Larapress\Services\Mockably');
-        $this->log = Mockery::mock('\Monolog\Logger');
-        $this->request = Mockery::mock('\Illuminate\Http\Request');
-        $this->session = Mockery::mock('\Illuminate\Session\Store');
-        $this->db = Mockery::mock('\Illuminate\Database\Connection');
-        $this->redirect = Mockery::mock('\Illuminate\Routing\Redirector');
+		$this->config = Mockery::mock('\Illuminate\Config\Repository');
+		$this->lang = Mockery::mock('\Illuminate\Translation\Translator');
+		$this->view = Mockery::mock('\Illuminate\View\Environment');
+		$this->mockably = Mockery::mock('\Larapress\Services\Mockably');
+		$this->log = Mockery::mock('\Monolog\Logger');
+		$this->request = Mockery::mock('\Illuminate\Http\Request');
+		$this->session = Mockery::mock('\Illuminate\Session\Store');
+		$this->db = Mockery::mock('\Illuminate\Database\Connection');
+		$this->redirect = Mockery::mock('\Illuminate\Routing\Redirector');
 		$this->baseController = Mockery::mock('\Larapress\Controllers\BaseController');
-    }
+	}
 
-    public function tearDown()
-    {
-        parent::tearDown();
+	public function tearDown()
+	{
+		parent::tearDown();
 
-        Mockery::close();
-    }
+		Mockery::close();
+	}
 
-    protected function getHelpersInstance()
-    {
-        return new Helpers(
-            $this->config,
-            $this->lang,
-            $this->view,
-            $this->mockably,
-            $this->log,
-            $this->request,
-            $this->session,
-            $this->db,
-            $this->redirect,
+	protected function getHelpersInstance()
+	{
+		return new Helpers(
+			$this->config,
+			$this->lang,
+			$this->view,
+			$this->mockably,
+			$this->log,
+			$this->request,
+			$this->session,
+			$this->db,
+			$this->redirect,
 			$this->baseController
-        );
-    }
+		);
+	}
 
 	/**
 	 * @test setPageTitle()

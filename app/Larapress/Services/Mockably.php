@@ -12,18 +12,17 @@ use Larapress\Interfaces\MockablyInterface;
 |
 */
 
-class Mockably implements MockablyInterface
-{
+class Mockably implements MockablyInterface {
 
-    /**
-     * Return current Unix timestamp in seconds with microseconds as float
-     *
-     * @return float
-     */
-    public function microtime()
-    {
-        return microtime(true);
-    }
+	/**
+	 * Return current Unix timestamp in seconds with microseconds as float
+	 *
+	 * @return float
+	 */
+	public function microtime()
+	{
+		return microtime(true);
+	}
 
 	/**
 	 * Return a random string of given length

@@ -295,7 +295,7 @@ class NarratorTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(' | Subject', $narrator->getSubject());
 		$this->assertEquals(array(
 			'cms_name' => null,
-			'url' => 'url'
+			'url'      => 'url'
 		), $narrator->getData());
 		$this->assertEquals(array('text' => 'larapress::emails.reset-password'), $narrator->getView());
 	}

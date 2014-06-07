@@ -43,9 +43,13 @@ class Captcha implements CaptchaInterface {
 	 *
 	 * @return \Larapress\Services\Captcha
 	 */
-	public function __construct(View $view, Config $config, Session $session, HelpersInterface $helpers,
-								MockablyInterface $mockably)
-	{
+	public function __construct(
+		View $view,
+		Config $config,
+		Session $session,
+		HelpersInterface $helpers,
+		MockablyInterface $mockably
+	) {
 		$this->view = $view;
 		$this->config = $config;
 		$this->session = $session;

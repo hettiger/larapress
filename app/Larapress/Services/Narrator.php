@@ -72,9 +72,15 @@ class Narrator implements NarratorInterface {
 	 *
 	 * @return Narrator
 	 */
-	public function __construct(Config $config, Mail $mail, Lang $lang, Input $input, Sentry $sentry,
-								NullObjectInterface $nullObject, MockablyInterface $mockably)
-	{
+	public function __construct(
+		Config $config,
+		Mail $mail,
+		Lang $lang,
+		Input $input,
+		Sentry $sentry,
+		NullObjectInterface $nullObject,
+		MockablyInterface $mockably
+	) {
 		$this->config = $config;
 		$this->mail = $mail;
 		$this->lang = $lang;
