@@ -1,56 +1,71 @@
 <?php namespace Larapress\Tests\Filters\Special;
 
-use Captcha;
-use InvalidArgumentException;
-use Larapress\Filters\Special\ForceHumanFilter;
-use Larapress\Tests\TestCase;
-use Route;
+use Larapress\Tests\Filters\Special\Proxies\ForceHumanFilterProxy;
+use Mockery\Mock;
+use Mockery;
+use PHPUnit_Framework_TestCase;
 
-class ForceHumanFilterTest extends TestCase {
+class ForceHumanFilterTest extends PHPUnit_Framework_TestCase {
+
+	/**
+	 * @var Mock
+	 */
+	private $captcha;
+
+	/**
+	 * @var Mock
+	 */
+	private $session;
+
+	/**
+	 * @var Mock
+	 */
+	private $redirect;
 
 	public function setUp()
 	{
 		parent::setUp();
 
-		Route::enableFilters();
+		$this->captcha = Mockery::mock('\Larapress\Interfaces\CaptchaInterface');
+		$this->session = Mockery::mock('\Illuminate\Session\Store');
+		$this->redirect = Mockery::mock('\Illuminate\Routing\Redirector');
 	}
 
-	public function test_can_return_null_if_captcha_is_not_required()
+	public function tearDown()
 	{
-		Captcha::shouldReceive('isRequired')->once()->andReturn(false);
+		parent::tearDown();
 
-		$filter = new ForceHumanFilter;
-		$this->assertInternalType('null', $filter->filter());
+		Mockery::close();
+	}
+
+	protected function getForceHumanFilterInstance()
+	{
+		return new ForceHumanFilterProxy($this->captcha, $this->session, $this->redirect);
 	}
 
 	/**
-	 * @expectedException InvalidArgumentException
-	 * @expectedExceptionMessage Cannot redirect to an empty URL.
+	 * @test filter() can redirect back with a flash message if the captcha is required
 	 */
-	public function test_can_redirect_back_if_the_captcha_is_required()
+	public function filter_can_redirect_back_with_a_flash_message_if_the_captcha_is_required()
 	{
-		Captcha::shouldReceive('isRequired')->once()->andReturn(true);
+		$this->captcha->shouldReceive('isRequired')->withNoArgs()->once()->andReturn(true);
+		$this->session->shouldReceive('flash')
+			->with('error', 'Please verify that you are human first.')->once();
+		$this->redirect->shouldReceive('back')->withNoArgs()->once()->andReturn('foo');
+		$filter = $this->getForceHumanFilterInstance();
 
-		$filter = new ForceHumanFilter;
-		$filter->filter();
+		$this->assertEquals('foo', $filter->filter());
 	}
 
-	public function test_can_flash_an_error_message_to_the_session_if_the_captcha_is_required()
+	/**
+	 * @test filter() returns null if the captcha is not required
+	 */
+	public function filter_returns_null_if_the_captcha_is_not_required()
 	{
-		Captcha::shouldReceive('isRequired')->once()->andReturn(true);
+		$this->captcha->shouldReceive('isRequired')->withNoArgs()->once()->andReturn(false);
+		$filter = $this->getForceHumanFilterInstance();
 
-		$filter = new ForceHumanFilter;
-
-		try
-		{
-			$filter->filter();
-		}
-		catch (InvalidArgumentException $e)
-		{
-			$this->assertEquals('Cannot redirect to an empty URL.', $e->getMessage());
-		}
-
-		$this->assertSessionHas('error', 'Please verify that you are human first.');
+		$this->assertNull($filter->filter());
 	}
 
 }

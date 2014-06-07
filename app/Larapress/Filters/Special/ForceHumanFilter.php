@@ -1,11 +1,35 @@
 <?php namespace Larapress\Filters\Special;
 
-use Captcha;
 use Illuminate\Http\RedirectResponse;
-use Redirect;
-use Session;
 
 class ForceHumanFilter {
+
+	/**
+	 * @var \Larapress\Interfaces\CaptchaInterface
+	 */
+	protected $captcha;
+
+	/**
+	 * @var \Illuminate\Session\Store
+	 */
+	protected $session;
+
+	/**
+	 * @var \Illuminate\Routing\Redirector
+	 */
+	protected $redirect;
+
+	/**
+	 * @codeCoverageIgnore
+	 */
+	public function __construct()
+	{
+		$app = app();
+
+		$this->captcha = $app['captcha'];
+		$this->session = $app['session.store'];
+		$this->redirect = $app['redirect'];
+	}
 
 	/**
 	 * Check if the user must pass a captcha first
@@ -15,11 +39,11 @@ class ForceHumanFilter {
 	 */
 	public function filter()
 	{
-		if ( Captcha::isRequired() )
+		if ( $this->captcha->isRequired() )
 		{
-			Session::flash('error', 'Please verify that you are human first.');
+			$this->session->flash('error', 'Please verify that you are human first.');
 
-			return Redirect::back();
+			return $this->redirect->back();
 		}
 
 		return null; // Captcha is not required, proceed
