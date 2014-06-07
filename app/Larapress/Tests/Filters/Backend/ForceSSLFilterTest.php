@@ -1,40 +1,40 @@
 <?php namespace Larapress\Tests\Filters;
 
+use Config;
 use Larapress\Tests\TestCase;
 use Route;
-use Config;
 
-class ForceSSLFilterTest extends TestCase
-{
-    private $backend_route;
+class ForceSSLFilterTest extends TestCase {
 
-    public function setUp()
-    {
-        parent::setUp();
+	private $backend_route;
 
-        Route::enableFilters();
+	public function setUp()
+	{
+		parent::setUp();
 
-        $this->backend_route = Config::get('larapress.urls.backend');
-    }
+		Route::enableFilters();
 
-    public function test_can_remain_silent_if_the_config_entry_is_set_to_false()
-    {
-        Config::set('larapress.settings.ssl', false);
+		$this->backend_route = Config::get('larapress.urls.backend');
+	}
 
-        $this->route('GET', 'larapress.home.login.get');
+	public function test_can_remain_silent_if_the_config_entry_is_set_to_false()
+	{
+		Config::set('larapress.settings.ssl', false);
 
-        $this->assertResponseOk();
-    }
+		$this->route('GET', 'larapress.home.login.get');
 
-    public function test_can_redirect_to_secure_urls_if_the_config_entry_is_set_to_true()
-    {
-        Config::set('larapress.settings.ssl', true);
-        $request = $this->backend_route . '/login';
-        $expected_redirect_url = url($request, array(), true);
+		$this->assertResponseOk();
+	}
 
-        $this->route('GET', 'larapress.home.login.get');
+	public function test_can_redirect_to_secure_urls_if_the_config_entry_is_set_to_true()
+	{
+		Config::set('larapress.settings.ssl', true);
+		$request = $this->backend_route . '/login';
+		$expected_redirect_url = url($request, array(), true);
 
-        $this->assertRedirectedTo($expected_redirect_url);
-    }
+		$this->route('GET', 'larapress.home.login.get');
+
+		$this->assertRedirectedTo($expected_redirect_url);
+	}
 
 }
