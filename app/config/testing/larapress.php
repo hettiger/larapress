@@ -2,19 +2,19 @@
 
 return array(
 
-    /*
-    |--------------------------------------------------------------------------
-    | Settings
-    |--------------------------------------------------------------------------
-    |
-    | Configure the CMS here
-    |
-    */
+	/*
+	|--------------------------------------------------------------------------
+	| Settings
+	|--------------------------------------------------------------------------
+	|
+	| Configure the CMS here
+	|
+	*/
 
-    'settings' => array(
+	'settings' => array(
 
-        'ssl' => false, // Force to use https:// requests in the backend
+		'ssl' => false, // Force to use https:// requests in the backend
 
-    ),
+	),
 
 );
