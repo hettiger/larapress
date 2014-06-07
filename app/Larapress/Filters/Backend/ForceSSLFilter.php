@@ -1,7 +1,5 @@
 <?php namespace Larapress\Filters\Backend;
 
-use Redirect;
-
 class ForceSSLFilter {
 
 	/**
@@ -28,7 +26,7 @@ class ForceSSLFilter {
 	/**
 	 * Look into the configuration and either force a ssl connection by redirecting or return null
 	 *
-	 * @return null|Redirect
+	 * @return null|\Illuminate\Routing\Redirector
 	 */
 	public function filter()
 	{
