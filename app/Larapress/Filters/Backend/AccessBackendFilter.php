@@ -20,6 +20,9 @@ class AccessBackendFilter {
 	 */
 	protected $redirect;
 
+	/**
+	 * @codeCoverageIgnore
+	 */
 	public function __construct()
 	{
 		$app = app();
