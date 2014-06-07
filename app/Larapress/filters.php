@@ -13,19 +13,19 @@
 
 App::before(function()
 {
-    Session::put('start.time', Mockably::microtime());
+	Session::put('start.time', Mockably::microtime());
 
-    $throttleProvider = Sentry::getThrottleProvider();
-    $throttleProvider->enable();
+	$throttleProvider = Sentry::getThrottleProvider();
+	$throttleProvider->enable();
 });
 
 
 App::after(function()
 {
-    if ( Config::get('larapress.settings.log') )
-    {
-        Helpers::logPerformance();
-    }
+	if ( Config::get('larapress.settings.log') )
+	{
+		Helpers::logPerformance();
+	}
 });
 
 /*
