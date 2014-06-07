@@ -1,40 +1,65 @@
 <?php namespace Larapress\Tests\Filters\Backend;
 
-use Config;
-use Larapress\Tests\TestCase;
-use Route;
+use Larapress\Tests\Filters\Backend\Proxies\ForceSSLFilterProxy;
+use Mockery;
+use Mockery\Mock;
+use PHPUnit_Framework_TestCase;
 
-class ForceSSLFilterTest extends TestCase {
+class ForceSSLFilterTest extends PHPUnit_Framework_TestCase {
 
-	private $backend_route;
+	/**
+	 * @var Mock
+	 */
+	private $config;
+
+	/**
+	 * @var Mock
+	 */
+	private $helpers;
 
 	public function setUp()
 	{
 		parent::setUp();
 
-		Route::enableFilters();
-
-		$this->backend_route = Config::get('larapress.urls.backend');
+		$this->config = Mockery::mock('\Illuminate\Config\Repository');
+		$this->helpers = Mockery::mock('\Larapress\Services\Helpers');
 	}
 
-	public function test_can_remain_silent_if_the_config_entry_is_set_to_false()
+	public function tearDown()
 	{
-		Config::set('larapress.settings.ssl', false);
+		parent::tearDown();
 
-		$this->route('GET', 'larapress.home.login.get');
-
-		$this->assertResponseOk();
+		Mockery::close();
 	}
 
-	public function test_can_redirect_to_secure_urls_if_the_config_entry_is_set_to_true()
+	protected function getForceSSLFilterInstance()
 	{
-		Config::set('larapress.settings.ssl', true);
-		$request = $this->backend_route . '/login';
-		$expected_redirect_url = url($request, array(), true);
+		return new ForceSSLFilterProxy($this->config, $this->helpers);
+	}
 
-		$this->route('GET', 'larapress.home.login.get');
+	/**
+	 * @test filter() does force SSL if enabled by configuration
+	 */
+	public function filter_does_force_ssl_if_enabled_by_configuration()
+	{
+		$this->config->shouldReceive('get')->with('larapress.settings.ssl')
+			->once()->andReturn(true);
+		$this->helpers->shouldReceive('forceSSL')->withNoArgs()->once()->andReturn('foo');
+		$filter = $this->getForceSSLFilterInstance();
 
-		$this->assertRedirectedTo($expected_redirect_url);
+		$this->assertEquals('foo', $filter->filter());
+	}
+
+	/**
+	 * @test filter() returns null if disabled by configuration
+	 */
+	public function filter_returns_null_if_disabled_by_configuration()
+	{
+		$this->config->shouldReceive('get')->with('larapress.settings.ssl')
+			->once()->andReturn(false);
+		$filter = $this->getForceSSLFilterInstance();
+
+		$this->assertNull($filter->filter());
 	}
 
 }
