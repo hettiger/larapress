@@ -53,7 +53,7 @@ class ForceHumanFilterTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * @test filter() returns null if the captcha is not required
 	 */
-	public function filter_returns_null_if_the_captcha_is_not_required()
+	public function filter_returns_true_if_the_captcha_is_not_required()
 	{
 		$this->captcha->shouldReceive('isRequired')->withNoArgs()->once()->andReturn(false);
 		$filter = $this->getForceHumanFilterInstance();
