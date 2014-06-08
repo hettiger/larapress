@@ -4,7 +4,7 @@
     "keywords": ["CMS", "laravel", "larapress"],
     "license": "MIT",
     "require": {
-        "laravel/framework": "4.1.*",
+        "laravel/framework": "4.2.*",
         "cartalyst/sentry": "2.1.*",
         "greggilbert/recaptcha": "1.0.*"
     },

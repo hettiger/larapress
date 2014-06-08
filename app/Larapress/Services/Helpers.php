@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector as Redirect;
 use Illuminate\Session\Store as Session;
 use Illuminate\Translation\Translator as Lang;
-use Illuminate\View\Environment as View;
+use Illuminate\View\Factory as View;
 use Larapress\Interfaces\BaseControllerInterface;
 use Larapress\Interfaces\HelpersInterface;
 use Larapress\Interfaces\MockablyInterface;
@@ -27,7 +27,7 @@ class Helpers implements HelpersInterface {
 	private $lang;
 
 	/**
-	 * @var \Illuminate\View\Environment
+	 * @var \Illuminate\View\Factory
 	 */
 	private $view;
 
@@ -69,7 +69,7 @@ class Helpers implements HelpersInterface {
 	/**
 	 * @param \Illuminate\Config\Repository $config
 	 * @param \Illuminate\Translation\Translator $lang
-	 * @param \Illuminate\View\Environment $view
+	 * @param \Illuminate\View\Factory $view
 	 * @param \Larapress\Interfaces\MockablyInterface $mockably
 	 * @param \Monolog\Logger $log
 	 * @param \Illuminate\Http\Request $request
