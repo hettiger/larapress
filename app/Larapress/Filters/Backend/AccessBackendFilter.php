@@ -18,6 +18,11 @@ class AccessBackendFilter extends RedirectFilter {
 		$this->permission = $app['permission'];
 	}
 
+	/**
+	 * Redirect the user with a flash message if he's missing permissions to the backend
+	 *
+	 * @return bool|\Illuminate\HTTP\RedirectResponse
+	 */
 	protected function redirect()
 	{
 		try

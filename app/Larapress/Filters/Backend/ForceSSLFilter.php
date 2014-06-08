@@ -17,6 +17,11 @@ class ForceSSLFilter extends RedirectFilter {
 		$this->config = $app['config'];
 	}
 
+	/**
+	 * Force SSl if it's enabled by the configuration
+	 *
+	 * @return bool|\Illuminate\HTTP\RedirectResponse|null
+	 */
 	protected function redirect()
 	{
 		if ( $this->config->get('larapress.settings.ssl') )

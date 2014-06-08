@@ -43,7 +43,7 @@ abstract class RedirectFilter {
 	/**
 	 * See if a redirect is required and do so or return null
 	 *
-	 * @return \Illuminate\HTTP\RedirectResponse|null|mixed
+	 * @return \Illuminate\HTTP\RedirectResponse|null
 	 */
 	public function filter()
 	{

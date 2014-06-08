@@ -17,6 +17,11 @@ class ForceHumanFilter extends RedirectFilter {
 		$this->captcha = $app['captcha'];
 	}
 
+	/**
+	 * Redirect the user with a flash message if the captcha is required to be passed first
+	 *
+	 * @return bool|\Illuminate\HTTP\RedirectResponse
+	 */
 	protected function redirect()
 	{
 		if ( $this->captcha->isRequired() )
