@@ -1,25 +1,35 @@
 <?php namespace Larapress\Filters\Backend;
 
-use Config;
-use Helpers;
-use Redirect;
+use Larapress\Filters\Templates\RedirectFilter;
 
-class ForceSSLFilter
-{
+class ForceSSLFilter extends RedirectFilter {
 
-    /**
-     * Look into the configuration and either force a ssl connection by redirecting or return null
-     *
-     * @return null|Redirect
-     */
-    public function filter()
-    {
-        if ( Config::get('larapress.settings.ssl') )
-        {
-            return Helpers::forceSSL();
-        }
+	/**
+	 * @var \Illuminate\Config\Repository
+	 */
+	protected $config;
 
-        return null; // SSL is not enabled
-    }
+	/**
+	 * @codeCoverageIgnore
+	 */
+	protected function init($app)
+	{
+		$this->config = $app['config'];
+	}
+
+	/**
+	 * Force SSl if it's enabled by the configuration
+	 *
+	 * @return bool|\Illuminate\HTTP\RedirectResponse|null
+	 */
+	protected function redirect()
+	{
+		if ( $this->config->get('larapress.settings.ssl') )
+		{
+			return $this->helpers->forceSSL();
+		}
+
+		return false;
+	}
 
 }

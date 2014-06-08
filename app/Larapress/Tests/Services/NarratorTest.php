@@ -1,185 +1,460 @@
 <?php namespace Larapress\Tests\Services;
 
-use Artisan;
-use Input;
-use Larapress\Tests\TestCase;
-use Log;
-use Mail;
-use Narrator;
-use Sentry;
+use Larapress\Tests\Services\Proxies\NarratorProxy;
+use Mockery;
+use Mockery\Mock;
+use PHPUnit_Framework_TestCase;
 
-class NarratorTest extends TestCase
-{
+class NarratorTest extends PHPUnit_Framework_TestCase {
 
-    public $log_message;
+	public $log_message;
 
-    /*
-    |--------------------------------------------------------------------------
-    | Narrator::sendMail() Tests
-    |--------------------------------------------------------------------------
-    |
-    | Here is where you can test the Narrator::sendMail() method
-    |
-    */
+	/**
+	 * @var Mock
+	 */
+	protected $config;
 
-    /**
-     * @expectedException \Larapress\Exceptions\MailException
-     * @expectedExceptionMessage foo
-     */
-    public function test_can_throw_a_mail_exception_with_error_message()
-    {
-        $to = array('address' => 'example@domain.com', 'name' => null);
-        $subject = 'Test';
-        $data = array();
-        $view = array();
-        $mail_error_message = 'foo';
+	/**
+	 * @var Mock
+	 */
+	protected $mail;
 
-        Mail::shouldReceive('send')->once()->andReturn(false);
+	/**
+	 * @var Mock
+	 */
+	protected $lang;
 
-        Narrator::sendMail($to, $subject, $data, $view, $mail_error_message);
-    }
+	/**
+	 * @var Mock
+	 */
+	protected $input;
 
-    /**
-     * @expectedException \Larapress\Exceptions\MailException
-     * @expectedExceptionMessage Cannot send message without a sender address
-     */
-    public function test_can_throw_a_mail_exception_warning_about_missing_sender_address()
-    {
-        $to = array('address' => 'example@domain.com', 'name' => null);
-        $subject = 'Test';
-        $data = array();
-        $view = array();
-        $mail_error_message = 'foo';
+	/**
+	 * @var Mock
+	 */
+	protected $sentry;
 
-        Mail::shouldReceive('send')->once()->andThrow(
-            'Swift_TransportException',
-            'Cannot send message without a sender address'
-        );
+	/**
+	 * @var Mock
+	 */
+	private $nullObject;
 
-        Narrator::sendMail($to, $subject, $data, $view, $mail_error_message);
-    }
+	/**
+	 * @var Mock
+	 */
+	private $mockably;
 
-    /**
-     * @expectedException \Larapress\Exceptions\MailException
-     * @expectedExceptionMessage foo
-     */
-    public function test_can_fall_back_to_the_provided_error_message_on_unknown_swift_transport_exception_messages()
-    {
-        $to = array('address' => 'example@domain.com', 'name' => null);
-        $subject = 'Test';
-        $data = array();
-        $view = array();
-        $mail_error_message = 'foo';
+	public function setUp()
+	{
+		parent::setUp();
 
-        Mail::shouldReceive('send')->once()->andThrow(
-            'Swift_TransportException',
-            'bar'
-        );
+		$this->config = Mockery::mock('\Illuminate\Config\Repository');
+		$this->mail = Mockery::mock('\Illuminate\Mail\Mailer');
+		$this->lang = Mockery::mock('\Illuminate\Translation\Translator');
+		$this->input = Mockery::mock('\Illuminate\Http\Request');
+		$this->sentry = Mockery::mock('\Cartalyst\Sentry\Sentry');
+		$this->nullObject = Mockery::mock('\Larapress\Services\NullObject');
+		$this->mockably = Mockery::mock('\Larapress\Services\Mockably');
 
-        Narrator::sendMail($to, $subject, $data, $view, $mail_error_message);
-    }
+		$this->nullObject->shouldDeferMissing();
+	}
 
-    public function test_can_send_an_email()
-    {
-        $to = array('address' => 'example@domain.com', 'name' => null);
-        $subject = 'Test';
-        $data = array();
-        $view = array();
-        $mail_error_message = '';
+	public function tearDown()
+	{
+		parent::tearDown();
 
-        $self = $this;
+		Mockery::close();
+	}
 
-        Log::listen(function($level, $message, $context) use ($self)
-        {
-            $self->log_message = $message;
-        });
+	protected function applyConfigFixture()
+	{
+		$this->config->shouldReceive('get')->with('larapress.email.from.address')->once();
+		$this->config->shouldReceive('get')->with('larapress.email.from.name')->once();
+		$this->config->shouldReceive('get')->with('larapress.names.cms')->once();
+	}
 
-        Narrator::sendMail($to, $subject, $data, $view, $mail_error_message);
-        $this->assertEquals('Pretending to mail message to: example@domain.com', $this->log_message);
-    }
+	/**
+	 * @param NarratorProxy $narrator
+	 */
+	protected function applyTestDataFixture($narrator)
+	{
+		$narrator->setTo(array('address' => 'example@domain.com', 'name' => 'foo'));
+		$narrator->setSubject('bar');
+		$narrator->setData(array());
+		$narrator->setView('baz');
+		$narrator->setMailErrorMessage('foo bar');
+	}
 
-    /*
-    |--------------------------------------------------------------------------
-    | Narrator::resetPassword() Tests
-    |--------------------------------------------------------------------------
-    |
-    | Here is where you can test the Narrator::resetPassword() method
-    |
-    */
+	protected function getResetPasswordCodeMock()
+	{
+		$m = Mockery::mock();
+		$m->shouldReceive('getResetPasswordCode')->once()->withNoArgs()->andReturn('foo');
+		$m->shouldReceive('getAttribute')->withAnyArgs()->times(3);
+		$m->shouldReceive('getId')->withNoArgs()->once();
 
-    /**
-     * @expectedException \Cartalyst\Sentry\Users\UserNotFoundException
-     */
-    public function test_can_throw_a_user_not_found_exception()
-    {
-        Artisan::call('larapress:install');
-        Input::merge(array('email' => 'example@domain.tld'));
+		return $m;
+	}
 
-        Narrator::resetPassword();
-    }
+	protected function getNarratorInstance()
+	{
+		return new NarratorProxy(
+			$this->config,
+			$this->mail,
+			$this->lang,
+			$this->input,
+			$this->sentry,
+			$this->nullObject,
+			$this->mockably
+		);
+	}
 
-    public function test_can_send_a_reset_password_email()
-    {
-        Artisan::call('larapress:install');
-        Input::merge(array('email' => 'admin@example.com'));
+	/**
+	 * @test init(), setCmsName() and setFrom()
+	 */
+	public function init()
+	{
+		$this->config->shouldReceive('get')->with('larapress.email.from.address')->atLeast()->once()->andReturn('foo');
+		$this->config->shouldReceive('get')->with('larapress.email.from.name')->atLeast()->once()->andReturn('bar');
+		$this->config->shouldReceive('get')->with('larapress.names.cms')->atLeast()->once()->andReturn('baz');
+		$this->nullObject->shouldReceive('validateMailRecipientData')
+			->with(array('address' => 'foo', 'name' => 'bar'))->atLeast()->once();
 
-        $self = $this;
+		$narrator = $this->getNarratorInstance();
+		$narrator->init();
 
-        Log::listen(function($level, $message, $context) use ($self)
-        {
-            $self->log_message = $message;
-        });
+		$this->assertEquals(array('address' => 'foo', 'name' => 'bar'), $narrator->getFrom());
+		$this->assertEquals('baz', $narrator->getCmsName());
+	}
 
-        Narrator::resetPassword();
+	/**
+	 * @test setData()
+	 */
+	public function setData()
+	{
+		$this->applyConfigFixture();
+		$this->nullObject->shouldReceive('validateVarIsArray')->with(array('foo' => 'bar'))->once();
+		$narrator = $this->getNarratorInstance();
 
-        $this->assertEquals('Pretending to mail message to: admin@example.com', $this->log_message);
-    }
+		$narrator->setData(array('foo' => 'bar'));
 
-    /*
-    |--------------------------------------------------------------------------
-    | Narrator::sendNewPassword() Tests
-    |--------------------------------------------------------------------------
-    |
-    | Here is where you can test the Narrator::sendNewPassword() method
-    |
-    */
+		$this->assertEquals(array('foo' => 'bar'), $narrator->getData());
+	}
 
-    /**
-     * @expectedException \Cartalyst\Sentry\Users\UserNotFoundException
-     */
-    public function test_can_throw_a_user_not_found_exception_when_trying_to_send_a_new_password()
-    {
-        Artisan::call('larapress:install');
+	/**
+	 * @test setMailErrorMessage()
+	 */
+	public function setMailErrorMessage()
+	{
+		$this->applyConfigFixture();
+		$this->nullObject->shouldReceive('validateVarIsString')->with('foo')->once();
+		$narrator = $this->getNarratorInstance();
 
-        Narrator::sendNewPassword(2, 'foo');
-    }
+		$narrator->setMailErrorMessage('foo');
 
-    /**
-     * @expectedException \Larapress\Exceptions\PasswordResetCodeInvalidException
-     */
-    public function test_can_throw_a_password_reset_code_invalid_exception()
-    {
-        Artisan::call('larapress:install');
+		$this->assertEquals('foo', $narrator->getMailErrorMessage());
+	}
 
-        Narrator::sendNewPassword(1, 'foo');
-    }
+	/**
+	 * @test setSubject()
+	 */
+	public function setSubject()
+	{
+		$this->applyConfigFixture();
+		$this->nullObject->shouldReceive('validateVarIsString')->with('foo')->once();
+		$narrator = $this->getNarratorInstance();
 
-    public function test_can_send_the_new_password()
-    {
-        Artisan::call('larapress:install');
-        $user = Sentry::findUserById(1);
-        $reset_code = $user->getResetPasswordCode();
+		$narrator->setSubject('foo');
 
-        $self = $this;
+		$this->assertEquals('foo', $narrator->getSubject());
+	}
 
-        Log::listen(function($level, $message, $context) use ($self)
-        {
-            $self->log_message = $message;
-        });
+	/**
+	 * @test setTo()
+	 */
+	public function setTo()
+	{
+		$this->applyConfigFixture();
+		$this->nullObject->shouldReceive('validateMailRecipientData')
+			->with(array('address' => 'baz', 'name' => 'foo bar'))->atLeast()->once();
+		$narrator = $this->getNarratorInstance();
 
-        Narrator::sendNewPassword(1, $reset_code);
+		$narrator->setTo(array('address' => 'baz', 'name' => 'foo bar'));
 
-        $this->assertEquals('Pretending to mail message to: admin@example.com', $this->log_message);
-    }
+		$this->assertEquals(array('address' => 'baz', 'name' => 'foo bar'), $narrator->getTo());
+	}
+
+	/**
+	 * @test setView()
+	 */
+	public function setView()
+	{
+		$this->applyConfigFixture();
+		$this->nullObject->shouldReceive('validateMailViewDetails')->with('foo')->once();
+		$narrator = $this->getNarratorInstance();
+
+		$narrator->setView('foo');
+
+		$this->assertEquals('foo', $narrator->getView());
+	}
+
+	/**
+	 * @test handleTransportExceptions() can throw with special error message
+	 * @expectedException \Larapress\Exceptions\MailException
+	 * @expectedExceptionMessage Cannot send message without a sender address
+	 */
+	public function handleTransportExceptions_can_throw_with_special_error_message()
+	{
+		$this->applyConfigFixture();
+		$narrator = $this->getNarratorInstance();
+		$special_message = 'Cannot send message without a sender address';
+
+		$e = Mockery::mock();
+		$e->shouldReceive('getMessage')->withNoArgs()->atLeast()->once()->andReturn($special_message);
+		$narrator->handleTransportExceptions($e);
+	}
+
+	/**
+	 * @test handleTransportExceptions() can throw the predefined mail error message
+	 * @expectedException \Larapress\Exceptions\MailException
+	 * @expectedExceptionMessage bar
+	 */
+	public function handleTransportExceptions_can_throw_the_predefined_mail_error_message()
+	{
+		$this->applyConfigFixture();
+		$narrator = $this->getNarratorInstance();
+		$input_message = 'foo';
+
+		$e = Mockery::mock();
+		$e->shouldReceive('getMessage')->withNoArgs()->atLeast()->once()->andReturn($input_message);
+		$narrator->setMailErrorMessage('bar');
+		$narrator->handleTransportExceptions($e);
+	}
+
+	/**
+	 * @test sendMail() can throw the predefined mail exception on false result
+	 * @expectedException \Larapress\Exceptions\MailException
+	 * @expectedExceptionMessage foo bar
+	 */
+	public function sendMail_can_throw_the_predefined_mail_exception_on_false_result()
+	{
+		$this->applyConfigFixture();
+		$this->mail->shouldReceive('send')->once()->andReturn(false);
+		$narrator = $this->getNarratorInstance();
+		$this->applyTestDataFixture($narrator);
+
+		$narrator->sendMail();
+	}
+
+	/**
+	 * @test sendMail() can handle transport exceptions
+	 * @expectedException \Larapress\Exceptions\MailException
+	 * @expectedExceptionMessage foo bar
+	 */
+	public function sendMail_can_handle_transport_exceptions()
+	{
+		$this->applyConfigFixture();
+		$this->mail->shouldReceive('send')->once()->andThrow('Swift_TransportException', 'baz');
+		$narrator = $this->getNarratorInstance();
+		$this->applyTestDataFixture($narrator);
+
+		$narrator->sendMail();
+	}
+
+	/**
+	 * @test sendMail() remains silent on success
+	 */
+	public function sendMail_remains_silent_on_success()
+	{
+		$this->applyConfigFixture();
+		$this->mail->shouldReceive('send')->once()->andReturn(true);
+		$narrator = $this->getNarratorInstance();
+		$this->applyTestDataFixture($narrator);
+
+		$narrator->sendMail();
+	}
+
+	/**
+	 * @test prepareResetRequestMailData() can set the data
+	 */
+	public function prepareResetRequestMailData_can_set_the_data()
+	{
+		$this->applyConfigFixture();
+		$narrator = $this->getNarratorInstance();
+		$user_mock = Mockery::mock();
+		$user_mock->shouldReceive('getAttribute')->with('email')->once()->andReturn('baz');
+		$user_mock->shouldReceive('getAttribute')->with('first_name')->once()->andReturn('John');
+		$user_mock->shouldReceive('getAttribute')->with('last_name')->once()->andReturn('Doe');
+		$user_mock->shouldReceive('getId')->withNoArgs()->once()->andReturn(1);
+		$this->lang->shouldReceive('get')->with('larapress::email.Password Reset!')->once()->andReturn('Subject');
+		$this->mockably->shouldReceive('route')->with('larapress.home.send.new.password.get', array(1, 'bar'))
+			->once()->andReturn('url');
+
+		$narrator->prepareResetRequestMailData($user_mock, 'bar');
+
+		$this->assertEquals(array('address' => 'baz', 'name' => 'John Doe'), $narrator->getTo());
+		$this->assertEquals(' | Subject', $narrator->getSubject());
+		$this->assertEquals(array(
+			'cms_name' => null,
+			'url'      => 'url'
+		), $narrator->getData());
+		$this->assertEquals(array('text' => 'larapress::emails.reset-password'), $narrator->getView());
+	}
+
+	/**
+	 * @test resetPassword()
+	 */
+	public function resetPassword()
+	{
+		$this->applyConfigFixture();
+		$this->input->shouldReceive('all')->once()->andReturn(array('email' => 'baz'));
+		$this->sentry->shouldReceive('findUserByLogin')->once()->andReturn($this->getResetPasswordCodeMock());
+		$this->lang->shouldReceive('get')->withAnyArgs()->once()->andReturn('Subject');
+		$this->mail->shouldReceive('send')->once()->andReturn(true);
+		$this->mockably->shouldReceive('route')->once();
+		$narrator = $this->getNarratorInstance();
+
+		$narrator->resetPassword();
+
+		$this->assertEquals('Sending the email containing the reset key failed. ' .
+			'Please try again later or contact the administrator.', $narrator->getMailErrorMessage());
+	}
+
+	/**
+	 * @test unsuspendUserAndResetPassword() can return a new password and unsuspend
+	 */
+	public function unsuspendUserAndResetPassword_can_return_a_new_password_and_unsuspend()
+	{
+		$user = Mockery::mock();
+		$user->shouldReceive('getId')->withNoArgs()->once()->andReturn(1);
+		$user->shouldReceive('attemptResetPassword')->with('foo', 'bar')->once()->andReturn(true);
+
+		$throttle = Mockery::mock();
+		$throttle->shouldReceive('unsuspend')->withNoArgs()->once()->andReturn(true);
+
+		$this->applyConfigFixture();
+		$this->sentry->shouldReceive('findThrottlerByUserId')->with(1)->once()->andReturn($throttle);
+		$this->mockably->shouldReceive('str_random')->with(16)->once()->andReturn('bar');
+		$narrator = $this->getNarratorInstance();
+
+		$this->assertEquals('bar', $narrator->unsuspendUserAndResetPassword($user, 'foo'));
+	}
+
+	/**
+	 * @test unsuspendUserAndResetPassword() can throw an exception on failure
+	 * @expectedException \Larapress\Exceptions\PasswordResetFailedException
+	 */
+	public function unsuspendUserAndResetPassword_can_throw_an_exception_on_failure()
+	{
+		$user = Mockery::mock();
+		$user->shouldReceive('getId')->withNoArgs()->once()->andReturn(1);
+		$user->shouldReceive('attemptResetPassword')->with('foo', 'bar')->once()->andReturn(false);
+
+		$throttle = Mockery::mock();
+		$throttle->shouldReceive('unsuspend')->withNoArgs()->once()->andReturn(true);
+
+		$this->applyConfigFixture();
+		$this->sentry->shouldReceive('findThrottlerByUserId')->with(1)->once()->andReturn($throttle);
+		$this->mockably->shouldReceive('str_random')->with(16)->once()->andReturn('bar');
+		$narrator = $this->getNarratorInstance();
+
+		$narrator->unsuspendUserAndResetPassword($user, 'foo');
+	}
+
+	/**
+	 * @test attemptToReset() can throw a password reset code invalid exception
+	 * @expectedException \Larapress\Exceptions\PasswordResetCodeInvalidException
+	 */
+	public function attemptToReset_can_throw_a_password_reset_code_invalid_exception()
+	{
+		$user = Mockery::mock();
+		$user->shouldReceive('checkResetPasswordCode')->with('foo')->once()->andReturn(false);
+
+		$this->applyConfigFixture();
+		$narrator = $this->getNarratorInstance();
+
+		$narrator->attemptToReset($user, 'foo');
+	}
+
+	/**
+	 * @test attemptToReset() can return the new password on success
+	 */
+	public function attemptToReset_can_return_the_new_password_on_success()
+	{
+		$user = Mockery::mock();
+		$user->shouldReceive('checkResetPasswordCode')->with('foo')->once()->andReturn(true);
+		$user->shouldReceive('getId')->withNoArgs()->once()->andReturn(1);
+		$user->shouldReceive('attemptResetPassword')->with('foo', 'bar')->once()->andReturn(true);
+
+		$throttle = Mockery::mock();
+		$throttle->shouldReceive('unsuspend')->withNoArgs()->once()->andReturn(true);
+
+		$this->applyConfigFixture();
+		$this->sentry->shouldReceive('findThrottlerByUserId')->with(1)->once()->andReturn($throttle);
+		$this->mockably->shouldReceive('str_random')->with(16)->once()->andReturn('bar');
+		$narrator = $this->getNarratorInstance();
+
+		$this->assertEquals('bar', $narrator->attemptToReset($user, 'foo'));
+	}
+
+	/**
+	 * @test prepareResetResultMailData() can set the data
+	 */
+	public function prepareResetResultMailData_can_set_the_data()
+	{
+		$user = Mockery::mock();
+		$user->shouldReceive('getAttribute')->with('email')->once()->andReturn('baz');
+		$user->shouldReceive('getAttribute')->with('first_name')->once()->andReturn('John');
+		$user->shouldReceive('getAttribute')->with('last_name')->once()->andReturn('Doe');
+
+		$throttle = Mockery::mock();
+		$throttle->shouldReceive('unsuspend')->withNoArgs()->once()->andReturn(true);
+
+		$this->applyConfigFixture();
+		$this->lang->shouldReceive('get')->with('larapress::email.Password Reset!')->once()->andReturn('Subject');
+		$user->shouldReceive('checkResetPasswordCode')->with('foo')->once()->andReturn(true);
+		$user->shouldReceive('getId')->withNoArgs()->once()->andReturn(1);
+		$this->sentry->shouldReceive('findThrottlerByUserId')->with(1)->once()->andReturn($throttle);
+		$user->shouldReceive('attemptResetPassword')->with('foo', 'bar')->once()->andReturn(true);
+		$this->mockably->shouldReceive('str_random')->with(16)->once()->andReturn('bar');
+		$narrator = $this->getNarratorInstance();
+
+		$narrator->prepareResetResultMailData($user, 'foo');
+
+		$this->assertEquals(array('address' => 'baz', 'name' => 'John Doe'), $narrator->getTo());
+		$this->assertEquals(' | Subject', $narrator->getSubject());
+		$this->assertEquals(array('new_password' => 'bar'), $narrator->getData());
+		$this->assertEquals(array('text' => 'larapress::emails.new-password'), $narrator->getView());
+	}
+
+	/**
+	 * @test sendNewPassword() can send a new password
+	 */
+	public function sendNewPassword_can_send_a_new_password()
+	{
+		$user = Mockery::mock();
+		$user->shouldReceive('getAttribute')->with('email')->once()->andReturn('baz');
+		$user->shouldReceive('getAttribute')->with('first_name')->once()->andReturn('John');
+		$user->shouldReceive('getAttribute')->with('last_name')->once()->andReturn('Doe');
+		$user->shouldReceive('checkResetPasswordCode')->with('foo')->once()->andReturn(true);
+		$user->shouldReceive('getId')->withNoArgs()->once()->andReturn(1);
+		$user->shouldReceive('attemptResetPassword')->with('foo', 'bar')->once()->andReturn(true);
+
+		$throttle = Mockery::mock();
+		$throttle->shouldReceive('unsuspend')->withNoArgs()->once()->andReturn(true);
+
+		$this->sentry->shouldDeferMissing();
+		$this->sentry->shouldReceive('findUserById')->with(1)->once()->andReturn($user);
+		$this->mockably->shouldReceive('str_random')->with(16)->once()->andReturn('bar');
+		$this->sentry->shouldReceive('findThrottlerByUserId')->with(1)->once()->andReturn($throttle);
+		$this->applyConfigFixture();
+		$this->lang->shouldReceive('get')->with('larapress::email.Password Reset!')->once()->andReturn('Subject');
+		$this->mail->shouldReceive('send')->once()->andReturn(true);
+		$narrator = $this->getNarratorInstance();
+
+		$narrator->sendNewPassword(1, 'foo');
+
+		$this->assertEquals('Sending the email containing the new password failed. ' .
+			'Please try again later or contact the administrator.', $narrator->getMailErrorMessage());
+	}
 
 }

@@ -4,6 +4,7 @@ var css_min = require('gulp-minify-css');
 var concat = require('gulp-concat');
 var js_min = require('gulp-uglify');
 var gzip = require('gulp-gzip');
+var phpunit = require('gulp-phpunit');
 
 var root = 'app/assets/';
 var components = root + 'components/';
@@ -38,7 +39,12 @@ var paths = {
     ],
     js_per_page: larapress + 'js/pages/**/*.js',
     fallback: [html5shiv, respond],
-    fonts: [bootstrap + 'fonts/*']
+    fonts: [bootstrap + 'fonts/*'],
+    phpunit: {
+        runner: './vendor/bin/phpunit',
+        config: './larapress.phpunit.xml',
+        tests: './app/Larapress/Tests/**/*.php'
+    }
 };
 
 gulp.task('less', function() {
@@ -101,6 +107,16 @@ gulp.task('watch', function() {
     gulp.watch(paths.fonts, ['fonts']);
 });
 
+gulp.task('phpunit', function() {
+    var options = {
+        debug: false,
+        configurationFile: paths.phpunit.config
+    };
+
+    return gulp.src(paths.phpunit.tests)
+        .pipe(phpunit(paths.phpunit.runner, options));
+});
+
 gulp.task('default',
     [
         'less',
@@ -108,6 +124,7 @@ gulp.task('default',
         'js',
         'js-per-page',
         'fallback',
-        'fonts'
+        'fonts',
+        'phpunit'
     ]
 );

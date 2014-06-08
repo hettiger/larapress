@@ -6,6 +6,7 @@
     "gulp-concat": "^2.2.0",
     "gulp-uglify": "^0.2.1",
     "gulp-rename": "^1.2.0",
-    "gulp-gzip": "0.0.8"
+    "gulp-gzip": "0.0.8",
+    "gulp-phpunit": "0.5.3"
   }
 }

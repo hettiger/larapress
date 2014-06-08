@@ -79,3 +79,44 @@ App::down(function()
 */
 
 require app_path().'/filters.php';
+
+/*
+|--------------------------------------------------------------------------
+| Require The Larapress Start File
+|--------------------------------------------------------------------------
+|
+| In order to keep larapress completely isolated from your application
+| we require an extra start file here. This allows you updating larapress
+| with no worries about breaking your code.
+|
+*/
+
+require app_path().'/Larapress/start.php';
+
+/*
+|--------------------------------------------------------------------------
+| Namespace The Larapress Views
+|--------------------------------------------------------------------------
+|
+| In order to keep larapress completely isolated from your application we
+| are using our own namespaced views directory. This also comes in handy
+| if you want to apply your own theme to larapress. (You could just
+| duplicate app/Larapress/Views/* and change the directory below)
+|
+*/
+
+View::addNamespace('larapress', __DIR__ . '/../Larapress/Views');
+
+/*
+|--------------------------------------------------------------------------
+| Namespace The Larapress Lang Files
+|--------------------------------------------------------------------------
+|
+| In order to keep larapress completely isolated from your application we
+| are using our own namespaced lang directory. This also comes in handy
+| if you want to apply your own translations to larapress. (You could just
+| duplicate app/Larapress/Lang/* and change the directory below)
+|
+*/
+
+Lang::addNamespace('larapress', __DIR__ . '/../Larapress/Lang');

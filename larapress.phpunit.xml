@@ -16,7 +16,9 @@
             <exclude>
                 <directory suffix=".php">./app/Larapress/Exceptions</directory>
                 <directory suffix=".php">./app/Larapress/Facades</directory>
+                <directory suffix=".php">./app/Larapress/Lang</directory>
                 <directory suffix=".php">./app/Larapress/Providers</directory>
+                <directory suffix=".php">./app/Larapress/Views</directory>
             </exclude>
         </whitelist>
     </filter>

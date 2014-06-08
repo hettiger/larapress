@@ -1,36 +1,65 @@
-<?php namespace Larapress\Tests\Filters;
+<?php namespace Larapress\Tests\Filters\Backend;
 
-use Larapress\Tests\TestCase;
-use Permission;
-use Route;
+use Larapress\Tests\Filters\Backend\Proxies\AccessBackendFilterProxy;
+use Mockery;
+use Mockery\Mock;
+use PHPUnit_Framework_TestCase;
 
-class AccessBackendFilterTest extends TestCase
-{
+class AccessBackendFilterTest extends PHPUnit_Framework_TestCase {
 
-    public function setUp()
-    {
-        parent::setUp();
+	/**
+	 * @var Mock
+	 */
+	private $permission;
 
-        Route::enableFilters();
-    }
+	/**
+	 * @var Mock
+	 */
+	private $helpers;
 
-    public function test_can_redirect_on_missing_permissions()
-    {
-        Permission::shouldReceive('has')->once()->andThrow('\Larapress\Exceptions\PermissionMissingException', 'error');
+	public function setUp()
+	{
+		parent::setUp();
 
-        $this->route('GET', 'larapress.cp.dashboard.get');
+		$this->permission = Mockery::mock('\Larapress\Interfaces\PermissionInterface');
+		$this->helpers = Mockery::mock('\Larapress\Interfaces\HelpersInterface');
+	}
 
-        $this->assertRedirectedToRoute('larapress.home.login.get');
-        $this->assertSessionHas('error', 'error');
-    }
+	public function tearDown()
+	{
+		parent::tearDown();
 
-    public function test_can_access_on_given_permissions()
-    {
-        Permission::shouldReceive('has')->once()->andReturn(true);
+		Mockery::close();
+	}
 
-        $this->route('GET', 'larapress.cp.dashboard.get');
+	protected function getAccessBackendFilterInstance()
+	{
+		return new AccessBackendFilterProxy($this->permission, $this->helpers);
+	}
 
-        $this->assertResponseOk();
-    }
+	/**
+	 * @test filter() can redirect with flash message on missing permissions
+	 */
+	public function filter_can_redirect_with_flash_message_on_missing_permissions()
+	{
+		$this->permission->shouldReceive('has')->with('access.backend')->once()
+			->andThrow('Larapress\Exceptions\PermissionMissingException', 'foo');
+		$this->helpers->shouldReceive('redirectWithFlashMessage')->with('error', 'foo', 'larapress.home.login.get')
+			->once()->andReturn('bar');
+		$filter = $this->getAccessBackendFilterInstance();
+
+		$this->assertEquals('bar', $filter->filter());
+	}
+
+	/**
+	 * @test filter() returns null on given permissions
+	 */
+	public function filter_returns_null_on_given_permissions()
+	{
+		$this->permission->shouldReceive('has')->with('access.backend')->andReturn(true);
+		$filter = $this->getAccessBackendFilterInstance();
+
+		$this->assertNull($filter->filter());
+	}
 
 }
