@@ -1,23 +1,17 @@
 <?php namespace Larapress\Tests\Services;
 
-use Larapress\Tests\TestCase;
-use Mockably;
+use Larapress\Services\Mockably;
+use PHPUnit_Framework_TestCase;
 
-class MockablyTest extends TestCase
-{
+class MockablyTest extends PHPUnit_Framework_TestCase {
 
-    /*
-    |--------------------------------------------------------------------------
-    | Mockably::microtime() Tests
-    |--------------------------------------------------------------------------
-    |
-    | Here is where you can test the Mockably::microtime() method
-    |
-    */
-
-    public function test_can_return_float()
-    {
-        $this->assertInternalType('float', Mockably::microtime());
-    }
+	/**
+	 * @test microtime() can return float
+	 */
+	public function microtime_can_return_float()
+	{
+		$mockably = new Mockably;
+		$this->assertInternalType('float', $mockably->microtime());
+	}
 
 }

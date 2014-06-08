@@ -1,80 +1,133 @@
 <?php namespace Larapress\Tests\Services;
 
-use Captcha;
-use Config;
-use Helpers;
-use Larapress\Tests\TestCase;
-use View;
+use Larapress\Services\Captcha;
+use Mockery;
+use Mockery\Mock;
+use PHPUnit_Framework_TestCase;
 
-class CaptchaTest extends TestCase
-{
+class CaptchaTest extends PHPUnit_Framework_TestCase {
 
-    public function setUp()
-    {
-        parent::setUp();
+	/**
+	 * @var Mock
+	 */
+	protected $view;
 
-        Config::set('larapress.settings.captcha.active', true);
-        Config::set('larapress.settings.captcha.timer', 10);
-    }
+	/**
+	 * @var Mock
+	 */
+	protected $config;
 
-    /*
-    |--------------------------------------------------------------------------
-    | Captcha::isRequired() Tests
-    |--------------------------------------------------------------------------
-    |
-    | Here is where you can test the Captcha::isRequired() method
-    |
-    */
+	/**
+	 * @var Mock
+	 */
+	protected $session;
 
-    public function test_can_return_false_if_deactivated_by_config()
-    {
-        Config::set('larapress.settings.captcha.active', false);
+	/**
+	 * @var Mock
+	 */
+	protected $helpers;
 
-        $this->assertFalse(Captcha::isRequired());
-    }
+	/**
+	 * @var Mock
+	 */
+	private $mockably;
 
-    public function test_can_return_true_if_passed_captcha_more_than_10_minutes_before()
-    {
-        Helpers::shouldReceive('getCurrentTimeDifference')->once()->andReturn(11);
+	public function setUp()
+	{
+		parent::setUp();
 
-        $this->assertTrue(Captcha::isRequired());
-    }
+		$this->view = Mockery::mock('Illuminate\View\Environment');
+		$this->config = Mockery::mock('Illuminate\Config\Repository');
+		$this->session = Mockery::mock('Illuminate\Session\Store');
+		$this->helpers = Mockery::mock('Larapress\Services\Helpers');
+		$this->mockably = Mockery::mock('Larapress\Services\Mockably');
+	}
 
-    public function test_can_return_false_if_passed_captcha_less_than_10_minutes_before()
-    {
-        Helpers::shouldReceive('getCurrentTimeDifference')->once()->andReturn(9);
+	public function tearDown()
+	{
+		parent::tearDown();
 
-        $this->assertFalse(Captcha::isRequired());
-    }
+		Mockery::close();
+	}
 
-    public function test_can_return_true_if_passed_captcha_exactly_10_minutes_before()
-    {
-        Helpers::shouldReceive('getCurrentTimeDifference')->once()->andReturn(10);
+	protected function applyConfigFixture()
+	{
+		$this->config->shouldReceive('get')->with('larapress.settings.captcha.active')->andReturn(true);
+		$this->config->shouldReceive('get')->with('larapress.settings.captcha.timer')->andReturn(10);
+	}
 
-        $this->assertTrue(Captcha::isRequired());
-    }
+	protected function applySessionFixture()
+	{
+		$this->session->shouldReceive('get')->with('captcha.passed.time', 0)->once();
+	}
 
-    public function test_can_return_false_if_passed_captcha_exactly_0_minutes_before()
-    {
-        Helpers::shouldReceive('getCurrentTimeDifference')->once()->andReturn(0);
+	protected function getCaptchaInstance()
+	{
+		return new Captcha($this->view, $this->config, $this->session, $this->helpers, $this->mockably);
+	}
 
-        $this->assertFalse(Captcha::isRequired());
-    }
+	/**
+	 * @test isRequired() always returns false if configured to be inactive
+	 */
+	public function isRequired_always_returns_false_if_configured_to_be_inactive()
+	{
+		$this->config->shouldReceive('get')->with('larapress.settings.captcha.active')->andReturn(false);
+		$captcha = $this->getCaptchaInstance();
 
-    /*
-    |--------------------------------------------------------------------------
-    | Captcha::shareDataToViews() Tests
-    |--------------------------------------------------------------------------
-    |
-    | Here is where you can test the Captcha::shareDataToViews() method
-    |
-    */
+		$this->assertFalse($captcha->isRequired());
+	}
 
-    public function test_does_share_data_to_the_views()
-    {
-        View::shouldReceive('share')->once();
+	/**
+	 * @test isRequired() returns true if the captcha did not exceed the timer limit
+	 */
+	public function isRequired_returns_true_if_the_captcha_did_exceed_the_timer_limit()
+	{
+		$this->applySessionFixture();
+		$this->applyConfigFixture();
+		$this->helpers->shouldReceive('getCurrentTimeDifference')->once()->andReturn(11);
+		$captcha = $this->getCaptchaInstance();
 
-        Captcha::shareDataToViews();
-    }
+		$this->assertTrue($captcha->isRequired());
+	}
+
+	/**
+	 * @test isRequired() returns false if the captcha did exceed the timer limit
+	 */
+	public function isRequired_returns_false_if_the_captcha_did_not_exceed_the_timer_limit()
+	{
+		$this->applySessionFixture();
+		$this->applyConfigFixture();
+		$this->helpers->shouldReceive('getCurrentTimeDifference')->once()->andReturn(9);
+		$captcha = $this->getCaptchaInstance();
+
+		$this->assertFalse($captcha->isRequired());
+	}
+
+	/**
+	 * @test isRequired() returns false if the captcha was passed in the same minute
+	 */
+	public function isRequired_returns_false_if_the_captcha_was_passed_in_the_same_minute()
+	{
+		$this->applySessionFixture();
+		$this->applyConfigFixture();
+		$this->helpers->shouldReceive('getCurrentTimeDifference')->once()->andReturn(0);
+		$captcha = $this->getCaptchaInstance();
+
+		$this->assertFalse($captcha->isRequired());
+	}
+
+	/**
+	 * @test shareDataToViews() does actually share data to the views
+	 */
+	public function shareDataToViews_does_actually_share_data_to_the_views()
+	{
+		$this->mockably->shouldReceive('route')->with('larapress.api.captcha.validate.post')->once()->andReturn('url');
+		$this->view->shouldReceive('share')->once()
+			->with('captcha_validation_url', 'url');
+
+		$captcha = $this->getCaptchaInstance();
+
+		$captcha->shareDataToViews();
+	}
 
 }

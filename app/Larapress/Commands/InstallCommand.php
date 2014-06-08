@@ -1,229 +1,234 @@
 <?php namespace Larapress\Commands;
 
-use Cartalyst\Sentry\Groups\GroupInterface;
-use Cartalyst\Sentry\Groups\GroupNotFoundException;
-use Cartalyst\Sentry\Users\LoginRequiredException;
-use Cartalyst\Sentry\Users\PasswordRequiredException;
-use Cartalyst\Sentry\Users\UserExistsException;
-use Config;
-use Sentry;
 use Cartalyst\Sentry\Groups\GroupExistsException;
+use Cartalyst\Sentry\Groups\GroupInterface;
 use Cartalyst\Sentry\Groups\NameRequiredException;
+use Cartalyst\Sentry\Sentry;
 use Illuminate\Console\Command;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputArgument;
+use Larapress\Services\Mockably;
+use UnexpectedValueException;
 
-class InstallCommand extends Command
-{
-    protected $email = 'admin@example.com';
-    protected $password = 'password';
-    protected $url;
+class InstallCommand extends Command {
 
-    /**
-     * The console command name.
-     *
-     * @var string
-     */
-    protected $name = 'larapress:install';
+	protected $email = 'admin@example.com';
+	protected $password = 'password';
+	protected $url;
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Install larapress.';
+	protected $groups = array(
+		'administrator' => array
+		(
+			'name'        => 'Administrator',
+			'permissions' => array(
+				'access.backend'       => 1,
+				'administrator.edit'   => 1,
+				'owner.add'            => 1,
+				'owner.remove'         => 1,
+				'owner.edit'           => 1,
+				'moderator.add'        => 1,
+				'moderator.remove'     => 1,
+				'moderator.edit'       => 1,
+				'self.remove'          => 0,
+				'content.administrate' => 1,
+				'content.manage'       => 1,
+				'configuration.edit'   => 1,
+				'partial.add'          => 1,
+				'partial.edit'         => 1,
+			),
+		),
+		'owner' => array
+		(
+			'name'        => 'Owner',
+			'permissions' => array(
+				'access.backend'       => 1,
+				'administrator.edit'   => 0,
+				'owner.add'            => 0,
+				'owner.remove'         => 0,
+				'owner.edit'           => 1,
+				'moderator.add'        => 1,
+				'moderator.remove'     => 1,
+				'moderator.edit'       => 1,
+				'self.remove'          => 0,
+				'content.administrate' => 0,
+				'content.manage'       => 1,
+				'configuration.edit'   => 1,
+				'partial.add'          => 0,
+				'partial.edit'         => 1,
+			),
+		),
+		'moderator' => array
+		(
+			'name'        => 'Moderator',
+			'permissions' => array(
+				'access.backend'       => 1,
+				'administrator.edit'   => 0,
+				'owner.add'            => 0,
+				'owner.remove'         => 0,
+				'owner.edit'           => 0,
+				'moderator.add'        => 0,
+				'moderator.remove'     => 0,
+				'moderator.edit'       => 0,
+				'self.remove'          => 1,
+				'content.administrate' => 0,
+				'content.manage'       => 1,
+				'configuration.edit'   => 0,
+				'partial.add'          => 0,
+				'partial.edit'         => 0,
+			),
+		)
+	);
 
-    /**
-     * Create a new command instance.
-     *
-     * @return InstallCommand
-     */
-    public function __construct()
-    {
-        parent::__construct();
+	/**
+	 * The console command name.
+	 *
+	 * @var string
+	 */
+	protected $name = 'larapress:install';
 
-        $this->url = url(Config::get('larapress.urls.backend'));
-    }
+	/**
+	 * The console command description.
+	 *
+	 * @var string
+	 */
+	protected $description = 'Install larapress.';
 
-    /**
-     * Create User Groups / Roles
-     *
-     * @return GroupInterface Returns the Administrator group
-     */
-    public function create_user_groups()
-    {
-        try {
-            // Create the Administrator group
-            $admin_group = Sentry::createGroup(
-                array(
-                    'name' => 'Administrator',
-                    'permissions' => array(
-                        'access.backend' => 1,
-                        'administrator.edit' => 1,
-                        'owner.add' => 1,
-                        'owner.remove' => 1,
-                        'owner.edit' => 1,
-                        'moderator.add' => 1,
-                        'moderator.remove' => 1,
-                        'moderator.edit' => 1,
-                        'self.remove' => 0,
-                        'content.administrate' => 1,
-                        'content.manage' => 1,
-                        'configuration.edit' => 1,
-                        'partial.add' => 1,
-                        'partial.edit' => 1,
-                    ),
-                )
-            );
+	/**
+	 * @var \Cartalyst\Sentry\Sentry
+	 */
+	private $sentry;
 
-            // Create the Owner group
-            Sentry::createGroup(
-                array(
-                    'name' => 'Owner',
-                    'permissions' => array(
-                        'access.backend' => 1,
-                        'administrator.edit' => 0,
-                        'owner.add' => 0,
-                        'owner.remove' => 0,
-                        'owner.edit' => 1,
-                        'moderator.add' => 1,
-                        'moderator.remove' => 1,
-                        'moderator.edit' => 1,
-                        'self.remove' => 0,
-                        'content.administrate' => 0,
-                        'content.manage' => 1,
-                        'configuration.edit' => 1,
-                        'partial.add' => 0,
-                        'partial.edit' => 1,
-                    ),
-                )
-            );
+	/**
+	 * @var \Larapress\Services\Mockably
+	 */
+	private $mockably;
 
-            // Create the Moderator group
-            Sentry::createGroup(
-                array(
-                    'name' => 'Moderator',
-                    'permissions' => array(
-                        'access.backend' => 1,
-                        'administrator.edit' => 0,
-                        'owner.add' => 0,
-                        'owner.remove' => 0,
-                        'owner.edit' => 0,
-                        'moderator.add' => 0,
-                        'moderator.remove' => 0,
-                        'moderator.edit' => 0,
-                        'self.remove' => 1,
-                        'content.administrate' => 0,
-                        'content.manage' => 1,
-                        'configuration.edit' => 0,
-                        'partial.add' => 0,
-                        'partial.edit' => 0,
-                    ),
-                )
-            );
-        } catch (NameRequiredException $e) {
-            $this->call('migrate:reset');
-            $this->error('Name field is required');
-            die();
-        } catch (GroupExistsException $e) {
-            $this->call('migrate:reset');
-            $this->error('Group already exists');
-            die();
-        }
+	/**
+	 * Create a new command instance.
+	 *
+	 * @param \Cartalyst\Sentry\Sentry $sentry
+	 * @param \Larapress\Services\Mockably $mockably
+	 * @return InstallCommand
+	 */
+	public function __construct(Sentry $sentry, Mockably $mockably)
+	{
+		parent::__construct();
 
-        return $admin_group;
-    }
+		$this->sentry = $sentry;
+		$this->mockably = $mockably;
+		$this->url = $mockably->route('larapress.home.login.get');
+	}
 
-    /**
-     * Add the admin user
-     *
-     * @param GroupInterface $admin_group The Administrator group
-     * @return void
-     */
-    public function add_the_admin_user($admin_group)
-    {
-        try {
-            // Create the user
-            $user = Sentry::createUser(
-                array(
-                    'email' => $this->email,
-                    'password' => $this->password,
-                    'activated' => true,
-                )
-            );
+	/**
+	 * Abort command execution with a given error message
+	 *
+	 * @param string $message
+	 */
+	protected function abort_command($message)
+	{
+		$this->call('migrate:reset');
+		$this->error($message);
+		$this->mockably->mockable_die();
+	}
 
-            // Assign the group to the user
-            $user->addGroup($admin_group);
-        } catch (LoginRequiredException $e) {
-            $this->call('migrate:reset');
-            $this->error('Login field is required.');
-            die();
-        } catch (PasswordRequiredException $e) {
-            $this->call('migrate:reset');
-            $this->error('Password field is required.');
-            die();
-        } catch (UserExistsException $e) {
-            $this->call('migrate:reset');
-            $this->error('User with this login already exists.');
-            die();
-        } catch (GroupNotFoundException $e) {
-            $this->call('migrate:reset');
-            $this->error('Group was not found.');
-            die();
-        }
-    }
+	/**
+	 * Create User Groups / Roles
+	 *
+	 * @return GroupInterface Returns the Administrator group
+	 */
+	public function create_user_groups()
+	{
+		$admin_group = null;
 
-    /**
-     * Execute the console command.
-     *
-     * @return mixed
-     */
-    public function fire()
-    {
-        $this->info('Installing larapress ...' . PHP_EOL);
+		try
+		{
+			$admin_group = $this->sentry->createGroup($this->groups['administrator']);
+			$this->sentry->createGroup($this->groups['owner']);
+			$this->sentry->createGroup($this->groups['moderator']);
+		}
+		catch (NameRequiredException $e)
+		{
+			$this->abort_command('Name field is required');
+		}
+		catch (GroupExistsException $e)
+		{
+			$this->abort_command('Group already exists');
+		}
 
-        // Run migrations
-        $this->call('migrate', array('--package' => 'cartalyst/sentry'));
+		return $admin_group;
+	}
 
-        // Create User Groups / Roles
-        $admin_group = $this->create_user_groups();
+	/**
+	 * Provide more specific error messages on unexpected value exceptions
+	 *
+	 * @param UnexpectedValueException $e
+	 */
+	protected function handle_unexpected_value_exception($e)
+	{
+		switch (get_class($e))
+		{
+			case 'Cartalyst\Sentry\Users\UserExistsException':
+				$this->abort_command('User with this login already exists.');
+				break;
+			case 'Cartalyst\Sentry\Groups\GroupNotFoundException':
+				$this->abort_command('Group was not found.');
+				break;
+		}
 
-        // Add the admin user
-        $this->add_the_admin_user($admin_group);
+		$this->abort_command('Unexpected value error.');
+	}
 
-        /**
-         * Notify the user about the successful install and tell him how to continue
-         */
-        $this->info(PHP_EOL . 'Installation complete!' . PHP_EOL);
-        $this->info('Now please visit ' . $this->url . ' and login.' . PHP_EOL);
-        $this->info('Credentials:');
-        $this->info('E-Mail: ' . $this->email);
-        $this->info('Password: ' . $this->password . PHP_EOL);
-        $this->info('Make sure you instantly update your credentials!');
-    }
+	/**
+	 * Add the admin user
+	 *
+	 * @param GroupInterface $admin_group The Administrator group
+	 * @return void
+	 */
+	public function add_the_admin_user($admin_group)
+	{
+		try
+		{
+			$user = $this->sentry->createUser(
+				array(
+					'email'     => $this->email,
+					'password'  => $this->password,
+					'activated' => true,
+				)
+			);
 
-    /**
-     * Get the console command arguments.
-     *
-     * @return array
-     */
-    protected function getArguments()
-    {
-        return array(
-            array('example', InputArgument::OPTIONAL, 'An example argument.'),
-        );
-    }
+			$user->addGroup($admin_group);
+		}
+		catch (UnexpectedValueException $e)
+		{
+			$this->handle_unexpected_value_exception($e);
+		}
+	}
 
-    /**
-     * Get the console command options.
-     *
-     * @return array
-     */
-    protected function getOptions()
-    {
-        return array(
-            array('example', null, InputOption::VALUE_OPTIONAL, 'An example option.', null),
-        );
-    }
+	/**
+	 * Execute the console command.
+	 *
+	 * @return mixed
+	 */
+	public function fire()
+	{
+		$this->info('Installing larapress ...' . PHP_EOL);
+
+		$this->call('migrate', array('--package' => 'cartalyst/sentry'));
+		$admin_group = $this->create_user_groups();
+
+		if ( $admin_group instanceof GroupInterface )
+		{
+			$this->add_the_admin_user($admin_group);
+		}
+		else
+		{
+			$this->abort_command('Failed creating the user groups.');
+		}
+
+		$this->info(PHP_EOL . 'Installation complete!' . PHP_EOL);
+		$this->info('Now please visit ' . $this->url . ' and login.' . PHP_EOL);
+		$this->info('Credentials:');
+		$this->info('E-Mail: ' . $this->email);
+		$this->info('Password: ' . $this->password . PHP_EOL);
+		$this->info('Make sure you instantly update your credentials!');
+	}
 
 }

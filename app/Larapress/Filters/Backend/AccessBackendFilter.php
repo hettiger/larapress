@@ -1,33 +1,39 @@
 <?php namespace Larapress\Filters\Backend;
 
-use Illuminate\Http\RedirectResponse;
 use Larapress\Exceptions\PermissionMissingException;
-use Permission;
-use Redirect;
-use Session;
+use Larapress\Filters\Templates\RedirectFilter;
 
-class AccessBackendFilter
-{
+class AccessBackendFilter extends RedirectFilter {
 
-    /**
-     * Check if the user has the permission to access the backend
-     * If not redirect him to the login page with some flash message
-     *
-     * @return RedirectResponse|null
-     */
-    public function filter()
-    {
-        try
-        {
-            Permission::has('access.backend');
-        }
-        catch (PermissionMissingException $e)
-        {
-            Session::flash('error', $e->getMessage());
-            return Redirect::route('larapress.home.login.get');
-        }
+	/**
+	 * @var \Larapress\Interfaces\PermissionInterface
+	 */
+	protected $permission;
 
-        return null; // User has access
-    }
+	/**
+	 * @codeCoverageIgnore
+	 */
+	protected function init($app)
+	{
+		$this->permission = $app['permission'];
+	}
+
+	/**
+	 * Redirect the user with a flash message if he's missing permissions to the backend
+	 *
+	 * @return bool|\Illuminate\HTTP\RedirectResponse
+	 */
+	protected function redirect()
+	{
+		try
+		{
+			$this->permission->has('access.backend');
+			return false;
+		}
+		catch (PermissionMissingException $e)
+		{
+			return $this->helpers->redirectWithFlashMessage('error', $e->getMessage(), 'larapress.home.login.get');
+		}
+	}
 
 }

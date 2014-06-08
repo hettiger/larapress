@@ -1,59 +1,81 @@
 <?php namespace Larapress\Tests\Services;
 
-use Larapress\Tests\TestCase;
+use Larapress\Services\Permission;
 use Mockery;
-use Permission;
-use Sentry;
+use Mockery\Mock;
+use PHPUnit_Framework_TestCase;
 
-class PermissionTest extends TestCase
-{
+class PermissionTest extends PHPUnit_Framework_TestCase {
 
-    /*
-    |--------------------------------------------------------------------------
-    | Permission::has() Tests
-    |--------------------------------------------------------------------------
-    |
-    | Here is where you can test the Permission::has() method
-    |
-    */
+	/**
+	 * @var Mock
+	 */
+	protected $sentry;
 
-    /**
-     * @expectedException \Larapress\Exceptions\PermissionMissingException
-     * @expectedExceptionMessage User is not logged in.
-     */
-    public function test_can_throw_an_exception_when_user_is_not_logged_in()
-    {
-        Sentry::shouldReceive('check')->once()->andReturn(false);
+	public function setUp()
+	{
+		parent::setUp();
 
-        Permission::has('foo');
-    }
+		$this->sentry = Mockery::mock('Cartalyst\Sentry\Sentry');
+	}
 
-    /**
-     * @expectedException \Larapress\Exceptions\PermissionMissingException
-     * @expectedExceptionMessage User is missing permissions.
-     */
-    public function test_can_throw_an_exception_when_user_is_missing_permissions()
-    {
-        Sentry::shouldReceive('check')->once()->andReturn(true);
+	public function tearDown()
+	{
+		parent::tearDown();
 
-        $get_user_mock = Mockery::mock();
-        $get_user_mock->shouldReceive('hasAccess')->once()->andReturn(false);
+		Mockery::close();
+	}
 
-        Sentry::shouldReceive('getUser')->once()->andReturn($get_user_mock);
+	protected function getPermissionInstance()
+	{
+		return new Permission($this->sentry);
+	}
 
-        Permission::has('foo');
-    }
+	/**
+	 * @test has() throws an exception when user is not logged in
+	 * @expectedException \Larapress\Exceptions\PermissionMissingException
+	 * @expectedExceptionMessage User is not logged in.
+	 */
+	public function has_throws_an_exception_when_user_is_not_logged_in()
+	{
+		$this->sentry->shouldReceive('check')->once()->andReturn(false);
+		$permission = $this->getPermissionInstance();
 
-    public function test_can_return_true_if_user_is_logged_in_and_has_permissions()
-    {
-        Sentry::shouldReceive('check')->once()->andReturn(true);
+		$permission->has('foo');
+	}
 
-        $get_user_mock = Mockery::mock();
-        $get_user_mock->shouldReceive('hasAccess')->once()->andReturn(true);
+	/**
+	 * @test has() throws an exception on missing permissions
+	 * @expectedException \Larapress\Exceptions\PermissionMissingException
+	 * @expectedExceptionMessage User is missing permissions.
+	 */
+	public function has_throws_an_exception_on_missing_permissions()
+	{
+		$this->sentry->shouldReceive('check')->once()->andReturn(true);
 
-        Sentry::shouldReceive('getUser')->once()->andReturn($get_user_mock);
+		$user = Mockery::mock();
+		$user->shouldReceive('hasAccess')->once()->andReturn(false);
 
-        $this->assertTrue(Permission::has('foo'));
-    }
+		$this->sentry->shouldReceive('getUser')->once()->andReturn($user);
+		$permission = $this->getPermissionInstance();
+
+		$permission->has('foo');
+	}
+
+	/**
+	 * @test has() returns true if the user is logged in and has permissions
+	 */
+	public function has_returns_true_if_the_user_is_logged_in_and_has_permissions()
+	{
+		$this->sentry->shouldReceive('check')->once()->andReturn(true);
+
+		$user = Mockery::mock();
+		$user->shouldReceive('hasAccess')->once()->andReturn(true);
+
+		$this->sentry->shouldReceive('getUser')->once()->andReturn($user);
+		$permission = $this->getPermissionInstance();
+
+		$this->assertTrue($permission->has('foo'));
+	}
 
 }

@@ -43,7 +43,7 @@ include our partial in your view wherever you need it:
 ```php
 // Your view
 
-@include('larapress.partials.captcha')
+@include('larapress::partials.captcha')
 ```
 
 Because the above included partial requires some data you'll need to add the following in your controller method or
@@ -70,8 +70,8 @@ the next step of this guide. Here's a example of how that could be accomplished:
 
 @if ( Session::has('error') )
     <div class="alert alert-danger">
-        <strong>@lang('messages.Error')!</strong>
-        @lang('messages.' . Session::get('error'))
+        <strong>@lang('larapress::messages.Error')!</strong>
+        @lang('larapress::messages.' . Session::get('error'))
     </div>
 @endif
 ```
@@ -97,7 +97,7 @@ The larapress backend has it's own fallback, no worries about that ... Anyways i
 
 ## Customization
 
-If you want to customize this in any way you can simple duplicate and edit the `larapress.partials.captcha` view.
+If you want to customize this in any way you can simple duplicate and edit the `larapress::partials.captcha` view.
 You could use your own stylesheet or even replace the javascript with a custom solution ... Be creative ;-)
 
 __If you run into trouble please have a look at `app/assets/larapress/js/pages/captcha/captcha.js` and

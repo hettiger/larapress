@@ -17,6 +17,8 @@ chmod -R 777 app/storage
 2. Apply your configuration in `.env.php`
 3. If you want to use MySQL you'll also need to change the default database connection in `app/config/database.php`
 
+> You can also use environment variables instead of the `.env.php` file in production for example.
+
 __Example for using MySQL__
 
 ```php

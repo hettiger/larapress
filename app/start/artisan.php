@@ -11,4 +11,17 @@
 |
 */
 
-Artisan::add(new \Larapress\Commands\InstallCommand);
+//
+
+/*
+|--------------------------------------------------------------------------
+| Require The Larapress Artisan File
+|--------------------------------------------------------------------------
+|
+| In order to keep larapress completely isolated from your application we
+| require an extra artisan file here. This allows you updating larapress
+| with no worries about breaking your code.
+|
+*/
+
+require app_path().'/Larapress/artisan.php';

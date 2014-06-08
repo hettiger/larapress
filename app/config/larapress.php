@@ -2,65 +2,65 @@
 
 return array(
 
-    /*
-    |--------------------------------------------------------------------------
-    | Settings
-    |--------------------------------------------------------------------------
-    |
-    | Configure the CMS here
-    |
-    */
+	/*
+	|--------------------------------------------------------------------------
+	| Settings
+	|--------------------------------------------------------------------------
+	|
+	| Configure the CMS here
+	|
+	*/
 
-    'settings' => array(
+	'settings' => array(
 
-        'log' => false, // Logs the application performance
+		'log' => false, // Logs the application performance
 
-        'ssl' => false, // Force to use https:// requests in the backend
+		'ssl' => false, // Force to use https:// requests in the backend
 
-        'captcha' => array(
+		'captcha' => array(
 
-            'active' => true, // Decide if you want to use the captcha
+			'active' => true, // Decide if you want to use the captcha
 
-            'timer' => 10, // Minutes until a passed captcha expires
+			'timer' => 10, // Minutes until a passed captcha expires
 
-        ),
+		),
 
-    ),
+	),
 
-    'email' => array(
+	'email' => array(
 
-        'from' => array('address' => null, 'name' => null),
+		'from' => array('address' => null, 'name' => null),
 
-    ),
+	),
 
-    /*
-    |--------------------------------------------------------------------------
-    | Names
-    |--------------------------------------------------------------------------
-    |
-    | Define all kinds of names here
-    |
-    */
+	/*
+	|--------------------------------------------------------------------------
+	| Names
+	|--------------------------------------------------------------------------
+	|
+	| Define all kinds of names here
+	|
+	*/
 
-    'names' => array(
+	'names' => array(
 
-        'cms' => 'larapress',
+		'cms' => 'larapress',
 
-    ),
+	),
 
-    /*
-    |--------------------------------------------------------------------------
-    | URL Configuration
-    |--------------------------------------------------------------------------
-    |
-    | Define larapress related urls here
-    |
-    */
+	/*
+	|--------------------------------------------------------------------------
+	| URL Configuration
+	|--------------------------------------------------------------------------
+	|
+	| Define larapress related urls here
+	|
+	*/
 
-    'urls' => array(
+	'urls' => array(
 
-        'backend' => 'admin'
+		'backend' => 'admin'
 
-    ),
+	),
 
 );
