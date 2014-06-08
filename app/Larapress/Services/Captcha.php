@@ -2,7 +2,7 @@
 
 use Illuminate\Config\Repository as Config;
 use Illuminate\Session\Store as Session;
-use Illuminate\View\Environment as View;
+use Illuminate\View\Factory as View;
 use Larapress\Interfaces\CaptchaInterface;
 use Larapress\Interfaces\HelpersInterface;
 use Larapress\Interfaces\MockablyInterface;
@@ -10,7 +10,7 @@ use Larapress\Interfaces\MockablyInterface;
 class Captcha implements CaptchaInterface {
 
 	/**
-	 * @var \Illuminate\View\Environment
+	 * @var \Illuminate\View\Factory
 	 */
 	private $view;
 

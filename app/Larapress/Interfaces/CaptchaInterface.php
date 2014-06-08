@@ -2,7 +2,7 @@
 
 use Illuminate\Config\Repository as Config;
 use Illuminate\Session\Store as Session;
-use Illuminate\View\Environment as View;
+use Illuminate\View\Factory as View;
 
 interface CaptchaInterface {
 

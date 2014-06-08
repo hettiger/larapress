@@ -64,7 +64,7 @@ class HelpersTest extends PHPUnit_Framework_TestCase {
 
 		$this->config = Mockery::mock('\Illuminate\Config\Repository');
 		$this->lang = Mockery::mock('\Illuminate\Translation\Translator');
-		$this->view = Mockery::mock('\Illuminate\View\Environment');
+		$this->view = Mockery::mock('\Illuminate\View\Factory');
 		$this->mockably = Mockery::mock('\Larapress\Services\Mockably');
 		$this->log = Mockery::mock('\Monolog\Logger');
 		$this->request = Mockery::mock('\Illuminate\Http\Request');
