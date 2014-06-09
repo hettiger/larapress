@@ -1,6 +1,6 @@
-<?php namespace Larapress\Tests\Controllers;
+<?php namespace Larapress\Tests\Controllers\Backend;
 
-use Larapress\Controllers\ControlPanelController;
+use Larapress\Controllers\Backend\ControlPanelController;
 use Larapress\Tests\Controllers\Templates\ControllerTestCase;
 use Mockery;
 use Mockery\Mock;

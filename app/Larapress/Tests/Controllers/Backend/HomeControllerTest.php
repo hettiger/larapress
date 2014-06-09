@@ -1,4 +1,4 @@
-<?php namespace Larapress\Tests\Controllers;
+<?php namespace Larapress\Tests\Controllers\Backend;
 
 use Captcha;
 use Config;

@@ -1,4 +1,4 @@
-<?php namespace Larapress\Controllers;
+<?php namespace Larapress\Controllers\Backend;
 
 use Captcha;
 use Cartalyst\Sentry\Throttling\UserBannedException;
@@ -10,6 +10,7 @@ use Cartalyst\Sentry\Users\UserNotFoundException;
 use Cartalyst\Sentry\Users\WrongPasswordException;
 use Helpers;
 use Input;
+use Larapress\Controllers\BaseController;
 use Larapress\Exceptions\MailException;
 use Larapress\Exceptions\PasswordResetCodeInvalidException;
 use Larapress\Exceptions\PasswordResetFailedException;
