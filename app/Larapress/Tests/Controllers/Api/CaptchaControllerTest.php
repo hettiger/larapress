@@ -1,16 +1,11 @@
 <?php namespace Larapress\Tests\Controllers\Api;
 
 use Larapress\Controllers\Api\CaptchaController;
+use Larapress\Tests\Controllers\Api\Templates\ApiControllerTestCase;
 use Mockery;
 use Mockery\Mock;
-use PHPUnit_Framework_TestCase;
 
-class CaptchaControllerTest extends PHPUnit_Framework_TestCase {
-
-	/**
-	 * @var Mock
-	 */
-	private $helpers;
+class CaptchaControllerTest extends ApiControllerTestCase {
 
 	/**
 	 * @var Mock
@@ -41,7 +36,6 @@ class CaptchaControllerTest extends PHPUnit_Framework_TestCase {
 	{
 		parent::setUp();
 
-		$this->helpers = Mockery::mock('\Larapress\Interfaces\HelpersInterface');
 		$this->validator = Mockery::mock('\Illuminate\Validation\Factory');
 		$this->input = Mockery::mock('\Illuminate\Http\Request');
 		$this->response = Mockery::mock('\Illuminate\Support\Facades\Response');
@@ -49,16 +43,16 @@ class CaptchaControllerTest extends PHPUnit_Framework_TestCase {
 		$this->mockably = Mockery::mock('\Larapress\Interfaces\MockablyInterface');
 	}
 
-	public function tearDown()
-	{
-		parent::tearDown();
-
-		Mockery::close();
-	}
-
 	protected function getCaptchaControllerInstance()
 	{
-		return new CaptchaController($this->helpers, $this->validator, $this->input, $this->response, $this->session, $this->mockably);
+		return new CaptchaController(
+			$this->helpers,
+			$this->validator,
+			$this->input,
+			$this->response,
+			$this->session,
+			$this->mockably
+		);
 	}
 
 	/**
