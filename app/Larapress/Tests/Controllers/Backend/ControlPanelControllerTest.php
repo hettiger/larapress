@@ -1,11 +1,11 @@
 <?php namespace Larapress\Tests\Controllers\Backend;
 
 use Larapress\Controllers\Backend\ControlPanelController;
-use Larapress\Tests\Controllers\Templates\ControllerTestCase;
+use Larapress\Tests\Controllers\Backend\Templates\BackendControllerTestCase;
 use Mockery;
 use Mockery\Mock;
 
-class ControlPanelControllerTest extends ControllerTestCase {
+class ControlPanelControllerTest extends BackendControllerTestCase {
 
 	/**
 	 * @var Mock

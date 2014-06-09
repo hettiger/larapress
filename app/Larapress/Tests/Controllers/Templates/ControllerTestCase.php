@@ -16,7 +16,6 @@ abstract class ControllerTestCase extends PHPUnit_Framework_TestCase {
 		parent::setUp();
 
 		$this->helpers = Mockery::mock('\Larapress\Interfaces\HelpersInterface');
-		$this->helpers->shouldReceive('initBaseController')->withNoArgs()->once();
 	}
 
 	public function tearDown()

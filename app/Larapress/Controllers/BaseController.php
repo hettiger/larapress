@@ -3,7 +3,7 @@
 use Controller;
 use Larapress\Interfaces\HelpersInterface as Helpers;
 
-class BaseController extends Controller {
+abstract class BaseController extends Controller {
 
 	/**
 	 * @var \Larapress\Interfaces\HelpersInterface
@@ -13,18 +13,6 @@ class BaseController extends Controller {
 	function __construct(Helpers $helpers)
 	{
 		$this->helpers = $helpers;
-
-		$this->init();
-	}
-
-	/**
-	 * Initialize the base controller sharing important data to all views
-	 *
-	 * @return void
-	 */
-	protected function init()
-	{
-		$this->helpers->initBaseController();
 	}
 
 	/**

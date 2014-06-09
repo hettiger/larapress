@@ -1,10 +1,9 @@
 <?php namespace Larapress\Controllers\Backend;
 
-use Larapress\Controllers\BaseController;
 use Larapress\Interfaces\HelpersInterface as Helpers;
 use Illuminate\View\Factory as View;
 
-class ControlPanelController extends BaseController {
+class ControlPanelController extends BackendBaseController {
 
 	/**
 	 * @var \View

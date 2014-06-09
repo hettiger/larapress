@@ -10,7 +10,6 @@ use Cartalyst\Sentry\Users\UserNotFoundException;
 use Cartalyst\Sentry\Users\WrongPasswordException;
 use Helpers;
 use Input;
-use Larapress\Controllers\BaseController;
 use Larapress\Exceptions\MailException;
 use Larapress\Exceptions\PasswordResetCodeInvalidException;
 use Larapress\Exceptions\PasswordResetFailedException;
@@ -23,7 +22,7 @@ use Sentry;
 use Session;
 use View;
 
-class HomeController extends BaseController {
+class HomeController extends BackendBaseController {
 
 	/**
 	 * Index

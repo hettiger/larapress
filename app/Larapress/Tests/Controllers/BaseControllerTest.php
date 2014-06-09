@@ -1,13 +1,13 @@
 <?php namespace Larapress\Tests\Controllers;
 
-use Larapress\Controllers\BaseController;
+use Larapress\Tests\Controllers\Proxies\BaseControllerProxy;
 use Larapress\Tests\Controllers\Templates\ControllerTestCase;
 
 class BaseControllerTest extends ControllerTestCase {
 
 	protected function getBaseControllerInstance()
 	{
-		return new BaseController($this->helpers);
+		return new BaseControllerProxy($this->helpers);
 	}
 
 	/**
