@@ -1,21 +1,51 @@
 <?php namespace Larapress\Controllers;
 
-use App;
 use Carbon\Carbon;
 use Controller;
-use Helpers;
+use Illuminate\Foundation\Application as App;
+use Illuminate\View\Factory as View;
+use Larapress\Interfaces\HelpersInterface as Helpers;
 use Response;
-use View;
 
 class BaseController extends Controller {
 
-	function __construct()
-	{
-		$lang = App::getLocale();
-		$now = Carbon::now();
+	/**
+	 * @var \Illuminate\Foundation\Application
+	 */
+	private $app;
 
-		View::share('lang', $lang);
-		View::share('now', $now);
+	/**
+	 * @var \Carbon\Carbon
+	 */
+	private $carbon;
+
+	/**
+	 * @var \Illuminate\View\Factory
+	 */
+	private $view;
+
+	/**
+	 * @var \Larapress\Interfaces\HelpersInterface
+	 */
+	private $helpers;
+
+	function __construct(App $app, Carbon $carbon, View $view, Helpers $helpers)
+	{
+		$this->app = $app;
+		$this->carbon = $carbon;
+		$this->view = $view;
+		$this->helpers = $helpers;
+
+		$this->init();
+	}
+
+	protected function init()
+	{
+		$lang = $this->app->getLocale();
+		$now = $this->carbon->now();
+
+		$this->view->share('lang', $lang);
+		$this->view->share('now', $now);
 	}
 
 	/**
@@ -28,7 +58,7 @@ class BaseController extends Controller {
 	 */
 	public function missingMethod($parameters = array())
 	{
-		return Helpers::force404();
+		return $this->helpers->force404();
 	}
 
 }

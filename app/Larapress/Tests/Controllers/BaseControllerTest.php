@@ -1,61 +1,84 @@
 <?php namespace Larapress\Tests\Controllers;
 
-use Config;
-use Helpers;
-use Larapress\Controllers\BaseController;
-use Larapress\Tests\TestCase;
-use Str;
-use View;
+use Larapress\Tests\Controllers\Proxies\BaseControllerProxy;
+use Mockery;
+use Mockery\Mock;
+use PHPUnit_Framework_TestCase;
 
-class BaseControllerTest extends TestCase {
+class BaseControllerTest extends PHPUnit_Framework_TestCase {
 
-	private $backend_route;
+	/**
+	 * @var Mock
+	 */
+	private $app;
+
+	/**
+	 * @var Mock
+	 */
+	private $carbon;
+
+	/**
+	 * @var Mock
+	 */
+	private $view;
+
+	/**
+	 * @var Mock
+	 */
+	private $helpers;
 
 	public function setUp()
 	{
 		parent::setUp();
 
-		$this->backend_route = Config::get('larapress.urls.backend');
+		$this->app = Mockery::mock('\Illuminate\Foundation\Application');
+		$this->carbon = Mockery::mock('\Carbon\Carbon');
+		$this->view = Mockery::mock('\Illuminate\View\Factory');
+		$this->helpers = Mockery::mock('\Larapress\Interfaces\HelpersInterface');
 	}
 
-	/*
-	|--------------------------------------------------------------------------
-	| Constructor Tests
-	|--------------------------------------------------------------------------
-	|
-	| Here is where you can test the constructor
-	|
-	*/
-
-	public function test_constructor_shares_important_data()
+	public function tearDown()
 	{
-		View::shouldReceive('share')->times(2);
+		parent::tearDown();
 
-		new BaseController;
+		Mockery::close();
 	}
 
-	/*
-	|--------------------------------------------------------------------------
-	| BaseController@missingMethod Tests
-	|--------------------------------------------------------------------------
-	|
-	| Here is where you can test the BaseController@missingMethod method
-	|
-	*/
-
-	public function test_can_catch_404_errors()
+	protected function getBaseControllerInstance()
 	{
-		$this->call('GET', $this->backend_route . '/' . Str::quickRandom(16));
-
-		$this->assertResponseStatus(404);
+		return new BaseControllerProxy($this->app, $this->carbon, $this->view, $this->helpers);
 	}
 
-	public function test_can_set_the_correct_page_title()
+	protected function getInitFixture()
 	{
-		Helpers::shouldReceive('force404')->withNoArgs()->once()->andReturn('foo');
-		$controller = new BaseController;
+		$this->app->shouldReceive('getLocale')->withNoArgs()->atLeast()->once()->andReturn('foo');
+		$this->carbon->shouldReceive('now')->withNoArgs()->atLeast()->once()->andReturn('bar');
 
-		$this->assertEquals('foo', $controller->missingMethod(array()));
+		$this->view->shouldReceive('share')->with('lang', 'foo')->atLeast()->once();
+		$this->view->shouldReceive('share')->with('now', 'bar')->atLeast()->once();
+	}
+
+	/**
+	 * @test init() shares some important data for all larapress views
+	 */
+	public function init_shares_some_important_data_for_all_larapress_views()
+	{
+		$this->getInitFixture();
+		$controller = $this->getBaseControllerInstance();
+
+		$controller->init();
+	}
+
+	/**
+	 * @test missingMethod() calls the force404 helpers method
+	 */
+	public function missingMethod_returns_the_force_404_helpers_method()
+	{
+		$this->getInitFixture();
+		$this->helpers->shouldReceive('force404')->withNoArgs()->once()->andReturn('baz');
+		$controller = $this->getBaseControllerInstance();
+
+		$this->assertEquals('baz', $controller->missingMethod());
 	}
 
 }
