@@ -60,6 +60,18 @@ class HomeController extends BackendBaseController {
 	}
 
 	/**
+	 * Redirect to the login route with a flash message keeping the input except for the password
+	 *
+	 * @param string $message The error message
+	 * @return \Illuminate\Http\RedirectResponse
+	 */
+	protected function loginRedirectFixture($message)
+	{
+		return Helpers::redirectWithFlashMessage('error', $message, 'larapress.home.login.get')
+			->withInput(Input::except('password'));
+	}
+
+	/**
 	 * Login
 	 *
 	 * This method will be processed once you try to login.
@@ -82,45 +94,31 @@ class HomeController extends BackendBaseController {
 		}
 		catch (LoginRequiredException $e)
 		{
-			Session::flash('error', 'Login field is required.');
-
-			return Redirect::route('larapress.home.login.get')->withInput(Input::except('password'));
+			return $this->loginRedirectFixture('Login field is required.');
 		}
 		catch (PasswordRequiredException $e)
 		{
-			Session::flash('error', 'Password field is required.');
-
-			return Redirect::route('larapress.home.login.get')->withInput(Input::except('password'));
+			return $this->loginRedirectFixture('Password field is required.');
 		}
 		catch (WrongPasswordException $e)
 		{
-			Session::flash('error', 'Wrong password, try again.');
-
-			return Redirect::route('larapress.home.login.get')->withInput(Input::except('password'));
+			return $this->loginRedirectFixture('Wrong password, try again.');
 		}
 		catch (UserNotFoundException $e)
 		{
-			Session::flash('error', 'User was not found.');
-
-			return Redirect::route('larapress.home.login.get')->withInput(Input::except('password'));
+			return $this->loginRedirectFixture('User was not found.');
 		}
 		catch (UserNotActivatedException $e)
 		{
-			Session::flash('error', 'User is not activated.');
-
-			return Redirect::route('larapress.home.login.get')->withInput(Input::except('password'));
+			return $this->loginRedirectFixture('User is not activated.');
 		}
 		catch (UserSuspendedException $e)
 		{
-			Session::flash('error', 'User is suspended.');
-
-			return Redirect::route('larapress.home.login.get')->withInput(Input::except('password'));
+			return $this->loginRedirectFixture('User is suspended.');
 		}
 		catch (UserBannedException $e)
 		{
-			Session::flash('error', 'User is banned.');
-
-			return Redirect::route('larapress.home.login.get')->withInput(Input::except('password'));
+			return $this->loginRedirectFixture('User is banned.');
 		}
 
 		return Redirect::route('larapress.cp.dashboard.get');
@@ -161,6 +159,18 @@ class HomeController extends BackendBaseController {
 	}
 
 	/**
+	 * Redirect to the reset password route with a flash message keeping the input
+	 *
+	 * @param string $message The error message
+	 * @return \Illuminate\Http\RedirectResponse
+	 */
+	protected function resetPasswordRedirectFixture($message)
+	{
+		return Helpers::redirectWithFlashMessage('error', $message, 'larapress.home.reset.password.get')
+			->withInput(Input::all());
+	}
+
+	/**
 	 * Reset Password
 	 *
 	 * This will try and send you a reset password link.
@@ -177,20 +187,18 @@ class HomeController extends BackendBaseController {
 		}
 		catch (UserNotFoundException $e)
 		{
-			Session::flash('error', 'User was not found.');
-
-			return Redirect::route('larapress.home.reset.password.get')->withInput(Input::all());
+			return $this->resetPasswordRedirectFixture('User was not found.');
 		}
 		catch (MailException $e)
 		{
-			Session::flash('error', $e->getMessage());
-
-			return Redirect::route('larapress.home.reset.password.get')->withInput(Input::all());
+			return $this->resetPasswordRedirectFixture($e->getMessage());
 		}
 
-		Session::flash('success', 'Now please check your email account for further instructions!');
-
-		return Redirect::route('larapress.home.reset.password.get');
+		return Helpers::redirectWithFlashMessage(
+			'success',
+			'Now please check your email account for further instructions!',
+			'larapress.home.reset.password.get'
+		);
 	}
 
 	/**
@@ -220,10 +228,8 @@ class HomeController extends BackendBaseController {
 		}
 		catch (PasswordResetFailedException $e)
 		{
-			Session::flash('error', 'Resetting your password failed. ' .
+			return $this->resetPasswordRedirectFixture('Resetting your password failed. ' .
 				'Please try again later or contact the administrator.');
-
-			return Redirect::route('larapress.home.reset.password.get');
 		}
 		catch (PasswordResetCodeInvalidException $e)
 		{
@@ -231,14 +237,14 @@ class HomeController extends BackendBaseController {
 		}
 		catch (MailException $e)
 		{
-			Session::flash('error', $e->getMessage());
-
-			return Redirect::route('larapress.home.reset.password.get');
+			return $this->resetPasswordRedirectFixture($e->getMessage());
 		}
 
-		Session::flash('success', 'Now please check your email account for the new password!');
-
-		return Redirect::route('larapress.home.login.get');
+		return Helpers::redirectWithFlashMessage(
+			'success',
+			'Now please check your email account for the new password!',
+			'larapress.home.login.get'
+		);
 	}
 
 }
