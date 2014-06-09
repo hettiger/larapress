@@ -4,11 +4,10 @@ use App;
 use Carbon\Carbon;
 use Controller;
 use Helpers;
-use Larapress\Interfaces\BaseControllerInterface;
 use Response;
 use View;
 
-class BaseController extends Controller implements BaseControllerInterface {
+class BaseController extends Controller {
 
 	function __construct()
 	{
@@ -29,9 +28,7 @@ class BaseController extends Controller implements BaseControllerInterface {
 	 */
 	public function missingMethod($parameters = array())
 	{
-		Helpers::setPageTitle('404 Error');
-
-		return Response::view('larapress::errors.404', array(), 404);
+		return Helpers::force404();
 	}
 
 }

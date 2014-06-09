@@ -41,7 +41,7 @@ class HelpersServiceProvider extends ServiceProvider {
 				$this->app['session.store'],
 				$this->db->connection($this->defaultDbConnection),
 				$this->app['redirect'],
-				new BaseController
+				$this->app['Illuminate\Support\Facades\Response']
 			);
 		});
 	}

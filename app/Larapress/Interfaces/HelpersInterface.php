@@ -6,6 +6,7 @@ use Illuminate\Database\Connection as DB;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector as Redirect;
 use Illuminate\Session\Store as Session;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Translation\Translator as Lang;
 use Illuminate\View\Factory as View;
 use Monolog\Logger as Log;
@@ -22,7 +23,7 @@ interface HelpersInterface {
 	 * @param \Illuminate\Session\Store $session
 	 * @param \Illuminate\Database\Connection $db
 	 * @param \Illuminate\Routing\Redirector $redirect
-	 * @param \Larapress\Interfaces\BaseControllerInterface $baseController
+	 * @param \Illuminate\Support\Facades\Response $response
 	 *
 	 * @return \Larapress\Interfaces\HelpersInterface
 	 */
@@ -36,7 +37,7 @@ interface HelpersInterface {
 		Session $session,
 		DB $db,
 		Redirect $redirect,
-		BaseControllerInterface $baseController
+		Response $response
 	);
 
 	/**

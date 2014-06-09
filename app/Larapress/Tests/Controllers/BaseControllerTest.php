@@ -52,11 +52,10 @@ class BaseControllerTest extends TestCase {
 
 	public function test_can_set_the_correct_page_title()
 	{
-		Helpers::shouldReceive('setPageTitle')->with('404 Error')->once();
-		View::share('title', 'foo'); // Prevent an for this test irrelevant ErrorException
-
+		Helpers::shouldReceive('force404')->withNoArgs()->once()->andReturn('foo');
 		$controller = new BaseController;
-		$controller->missingMethod(array());
+
+		$this->assertEquals('foo', $controller->missingMethod(array()));
 	}
 
 }

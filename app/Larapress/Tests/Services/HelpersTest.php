@@ -56,7 +56,7 @@ class HelpersTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * @var Mock
 	 */
-	private $baseController;
+	private $response;
 
 	public function setUp()
 	{
@@ -71,7 +71,7 @@ class HelpersTest extends PHPUnit_Framework_TestCase {
 		$this->session = Mockery::mock('\Illuminate\Session\Store');
 		$this->db = Mockery::mock('\Illuminate\Database\Connection');
 		$this->redirect = Mockery::mock('\Illuminate\Routing\Redirector');
-		$this->baseController = Mockery::mock('\Larapress\Controllers\BaseController');
+		$this->response = Mockery::mock('\Illuminate\Support\Facades\Response');
 	}
 
 	public function tearDown()
@@ -93,8 +93,15 @@ class HelpersTest extends PHPUnit_Framework_TestCase {
 			$this->session,
 			$this->db,
 			$this->redirect,
-			$this->baseController
+			$this->response
 		);
+	}
+
+	protected function setPageTitleFixture($page_name)
+	{
+		$this->config->shouldReceive('get')->with('larapress.names.cms')->once()->andReturn('foo');
+		$this->lang->shouldReceive('get')->with('larapress::general.' . $page_name)->once()->andReturn($page_name);
+		$this->view->shouldReceive('share')->with('title', 'foo | ' . $page_name)->once();
 	}
 
 	/**
@@ -102,9 +109,7 @@ class HelpersTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function setPageTitle()
 	{
-		$this->config->shouldReceive('get')->with('larapress.names.cms')->once()->andReturn('foo');
-		$this->lang->shouldReceive('get')->with('larapress::general.bar')->once()->andReturn('bar');
-		$this->view->shouldReceive('share')->with('title', 'foo | bar')->once();
+		$this->setPageTitleFixture('bar');
 		$helpers = $this->getHelpersInstance();
 
 		$helpers->setPageTitle('bar');
@@ -225,7 +230,8 @@ class HelpersTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function force404_can_abort_the_app_returning_the_backend_404_view()
 	{
-		$this->baseController->shouldReceive('missingMethod')->with(array())->once()->andReturn('foo');
+		$this->setPageTitleFixture('404 Error');
+		$this->response->shouldReceive('view')->with('larapress::errors.404', array(), 404)->once()->andReturn('foo');
 		$helpers = $this->getHelpersInstance();
 
 		$this->assertEquals('foo', $helpers->force404());

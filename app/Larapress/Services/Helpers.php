@@ -7,9 +7,9 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector as Redirect;
 use Illuminate\Session\Store as Session;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Translation\Translator as Lang;
 use Illuminate\View\Factory as View;
-use Larapress\Interfaces\BaseControllerInterface;
 use Larapress\Interfaces\HelpersInterface;
 use Larapress\Interfaces\MockablyInterface;
 use Monolog\Logger as Log;
@@ -62,9 +62,9 @@ class Helpers implements HelpersInterface {
 	private $redirect;
 
 	/**
-	 * @var \Larapress\Controllers\BaseController
+	 * @var \Illuminate\Support\Facades\Response
 	 */
-	private $baseController;
+	private $response;
 
 	/**
 	 * @var float
@@ -81,7 +81,7 @@ class Helpers implements HelpersInterface {
 	 * @param \Illuminate\Session\Store $session
 	 * @param \Illuminate\Database\Connection $db
 	 * @param \Illuminate\Routing\Redirector $redirect
-	 * @param \Larapress\Interfaces\BaseControllerInterface $baseController
+	 * @param \Illuminate\Support\Facades\Response $response
 	 *
 	 * @return \Larapress\Services\Helpers
 	 */
@@ -95,7 +95,7 @@ class Helpers implements HelpersInterface {
 		Session $session,
 		DB $db,
 		Redirect $redirect,
-		BaseControllerInterface $baseController
+		Response $response
 	) {
 		$this->config = $config;
 		$this->lang = $lang;
@@ -106,7 +106,7 @@ class Helpers implements HelpersInterface {
 		$this->session = $session;
 		$this->db = $db;
 		$this->redirect = $redirect;
-		$this->baseController = $baseController;
+		$this->response = $response;
 	}
 
 	/**
@@ -194,7 +194,9 @@ class Helpers implements HelpersInterface {
 	 */
 	public function force404()
 	{
-		return $this->baseController->missingMethod(array());
+		$this->setPageTitle('404 Error');
+
+		return $this->response->view('larapress::errors.404', array(), 404);
 	}
 
 	/**
