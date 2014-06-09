@@ -1,6 +1,6 @@
 <?php namespace Larapress\Controllers;
 
-use Controller;
+use Illuminate\Routing\Controller;
 use Larapress\Interfaces\HelpersInterface as Helpers;
 
 abstract class BaseController extends Controller {

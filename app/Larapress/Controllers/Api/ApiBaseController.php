@@ -2,4 +2,7 @@
 
 use Larapress\Controllers\BaseController;
 
+/**
+ * No extra functionality required yet
+ */
 class ApiBaseController extends BaseController {}
