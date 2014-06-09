@@ -5,8 +5,9 @@ use Illuminate\Session\Store as Session;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\Factory as Validator;
 use Larapress\Interfaces\MockablyInterface as Mockably;
+use Larapress\Interfaces\HelpersInterface as Helpers;
 
-class CaptchaController extends BaseController {
+class CaptchaController extends ApiBaseController {
 
 	/**
 	 * @var \Illuminate\Validation\Factory
@@ -34,12 +35,15 @@ class CaptchaController extends BaseController {
 	private $mockably;
 
 	public function __construct(
+		Helpers $helpers,
 		Validator $validator,
 		Input $input,
 		Response $response,
 		Session $session,
 		Mockably $mockably
 	) {
+		parent::__construct($helpers);
+
 		$this->validator = $validator;
 		$this->input = $input;
 		$this->response = $response;

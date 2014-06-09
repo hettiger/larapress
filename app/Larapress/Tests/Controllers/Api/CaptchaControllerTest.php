@@ -10,6 +10,11 @@ class CaptchaControllerTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * @var Mock
 	 */
+	private $helpers;
+
+	/**
+	 * @var Mock
+	 */
 	private $validator;
 
 	/**
@@ -36,6 +41,7 @@ class CaptchaControllerTest extends PHPUnit_Framework_TestCase {
 	{
 		parent::setUp();
 
+		$this->helpers = Mockery::mock('\Larapress\Interfaces\HelpersInterface');
 		$this->validator = Mockery::mock('\Illuminate\Validation\Factory');
 		$this->input = Mockery::mock('\Illuminate\Http\Request');
 		$this->response = Mockery::mock('\Illuminate\Support\Facades\Response');
@@ -52,7 +58,7 @@ class CaptchaControllerTest extends PHPUnit_Framework_TestCase {
 
 	protected function getCaptchaControllerInstance()
 	{
-		return new CaptchaController($this->validator, $this->input, $this->response, $this->session, $this->mockably);
+		return new CaptchaController($this->helpers, $this->validator, $this->input, $this->response, $this->session, $this->mockably);
 	}
 
 	/**
