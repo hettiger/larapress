@@ -5,7 +5,6 @@ use Controller;
 use Illuminate\Foundation\Application as App;
 use Illuminate\View\Factory as View;
 use Larapress\Interfaces\HelpersInterface as Helpers;
-use Response;
 
 class BaseController extends Controller {
 
@@ -54,7 +53,7 @@ class BaseController extends Controller {
 	 * Abort the app and return a 404 response
 	 *
 	 * @param array $parameters
-	 * @return Response
+	 * @return \Illuminate\Http\Response
 	 */
 	public function missingMethod($parameters = array())
 	{

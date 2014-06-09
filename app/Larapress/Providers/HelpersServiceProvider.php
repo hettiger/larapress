@@ -2,7 +2,6 @@
 
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\ServiceProvider;
-use Larapress\Controllers\BaseController;
 use Larapress\Services\Helpers;
 
 class HelpersServiceProvider extends ServiceProvider {
