@@ -8,7 +8,7 @@ class BackendControllerTestCase extends ControllerTestCase {
 	{
 		parent::setUp();
 
-		$this->helpers->shouldReceive('initBaseController')->withNoArgs()->once();
+		$this->helpers->shouldReceive('initBaseController')->withNoArgs()->atLeast()->once();
 	}
 
 }
