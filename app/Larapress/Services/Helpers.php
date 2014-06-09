@@ -100,18 +100,10 @@ class Helpers implements HelpersInterface {
 	 * @return \Larapress\Services\Helpers
 	 */
 	public function __construct(
-		Config $config,
-		Lang $lang,
-		View $view,
-		MockablyInterface $mockably,
-		Log $log,
-		Request $request,
-		Session $session,
-		DB $db,
-		Redirect $redirect,
-		Response $response,
-		App $app,
-		Carbon $carbon
+		Config $config, Lang $lang, View $view,
+		MockablyInterface $mockably, Log $log, Request $request,
+		Session $session, DB $db, Redirect $redirect,
+		Response $response, App $app, Carbon $carbon
 	) {
 		$this->config = $config;
 		$this->lang = $lang;

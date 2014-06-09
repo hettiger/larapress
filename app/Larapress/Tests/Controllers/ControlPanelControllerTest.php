@@ -1,23 +1,39 @@
 <?php namespace Larapress\Tests\Controllers;
 
-use Larapress\Tests\TestCase;
+use Larapress\Controllers\ControlPanelController;
+use Larapress\Tests\Controllers\Templates\ControllerTestCase;
+use Mockery;
+use Mockery\Mock;
 
-class ControlPanelControllerTest extends TestCase {
+class ControlPanelControllerTest extends ControllerTestCase {
 
-	/*
-	|--------------------------------------------------------------------------
-	| ControlPanelController@getDashboard Tests
-	|--------------------------------------------------------------------------
-	|
-	| Here is where you can test the ControlPanelController@getDashboard method
-	|
-	*/
+	/**
+	 * @var Mock
+	 */
+	private $view;
 
-	public function test_can_browse_the_dashboard()
+	public function setUp()
 	{
-		$this->route('GET', 'larapress.cp.dashboard.get');
+		parent::setUp();
 
-		$this->assertResponseOk();
+		$this->view = Mockery::mock('\Illuminate\View\Factory');
+	}
+
+	protected function getControlPanelControllerInstance()
+	{
+		return new ControlPanelController($this->helpers, $this->view);
+	}
+
+	/**
+	 * @test getDashboard() sets the page title and makes the dashboard view
+	 */
+	public function getDashboard_sets_the_page_title_and_makes_the_dashboard_view()
+	{
+		$this->helpers->shouldReceive('setPageTitle')->with('Dashboard')->once();
+		$this->view->shouldReceive('make')->with('larapress::pages.cp.dashboard')->once()->andReturn('foo');
+		$controller = $this->getControlPanelControllerInstance();
+
+		$this->assertEquals('foo', $controller->getDashboard());
 	}
 
 }

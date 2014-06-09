@@ -32,18 +32,10 @@ interface HelpersInterface {
 	 * @return \Larapress\Interfaces\HelpersInterface
 	 */
 	public function __construct(
-		Config $config,
-		Lang $lang,
-		View $view,
-		MockablyInterface $mockably,
-		Log $log,
-		Request $request,
-		Session $session,
-		DB $db,
-		Redirect $redirect,
-		Response $response,
-		App $app,
-		Carbon $carbon
+		Config $config, Lang $lang, View $view,
+		MockablyInterface $mockably, Log $log, Request $request,
+		Session $session, DB $db, Redirect $redirect,
+		Response $response, App $app, Carbon $carbon
 	);
 
 	/**

@@ -1,9 +1,21 @@
 <?php namespace Larapress\Controllers;
 
-use Helpers;
-use View;
+use Larapress\Interfaces\HelpersInterface as Helpers;
+use Illuminate\View\Factory as View;
 
 class ControlPanelController extends BaseController {
+
+	/**
+	 * @var \View
+	 */
+	private $view;
+
+	public function __construct(Helpers $helpers, View $view)
+	{
+		parent::__construct($helpers);
+
+		$this->view = $view;
+	}
 
 	/**
 	 * Dashboard
@@ -14,9 +26,9 @@ class ControlPanelController extends BaseController {
 	 */
 	public function getDashboard()
 	{
-		Helpers::setPageTitle('Dashboard');
+		$this->helpers->setPageTitle('Dashboard');
 
-		return View::make('larapress::pages.cp.dashboard');
+		return $this->view->make('larapress::pages.cp.dashboard');
 	}
 
 }
