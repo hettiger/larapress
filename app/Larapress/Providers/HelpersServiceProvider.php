@@ -40,7 +40,9 @@ class HelpersServiceProvider extends ServiceProvider {
 				$this->app['session.store'],
 				$this->db->connection($this->defaultDbConnection),
 				$this->app['redirect'],
-				$this->app['Illuminate\Support\Facades\Response']
+				$this->app['Illuminate\Support\Facades\Response'],
+				$this->app['app'],
+				$this->app['Carbon\Carbon']
 			);
 		});
 	}

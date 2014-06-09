@@ -58,6 +58,16 @@ class HelpersTest extends PHPUnit_Framework_TestCase {
 	 */
 	private $response;
 
+	/**
+	 * @var Mock
+	 */
+	private $app;
+
+	/**
+	 * @var Mock
+	 */
+	private $carbon;
+
 	public function setUp()
 	{
 		parent::setUp();
@@ -72,6 +82,8 @@ class HelpersTest extends PHPUnit_Framework_TestCase {
 		$this->db = Mockery::mock('\Illuminate\Database\Connection');
 		$this->redirect = Mockery::mock('\Illuminate\Routing\Redirector');
 		$this->response = Mockery::mock('\Illuminate\Support\Facades\Response');
+		$this->app = Mockery::mock('\Illuminate\Foundation\Application');
+		$this->carbon = Mockery::mock('\Carbon\Carbon');
 	}
 
 	public function tearDown()
@@ -93,7 +105,9 @@ class HelpersTest extends PHPUnit_Framework_TestCase {
 			$this->session,
 			$this->db,
 			$this->redirect,
-			$this->response
+			$this->response,
+			$this->app,
+			$this->carbon
 		);
 	}
 
@@ -102,6 +116,20 @@ class HelpersTest extends PHPUnit_Framework_TestCase {
 		$this->config->shouldReceive('get')->with('larapress.names.cms')->once()->andReturn('foo');
 		$this->lang->shouldReceive('get')->with('larapress::general.' . $page_name)->once()->andReturn($page_name);
 		$this->view->shouldReceive('share')->with('title', 'foo | ' . $page_name)->once();
+	}
+
+	/**
+	 * @test initBaseController() can share important data to all views
+	 */
+	public function initBaseController_can_share_important_data_to_all_views()
+	{
+		$this->app->shouldReceive('getLocale')->withNoArgs()->atLeast()->once()->andReturn('foo');
+		$this->carbon->shouldReceive('now')->withNoArgs()->atLeast()->once()->andReturn('bar');
+		$this->view->shouldReceive('share')->with('lang', 'foo')->atLeast()->once();
+		$this->view->shouldReceive('share')->with('now', 'bar')->atLeast()->once();
+		$helpers = $this->getHelpersInstance();
+
+		$helpers->initBaseController();
 	}
 
 	/**

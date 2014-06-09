@@ -10,30 +10,12 @@ class BaseControllerTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * @var Mock
 	 */
-	private $app;
-
-	/**
-	 * @var Mock
-	 */
-	private $carbon;
-
-	/**
-	 * @var Mock
-	 */
-	private $view;
-
-	/**
-	 * @var Mock
-	 */
 	private $helpers;
 
 	public function setUp()
 	{
 		parent::setUp();
 
-		$this->app = Mockery::mock('\Illuminate\Foundation\Application');
-		$this->carbon = Mockery::mock('\Carbon\Carbon');
-		$this->view = Mockery::mock('\Illuminate\View\Factory');
 		$this->helpers = Mockery::mock('\Larapress\Interfaces\HelpersInterface');
 	}
 
@@ -46,16 +28,12 @@ class BaseControllerTest extends PHPUnit_Framework_TestCase {
 
 	protected function getBaseControllerInstance()
 	{
-		return new BaseControllerProxy($this->app, $this->carbon, $this->view, $this->helpers);
+		return new BaseControllerProxy($this->helpers);
 	}
 
 	protected function getInitFixture()
 	{
-		$this->app->shouldReceive('getLocale')->withNoArgs()->atLeast()->once()->andReturn('foo');
-		$this->carbon->shouldReceive('now')->withNoArgs()->atLeast()->once()->andReturn('bar');
-
-		$this->view->shouldReceive('share')->with('lang', 'foo')->atLeast()->once();
-		$this->view->shouldReceive('share')->with('now', 'bar')->atLeast()->once();
+		$this->helpers->shouldReceive('initBaseController')->withNoArgs()->atLeast()->once();
 	}
 
 	/**

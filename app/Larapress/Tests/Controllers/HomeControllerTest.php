@@ -278,6 +278,7 @@ class HomeControllerTest extends TestCase {
 	public function test_can_return_a_404_response_on_user_not_found_exception()
 	{
 		Narrator::shouldReceive('sendNewPassword')->once()->andThrow('Cartalyst\Sentry\Users\UserNotFoundException');
+		Helpers::shouldReceive('initBaseController')->once();
 		Helpers::shouldReceive('force404')->once();
 
 		$this->route('GET', 'larapress.home.send.new.password.get');
@@ -299,6 +300,7 @@ class HomeControllerTest extends TestCase {
 	{
 		Narrator::shouldReceive('sendNewPassword')
 			->once()->andThrow('Larapress\Exceptions\PasswordResetCodeInvalidException');
+		Helpers::shouldReceive('initBaseController')->once();
 		Helpers::shouldReceive('force404')->once();
 
 		$this->route('GET', 'larapress.home.send.new.password.get');

@@ -1,8 +1,10 @@
 <?php namespace Larapress\Services;
 
 use BadMethodCallException;
+use Carbon\Carbon;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Database\Connection as DB;
+use Illuminate\Foundation\Application as App;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector as Redirect;
@@ -67,6 +69,16 @@ class Helpers implements HelpersInterface {
 	private $response;
 
 	/**
+	 * @var \Illuminate\Foundation\Application
+	 */
+	private $app;
+
+	/**
+	 * @var \Carbon\Carbon
+	 */
+	private $carbon;
+
+	/**
 	 * @var float
 	 */
 	protected $laravel_start = LARAVEL_START;
@@ -82,6 +94,8 @@ class Helpers implements HelpersInterface {
 	 * @param \Illuminate\Database\Connection $db
 	 * @param \Illuminate\Routing\Redirector $redirect
 	 * @param \Illuminate\Support\Facades\Response $response
+	 * @param \Illuminate\Foundation\Application $app
+	 * @param \Carbon\Carbon $carbon
 	 *
 	 * @return \Larapress\Services\Helpers
 	 */
@@ -95,7 +109,9 @@ class Helpers implements HelpersInterface {
 		Session $session,
 		DB $db,
 		Redirect $redirect,
-		Response $response
+		Response $response,
+		App $app,
+		Carbon $carbon
 	) {
 		$this->config = $config;
 		$this->lang = $lang;
@@ -107,6 +123,22 @@ class Helpers implements HelpersInterface {
 		$this->db = $db;
 		$this->redirect = $redirect;
 		$this->response = $response;
+		$this->app = $app;
+		$this->carbon = $carbon;
+	}
+
+	/**
+	 * Initialize the base controller sharing important data to all views
+	 *
+	 * @return void
+	 */
+	public function initBaseController()
+	{
+		$lang = $this->app->getLocale();
+		$now = $this->carbon->now();
+
+		$this->view->share('lang', $lang);
+		$this->view->share('now', $now);
 	}
 
 	/**

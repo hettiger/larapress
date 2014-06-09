@@ -1,8 +1,10 @@
 <?php namespace Larapress\Interfaces;
 
 use BadMethodCallException;
+use Carbon\Carbon;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Database\Connection as DB;
+use Illuminate\Foundation\Application as App;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector as Redirect;
 use Illuminate\Session\Store as Session;
@@ -24,6 +26,8 @@ interface HelpersInterface {
 	 * @param \Illuminate\Database\Connection $db
 	 * @param \Illuminate\Routing\Redirector $redirect
 	 * @param \Illuminate\Support\Facades\Response $response
+	 * @param \Illuminate\Foundation\Application $app
+	 * @param \Carbon\Carbon $carbon
 	 *
 	 * @return \Larapress\Interfaces\HelpersInterface
 	 */
@@ -37,8 +41,17 @@ interface HelpersInterface {
 		Session $session,
 		DB $db,
 		Redirect $redirect,
-		Response $response
+		Response $response,
+		App $app,
+		Carbon $carbon
 	);
+
+	/**
+	 * Initialize the base controller sharing important data to all views
+	 *
+	 * @return void
+	 */
+	public function initBaseController();
 
 	/**
 	 * Sets the page title (Shares the title variable for the view)
