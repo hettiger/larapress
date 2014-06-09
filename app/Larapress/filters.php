@@ -13,8 +13,6 @@
 
 App::before(function()
 {
-	Session::put('start.time', Mockably::microtime());
-
 	$throttleProvider = Sentry::getThrottleProvider();
 	$throttleProvider->enable();
 });

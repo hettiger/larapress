@@ -67,6 +67,11 @@ class Helpers implements HelpersInterface {
 	private $baseController;
 
 	/**
+	 * @var float
+	 */
+	protected $laravel_start = LARAVEL_START;
+
+	/**
 	 * @param \Illuminate\Config\Repository $config
 	 * @param \Illuminate\Translation\Translator $lang
 	 * @param \Illuminate\View\Factory $view
@@ -160,7 +165,7 @@ class Helpers implements HelpersInterface {
 			'Current Route: ' . $this->request->getRequestUri()
 			. PHP_EOL .
 			'Time to create the Response: '
-			. $this->getCurrentTimeDifference($this->session->get('start.time'), 'ms') . ' ms'
+			. $this->getCurrentTimeDifference($this->laravel_start, 'ms') . ' ms'
 			. PHP_EOL .
 			'Total performed DB Queries: ' . count($this->db->getQueryLog())
 			. PHP_EOL

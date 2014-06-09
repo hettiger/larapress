@@ -1,7 +1,7 @@
 <?php namespace Larapress\Tests\Services;
 
 use BadMethodCallException;
-use Larapress\Services\Helpers;
+use Larapress\Tests\Services\Proxies\HelpersProxy;
 use Mockery;
 use Mockery\Mock;
 use PHPUnit_Framework_TestCase;
@@ -83,7 +83,7 @@ class HelpersTest extends PHPUnit_Framework_TestCase {
 
 	protected function getHelpersInstance()
 	{
-		return new Helpers(
+		return new HelpersProxy(
 			$this->config,
 			$this->lang,
 			$this->view,
@@ -183,7 +183,6 @@ class HelpersTest extends PHPUnit_Framework_TestCase {
 	public function logPerformance()
 	{
 		$this->request->shouldReceive('getRequestUri')->once()->andReturn('url');
-		$this->session->shouldReceive('get')->with('start.time')->once()->andReturn(30.00);
 		$this->mockably->shouldReceive('microtime')->once()->andReturn(60.00);
 		$this->db->shouldReceive('getQueryLog')->once()->andReturn(array('1', '2'));
 		$this->log->shouldReceive('info')->with(
@@ -191,6 +190,7 @@ class HelpersTest extends PHPUnit_Framework_TestCase {
 			. 'Time to create the Response: 30000 ms' . PHP_EOL . 'Total performed DB Queries: 2' . PHP_EOL
 		)->once();
 		$helpers = $this->getHelpersInstance();
+		$helpers->setLaravelStart(30.00);
 
 		$helpers->logPerformance();
 	}
