@@ -9,7 +9,6 @@ use Larapress\Exceptions\MailException;
 use Larapress\Exceptions\PasswordResetCodeInvalidException;
 use Larapress\Exceptions\PasswordResetFailedException;
 use Larapress\Exceptions\PermissionMissingException;
-use Log;
 use Narrator;
 use Permission;
 use Redirect;
@@ -77,32 +76,21 @@ class HomeController extends BackendBaseController {
 	 */
 	public function postLogin()
 	{
-		$input = Input::all();
-
 		try
 		{
 			$credentials = array(
-				'email'    => $input['email'],
-				'password' => $input['password'],
+				'email'    => Input::get('email'),
+				'password' => Input::get('password')
 			);
 
 			Sentry::authenticate($credentials, false);
 		}
 		catch (Exception $e)
 		{
-			// TODO Move this business logic into a service
-			$full_class_reference = get_class($e);
-			$exception = substr(strrchr($full_class_reference, '\\'), 1);
+			$error_message = Helpers::handleMultipleExceptions($e, $this->error_messages);
 
-			if ( array_key_exists($exception, $this->error_messages) )
-			{
-				return Helpers::redirectWithFlashMessage(
-					'error', $this->error_messages[$exception], 'larapress.home.login.get'
-				)->withInput(Input::except('password'));
-			}
-
-			Log::error('Unhandled Exception rethrown in HomeController::postLogin().');
-			throw $e;
+			return Helpers::redirectWithFlashMessage('error', $error_message, 'larapress.home.login.get')
+				->withInput(Input::except('password'));
 		}
 
 		return Redirect::route('larapress.cp.dashboard.get');

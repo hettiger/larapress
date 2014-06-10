@@ -2,6 +2,7 @@
 
 use BadMethodCallException;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Database\Connection as DB;
 use Illuminate\Foundation\Application as App;
@@ -250,6 +251,31 @@ class Helpers implements HelpersInterface {
 		}
 
 		return $this->redirect->back();
+	}
+
+	/**
+	 * Handle Multiple Exceptions
+	 *
+	 * Chaining lots of catch blocks in a row leads to code duplication quickly.
+	 * This method helps avoiding this and also greatly reduces the total lines of code.
+	 *
+	 * @param Exception $exception The caught exception
+	 * @param array $error_messages An array of possible error messages (e.g. array('Exception' => 'Error message');)
+	 * @return string Returns the correct error message from the $error_messages bag
+	 * @throws Exception
+	 */
+	public function handleMultipleExceptions($exception, $error_messages)
+	{
+		$namespace_class_name = get_class($exception);
+		$class_name = substr(strrchr($namespace_class_name, '\\'), 1) ? : $namespace_class_name;
+
+		if ( array_key_exists($class_name, $error_messages) )
+		{
+			return $error_messages[$class_name];
+		}
+
+		$this->log->error('Unhandled Exception rethrown. See the Stacktrace below for more information:');
+		throw $exception;
 	}
 
 }

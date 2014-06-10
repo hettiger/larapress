@@ -2,6 +2,7 @@
 
 use BadMethodCallException;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Database\Connection as DB;
 use Illuminate\Foundation\Application as App;
@@ -103,5 +104,18 @@ interface HelpersInterface {
 		$status = 302,
 		$headers = array()
 	);
+
+	/**
+	 * Handle Multiple Exceptions
+	 *
+	 * Chaining lots of catch blocks in a row leads to code duplication quickly.
+	 * This method helps avoiding this and also greatly reduces the total lines of code.
+	 *
+	 * @param Exception $exception The caught exception
+	 * @param array $error_messages An array of possible error messages (e.g. array('Exception' => 'Error message');)
+	 * @return string Returns the correct error message from the $error_messages bag
+	 * @throws Exception
+	 */
+	public function handleMultipleExceptions($exception, $error_messages);
 
 }

@@ -289,4 +289,32 @@ class HelpersTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('route', $helpers->redirectWithFlashMessage('foo', 'bar', 'baz'));
 	}
 
+	/**
+	 * @test handleMultipleExceptions() can return the correct error message
+	 */
+	public function handleMultipleExceptions_can_return_the_correct_error_message()
+	{
+		$error_messages = array('Exception' => 'foo');
+		$helpers = $this->getHelpersInstance();
+
+		$error_message = $helpers->handleMultipleExceptions(new \Exception(), $error_messages);
+
+		$this->assertEquals('foo', $error_message);
+	}
+
+	/**
+	 * @test handleMultipleExceptions() can log and rethrow the exception when missing the adequate message
+	 * @expectedException \Exception
+	 * @expectedExceptionMessage bar
+	 */
+	public function handleMultipleExceptions_can_log_and_rethrow_the_exception_when_missing_the_adequate_message()
+	{
+		$error_messages = array('SomeException' => 'foo');
+ 		$this->log->shouldReceive('error')
+			->with('Unhandled Exception rethrown. See the Stacktrace below for more information:')->once();
+		$helpers = $this->getHelpersInstance();
+
+		$helpers->handleMultipleExceptions(new \Exception('bar'), $error_messages);
+	}
+
 }
