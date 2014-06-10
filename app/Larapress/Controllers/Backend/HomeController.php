@@ -1,19 +1,15 @@
 <?php namespace Larapress\Controllers\Backend;
 
 use Captcha;
-use Cartalyst\Sentry\Throttling\UserBannedException;
-use Cartalyst\Sentry\Throttling\UserSuspendedException;
-use Cartalyst\Sentry\Users\LoginRequiredException;
-use Cartalyst\Sentry\Users\PasswordRequiredException;
-use Cartalyst\Sentry\Users\UserNotActivatedException;
 use Cartalyst\Sentry\Users\UserNotFoundException;
-use Cartalyst\Sentry\Users\WrongPasswordException;
+use Exception;
 use Helpers;
 use Input;
 use Larapress\Exceptions\MailException;
 use Larapress\Exceptions\PasswordResetCodeInvalidException;
 use Larapress\Exceptions\PasswordResetFailedException;
 use Larapress\Exceptions\PermissionMissingException;
+use Log;
 use Narrator;
 use Permission;
 use Redirect;
@@ -60,23 +56,12 @@ class HomeController extends BackendBaseController {
 	}
 
 	/**
-	 * Redirect to the login route with a flash message keeping the input except for the password
-	 *
-	 * @param string $message The error message
-	 * @return \Illuminate\Http\RedirectResponse
-	 */
-	protected function loginRedirectFixture($message)
-	{
-		return Helpers::redirectWithFlashMessage('error', $message, 'larapress.home.login.get')
-			->withInput(Input::except('password'));
-	}
-
-	/**
 	 * Login
 	 *
 	 * This method will be processed once you try to login.
 	 * It redirects you either back to the login page with an error message or to the dashboard.
 	 *
+	 * @throws Exception
 	 * @return Redirect
 	 */
 	public function postLogin()
@@ -92,33 +77,30 @@ class HomeController extends BackendBaseController {
 
 			Sentry::authenticate($credentials, false);
 		}
-		catch (LoginRequiredException $e)
+		catch (Exception $e)
 		{
-			return $this->loginRedirectFixture('Login field is required.');
-		}
-		catch (PasswordRequiredException $e)
-		{
-			return $this->loginRedirectFixture('Password field is required.');
-		}
-		catch (WrongPasswordException $e)
-		{
-			return $this->loginRedirectFixture('Wrong password, try again.');
-		}
-		catch (UserNotFoundException $e)
-		{
-			return $this->loginRedirectFixture('User was not found.');
-		}
-		catch (UserNotActivatedException $e)
-		{
-			return $this->loginRedirectFixture('User is not activated.');
-		}
-		catch (UserSuspendedException $e)
-		{
-			return $this->loginRedirectFixture('User is suspended.');
-		}
-		catch (UserBannedException $e)
-		{
-			return $this->loginRedirectFixture('User is banned.');
+			$full_class_reference = get_class($e);
+			$exception = substr(strrchr($full_class_reference, '\\'), 1);
+
+			$error_messages = array(
+				'LoginRequiredException'    => 'Login field is required.',
+				'PasswordRequiredException' => 'Password field is required.',
+				'WrongPasswordException'    => 'Wrong password, try again.',
+				'UserNotFoundException'     => 'User was not found.',
+				'UserNotActivatedException' => 'User is not activated.',
+				'UserSuspendedException'    => 'User is suspended.',
+				'UserBannedException'       => 'User is banned.'
+			);
+
+			if ( array_key_exists($exception, $error_messages) )
+			{
+				return Helpers::redirectWithFlashMessage(
+					'error', $error_messages[$exception], 'larapress.home.login.get'
+				)->withInput(Input::except('password'));
+			}
+
+			Log::error('Unhandled Exception rethrown in HomeController::postLogin().');
+			throw $e;
 		}
 
 		return Redirect::route('larapress.cp.dashboard.get');
