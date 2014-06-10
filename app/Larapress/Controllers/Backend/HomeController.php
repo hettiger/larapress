@@ -20,6 +20,17 @@ use View;
 
 class HomeController extends BackendBaseController {
 
+	private $error_messages = array
+	(
+		'LoginRequiredException'    => 'Login field is required.',
+		'PasswordRequiredException' => 'Password field is required.',
+		'WrongPasswordException'    => 'Wrong password, try again.',
+		'UserNotFoundException'     => 'User was not found.',
+		'UserNotActivatedException' => 'User is not activated.',
+		'UserSuspendedException'    => 'User is suspended.',
+		'UserBannedException'       => 'User is banned.'
+	);
+
 	/**
 	 * Index
 	 *
@@ -79,23 +90,14 @@ class HomeController extends BackendBaseController {
 		}
 		catch (Exception $e)
 		{
+			// TODO Move this business logic into a service
 			$full_class_reference = get_class($e);
 			$exception = substr(strrchr($full_class_reference, '\\'), 1);
 
-			$error_messages = array(
-				'LoginRequiredException'    => 'Login field is required.',
-				'PasswordRequiredException' => 'Password field is required.',
-				'WrongPasswordException'    => 'Wrong password, try again.',
-				'UserNotFoundException'     => 'User was not found.',
-				'UserNotActivatedException' => 'User is not activated.',
-				'UserSuspendedException'    => 'User is suspended.',
-				'UserBannedException'       => 'User is banned.'
-			);
-
-			if ( array_key_exists($exception, $error_messages) )
+			if ( array_key_exists($exception, $this->error_messages) )
 			{
 				return Helpers::redirectWithFlashMessage(
-					'error', $error_messages[$exception], 'larapress.home.login.get'
+					'error', $this->error_messages[$exception], 'larapress.home.login.get'
 				)->withInput(Input::except('password'));
 			}
 
