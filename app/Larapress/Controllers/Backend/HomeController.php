@@ -5,9 +5,7 @@ use Cartalyst\Sentry\Users\UserNotFoundException;
 use Exception;
 use Helpers;
 use Input;
-use Larapress\Exceptions\MailException;
 use Larapress\Exceptions\PasswordResetCodeInvalidException;
-use Larapress\Exceptions\PasswordResetFailedException;
 use Larapress\Exceptions\PermissionMissingException;
 use Narrator;
 use Permission;
@@ -21,13 +19,14 @@ class HomeController extends BackendBaseController {
 
 	private $error_messages = array
 	(
-		'LoginRequiredException'    => 'Login field is required.',
-		'PasswordRequiredException' => 'Password field is required.',
-		'WrongPasswordException'    => 'Wrong password, try again.',
-		'UserNotFoundException'     => 'User was not found.',
-		'UserNotActivatedException' => 'User is not activated.',
-		'UserSuspendedException'    => 'User is suspended.',
-		'UserBannedException'       => 'User is banned.'
+		'LoginRequiredException'       => 'Login field is required.',
+		'PasswordRequiredException'    => 'Password field is required.',
+		'WrongPasswordException'       => 'Wrong password, try again.',
+		'UserNotFoundException'        => 'User was not found.',
+		'UserNotActivatedException'    => 'User is not activated.',
+		'UserSuspendedException'       => 'User is suspended.',
+		'UserBannedException'          => 'User is banned.',
+		'PasswordResetFailedException' => 'Resetting your password failed. Please try again later or contact the administrator.'
 	);
 
 	/**
@@ -131,14 +130,20 @@ class HomeController extends BackendBaseController {
 	}
 
 	/**
-	 * Redirect to the reset password route with a flash message keeping the input
+	 * Handle multiple Exceptions for the postResetPassword() and getSendNewPassword() methods
 	 *
-	 * @param string $message The error message
+	 * See private $error_messages for handled exceptions.
+	 * Besides of that the MailException is handled by this fixture.
+	 *
+	 * @param Exception $exception The caught exception
 	 * @return \Illuminate\Http\RedirectResponse
 	 */
-	protected function resetPasswordRedirectFixture($message)
+	protected function resetPasswordFixture($exception)
 	{
-		return Helpers::redirectWithFlashMessage('error', $message, 'larapress.home.reset.password.get')
+		$this->error_messages['MailException'] = $exception->getMessage();
+		$error_message = Helpers::handleMultipleExceptions($exception, $this->error_messages);
+
+		return Helpers::redirectWithFlashMessage('error', $error_message, 'larapress.home.reset.password.get')
 			->withInput(Input::all());
 	}
 
@@ -157,13 +162,9 @@ class HomeController extends BackendBaseController {
 		{
 			Narrator::resetPassword();
 		}
-		catch (UserNotFoundException $e)
+		catch (Exception $e)
 		{
-			return $this->resetPasswordRedirectFixture('User was not found.');
-		}
-		catch (MailException $e)
-		{
-			return $this->resetPasswordRedirectFixture($e->getMessage());
+			return $this->resetPasswordFixture($e);
 		}
 
 		return Helpers::redirectWithFlashMessage(
@@ -198,18 +199,13 @@ class HomeController extends BackendBaseController {
 		{
 			return Helpers::force404();
 		}
-		catch (PasswordResetFailedException $e)
-		{
-			return $this->resetPasswordRedirectFixture('Resetting your password failed. ' .
-				'Please try again later or contact the administrator.');
-		}
 		catch (PasswordResetCodeInvalidException $e)
 		{
 			return Helpers::force404();
 		}
-		catch (MailException $e)
+		catch (Exception $e)
 		{
-			return $this->resetPasswordRedirectFixture($e->getMessage());
+			return $this->resetPasswordFixture($e);
 		}
 
 		return Helpers::redirectWithFlashMessage(
