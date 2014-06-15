@@ -92,7 +92,7 @@ class HomeController extends BackendBaseController {
 	 *
 	 * Redirect a user depending on his permissions when he browses the backend route.
 	 *
-	 * @return Redirect
+	 * @return \Illuminate\Http\RedirectResponse
 	 */
 	public function getIndex()
 	{
@@ -113,7 +113,7 @@ class HomeController extends BackendBaseController {
 	 *
 	 * Shows the login form to the world!
 	 *
-	 * @return View
+	 * @return \Illuminate\View\View
 	 */
 	public function getLogin()
 	{
@@ -129,7 +129,7 @@ class HomeController extends BackendBaseController {
 	 * It redirects you either back to the login page with an error message or to the dashboard.
 	 *
 	 * @throws Exception
-	 * @return Redirect
+	 * @return \Illuminate\Http\RedirectResponse
 	 */
 	public function postLogin()
 	{
@@ -159,7 +159,7 @@ class HomeController extends BackendBaseController {
 	 * If you're actually logged in, it'll log you out and show a message.
 	 * Else it will silently redirect you to the login form.
 	 *
-	 * @return Redirect
+	 * @return \Illuminate\Http\RedirectResponse
 	 */
 	public function getLogout()
 	{
@@ -177,7 +177,7 @@ class HomeController extends BackendBaseController {
 	 *
 	 * Gives you the opportunity to reset you password easily.
 	 *
-	 * @return View
+	 * @return \Illuminate\View\View
 	 */
 	public function getResetPassword()
 	{
@@ -212,7 +212,7 @@ class HomeController extends BackendBaseController {
 	 * It is going to fail on wrong input or problems when sending the mail.
 	 * No matter what happens, the user will get a flash message!
 	 *
-	 * @return Redirect
+	 * @return \Illuminate\Http\RedirectResponse
 	 */
 	public function postResetPassword()
 	{
