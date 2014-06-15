@@ -10,6 +10,8 @@
 |
 */
 
+App::bind('Cartalyst\Sentry\Sentry', 'sentry');
+
 App::bind('Larapress\Interfaces\CaptchaInterface', 'captcha');
 App::bind('Larapress\Interfaces\HelpersInterface', 'helpers');
 App::bind('Larapress\Interfaces\MockablyInterface', 'mockably');

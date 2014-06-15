@@ -1,21 +1,61 @@
 <?php namespace Larapress\Controllers\Backend;
 
-use Captcha;
+use Cartalyst\Sentry\Sentry;
 use Cartalyst\Sentry\Users\UserNotFoundException;
 use Exception;
-use Helpers;
-use Input;
+use Illuminate\Http\Request as Input;
+use Illuminate\Routing\Redirector as Redirect;
+use Illuminate\Session\Store as Session;
+use Illuminate\Support\Facades\Response;
+use Illuminate\View\Factory as View;
 use Larapress\Exceptions\PasswordResetCodeInvalidException;
 use Larapress\Exceptions\PermissionMissingException;
-use Narrator;
-use Permission;
-use Redirect;
-use Response;
-use Sentry;
-use Session;
-use View;
+use Larapress\Interfaces\CaptchaInterface as Captcha;
+use Larapress\Interfaces\HelpersInterface as Helpers;
+use Larapress\Interfaces\NarratorInterface as Narrator;
+use Larapress\Interfaces\PermissionInterface as Permission;
 
 class HomeController extends BackendBaseController {
+
+	/**
+	 * @var \Larapress\Interfaces\PermissionInterface
+	 */
+	private $permission;
+
+	/**
+	 * @var \Illuminate\Routing\Redirector
+	 */
+	private $redirect;
+
+	/**
+	 * @var \Illuminate\View\Factory
+	 */
+	private $view;
+
+	/**
+	 * @var \Cartalyst\Sentry\Sentry
+	 */
+	private $sentry;
+
+	/**
+	 * @var \Larapress\Interfaces\CaptchaInterface
+	 */
+	private $captcha;
+
+	/**
+	 * @var \Illuminate\Http\Request
+	 */
+	private $input;
+
+	/**
+	 * @var \Larapress\Interfaces\NarratorInterface
+	 */
+	private $narrator;
+
+	/**
+	 * @var \Illuminate\Session\Store
+	 */
+	private $session;
 
 	private $error_messages = array
 	(
@@ -29,6 +69,24 @@ class HomeController extends BackendBaseController {
 		'PasswordResetFailedException' => 'Resetting your password failed. Please try again later or contact the administrator.'
 	);
 
+	public function __construct(
+		Permission $permission, Redirect $redirect, Helpers $helpers,
+		View $view, Sentry $sentry, Captcha $captcha,
+		Input $input, Narrator $narrator, Session $session
+	) {
+		parent::__construct($helpers);
+
+		$this->permission = $permission;
+		$this->redirect = $redirect;
+		$this->helpers = $helpers;
+		$this->view = $view;
+		$this->sentry = $sentry;
+		$this->captcha = $captcha;
+		$this->input = $input;
+		$this->narrator = $narrator;
+		$this->session = $session;
+	}
+
 	/**
 	 * Index
 	 *
@@ -40,14 +98,14 @@ class HomeController extends BackendBaseController {
 	{
 		try
 		{
-			Permission::has('access.backend');
+			$this->permission->has('access.backend');
 		}
 		catch (PermissionMissingException $e)
 		{
-			return Redirect::route('larapress.home.login.get');
+			return $this->redirect->route('larapress.home.login.get');
 		}
 
-		return Redirect::route('larapress.cp.dashboard.get');
+		return $this->redirect->route('larapress.cp.dashboard.get');
 	}
 
 	/**
@@ -59,9 +117,9 @@ class HomeController extends BackendBaseController {
 	 */
 	public function getLogin()
 	{
-		Helpers::setPageTitle('Login');
+		$this->helpers->setPageTitle('Login');
 
-		return View::make('larapress::pages.home.login');
+		return $this->view->make('larapress::pages.home.login');
 	}
 
 	/**
@@ -78,21 +136,21 @@ class HomeController extends BackendBaseController {
 		try
 		{
 			$credentials = array(
-				'email'    => Input::get('email'),
-				'password' => Input::get('password')
+				'email'    => $this->input->get('email'),
+				'password' => $this->input->get('password')
 			);
 
-			Sentry::authenticate($credentials, false);
+			$this->sentry->authenticate($credentials, false);
 		}
 		catch (Exception $e)
 		{
-			$error_message = Helpers::handleMultipleExceptions($e, $this->error_messages);
+			$error_message = $this->helpers->handleMultipleExceptions($e, $this->error_messages);
 
-			return Helpers::redirectWithFlashMessage('error', $error_message, 'larapress.home.login.get')
-				->withInput(Input::except('password'));
+			return $this->helpers->redirectWithFlashMessage('error', $error_message, 'larapress.home.login.get')
+				->withInput($this->input->except('password'));
 		}
 
-		return Redirect::route('larapress.cp.dashboard.get');
+		return $this->redirect->route('larapress.cp.dashboard.get');
 	}
 
 	/**
@@ -105,13 +163,13 @@ class HomeController extends BackendBaseController {
 	 */
 	public function getLogout()
 	{
-		if ( Sentry::check() )
+		if ( $this->sentry->check() )
 		{
-			Sentry::logout();
-			Session::flash('success', 'You have successfully logged out.');
+			$this->sentry->logout();
+			$this->session->flash('success', 'You have successfully logged out.');
 		}
 
-		return Redirect::route('larapress.home.login.get');
+		return $this->redirect->route('larapress.home.login.get');
 	}
 
 	/**
@@ -123,10 +181,10 @@ class HomeController extends BackendBaseController {
 	 */
 	public function getResetPassword()
 	{
-		Helpers::setPageTitle('Reset Password');
-		Captcha::shareDataToViews();
+		$this->helpers->setPageTitle('Reset Password');
+		$this->captcha->shareDataToViews();
 
-		return View::make('larapress::pages.home.reset-password');
+		return $this->view->make('larapress::pages.home.reset-password');
 	}
 
 	/**
@@ -141,10 +199,10 @@ class HomeController extends BackendBaseController {
 	protected function resetPasswordFixture($exception)
 	{
 		$this->error_messages['MailException'] = $exception->getMessage();
-		$error_message = Helpers::handleMultipleExceptions($exception, $this->error_messages);
+		$error_message = $this->helpers->handleMultipleExceptions($exception, $this->error_messages);
 
-		return Helpers::redirectWithFlashMessage('error', $error_message, 'larapress.home.reset.password.get')
-			->withInput(Input::all());
+		return $this->helpers->redirectWithFlashMessage('error', $error_message, 'larapress.home.reset.password.get')
+			->withInput($this->input->all());
 	}
 
 	/**
@@ -160,14 +218,14 @@ class HomeController extends BackendBaseController {
 	{
 		try
 		{
-			Narrator::resetPassword();
+			$this->narrator->resetPassword();
 		}
 		catch (Exception $e)
 		{
 			return $this->resetPasswordFixture($e);
 		}
 
-		return Helpers::redirectWithFlashMessage(
+		return $this->helpers->redirectWithFlashMessage(
 			'success',
 			'Now please check your email account for further instructions!',
 			'larapress.home.reset.password.get'
@@ -193,22 +251,22 @@ class HomeController extends BackendBaseController {
 	{
 		try
 		{
-			Narrator::sendNewPassword($id, $reset_code);
+			$this->narrator->sendNewPassword($id, $reset_code);
 		}
 		catch (UserNotFoundException $e)
 		{
-			return Helpers::force404();
+			return $this->helpers->force404();
 		}
 		catch (PasswordResetCodeInvalidException $e)
 		{
-			return Helpers::force404();
+			return $this->helpers->force404();
 		}
 		catch (Exception $e)
 		{
 			return $this->resetPasswordFixture($e);
 		}
 
-		return Helpers::redirectWithFlashMessage(
+		return $this->helpers->redirectWithFlashMessage(
 			'success',
 			'Now please check your email account for the new password!',
 			'larapress.home.login.get'
