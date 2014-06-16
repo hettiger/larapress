@@ -2,11 +2,11 @@
 
 use BadMethodCallException;
 use Larapress\Tests\Services\Proxies\HelpersProxy;
+use Larapress\Tests\TestCase;
 use Mockery;
 use Mockery\Mock;
-use PHPUnit_Framework_TestCase;
 
-class HelpersTest extends PHPUnit_Framework_TestCase {
+class HelpersTest extends TestCase {
 
 	/**
 	 * @var Mock
@@ -84,13 +84,6 @@ class HelpersTest extends PHPUnit_Framework_TestCase {
 		$this->response = Mockery::mock('\Illuminate\Support\Facades\Response');
 		$this->app = Mockery::mock('\Illuminate\Foundation\Application');
 		$this->carbon = Mockery::mock('\Carbon\Carbon');
-	}
-
-	public function tearDown()
-	{
-		parent::tearDown();
-
-		Mockery::close();
 	}
 
 	protected function getHelpersInstance()

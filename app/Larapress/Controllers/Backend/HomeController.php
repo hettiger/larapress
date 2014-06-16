@@ -57,7 +57,7 @@ class HomeController extends BackendBaseController {
 	 */
 	private $session;
 
-	private $error_messages = array
+	protected $error_messages = array
 	(
 		'LoginRequiredException'       => 'Login field is required.',
 		'PasswordRequiredException'    => 'Password field is required.',

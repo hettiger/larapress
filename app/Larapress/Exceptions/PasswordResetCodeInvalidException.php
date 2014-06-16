@@ -5,7 +5,10 @@ use Exception;
 
 class PasswordResetCodeInvalidException extends Exception {}
 
-App::error(function (PasswordResetCodeInvalidException $exception)
+if ( ! defined('RUNNING_TESTS') )
 {
-	return $exception;
-});
+	App::error(function (PasswordResetCodeInvalidException $exception)
+	{
+		return $exception;
+	});
+}

@@ -5,7 +5,10 @@ use Exception;
 
 class MailException extends Exception {}
 
-App::error(function (MailException $exception)
+if ( ! defined('RUNNING_TESTS') )
 {
-	return $exception;
-});
+	App::error(function (MailException $exception)
+	{
+		return $exception;
+	});
+}

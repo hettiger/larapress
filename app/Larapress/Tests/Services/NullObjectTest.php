@@ -2,9 +2,9 @@
 
 use InvalidArgumentException;
 use Larapress\Services\NullObject;
-use PHPUnit_Framework_TestCase;
+use Larapress\Tests\TestCase;
 
-class NullObjectTest extends PHPUnit_Framework_TestCase {
+class NullObjectTest extends TestCase {
 
 	protected function getNullObjectInstance()
 	{

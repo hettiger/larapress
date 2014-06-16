@@ -224,7 +224,7 @@ class Narrator implements NarratorInterface {
 	{
 		try
 		{
-			$result = $this->mail->send($this->view, $this->data, // @codeCoverageIgnoreStart
+			$this->mail->send($this->view, $this->data, // @codeCoverageIgnoreStart
 				function ($message)
 				{
 					$message->from($this->from['address'], $this->from['name']);
@@ -232,7 +232,7 @@ class Narrator implements NarratorInterface {
 				} // @codeCoverageIgnoreEnd
 			);
 
-			if ( ! $result )
+			if ( $this->mail->failures() != array() )
 			{
 				throw new MailException($this->mailErrorMessage);
 			}

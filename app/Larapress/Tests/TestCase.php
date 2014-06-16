@@ -1,25 +1,15 @@
 <?php namespace Larapress\Tests;
 
-ini_set('memory_limit', '256M');
+ini_set('memory_limit', '64M');
 
-use Illuminate\Foundation\Testing\TestCase as LaravelTestCase;
 use Mockery;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
+use PHPUnit_Framework_TestCase;
 
-class TestCase extends LaravelTestCase {
+abstract class TestCase extends PHPUnit_Framework_TestCase {
 
-	/**
-	 * Creates the application.
-	 *
-	 * @return HttpKernelInterface
-	 */
-	public function createApplication()
+	public function __construct()
 	{
-		$unitTesting = true;
-
-		$testEnvironment = 'testing';
-
-		return require __DIR__ . '/../../../bootstrap/start.php';
+		define('RUNNING_TESTS', true);
 	}
 
 	protected function tearDown()

@@ -5,7 +5,10 @@ use Exception;
 
 class PermissionMissingException extends Exception {}
 
-App::error(function (PermissionMissingException $exception)
+if ( ! defined('RUNNING_TESTS') )
 {
-	return $exception;
-});
+	App::error(function (PermissionMissingException $exception)
+	{
+		return $exception;
+	});
+}

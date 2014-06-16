@@ -29,6 +29,9 @@ return array(
 	'Sending the email containing the reset key failed. Please try again later or contact the administrator.'
 		=> 'Sending the email containing the reset key failed. Please try again later or contact the administrator.',
 
+	'Sending the email containing the new password failed. Please try again later or contact the administrator.'
+		=> 'Sending the email containing the new password failed. Please try again later or contact the administrator.',
+
 	'Resetting your password failed. Please try again later or contact the administrator.'
 		=> 'Resetting your password failed. Please try again later or contact the administrator.',
 
