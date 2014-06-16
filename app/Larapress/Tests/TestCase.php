@@ -7,11 +7,6 @@ use PHPUnit_Framework_TestCase;
 
 abstract class TestCase extends PHPUnit_Framework_TestCase {
 
-	public function __construct()
-	{
-		define('RUNNING_TESTS', true);
-	}
-
 	protected function tearDown()
 	{
 		parent::tearDown();
