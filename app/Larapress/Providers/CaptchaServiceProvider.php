@@ -12,14 +12,14 @@ class CaptchaServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		$this->app->singleton('captcha', function ()
+		$this->app->singleton('Larapress\Services\Captcha', function ()
 		{
 			return new Captcha(
 				$this->app['view'],
 				$this->app['config'],
 				$this->app['session.store'],
-				$this->app['helpers'],
-				$this->app['mockably']
+				$this->app['Larapress\Interfaces\HelpersInterface'],
+				$this->app['Larapress\Interfaces\MockablyInterface']
 			);
 		});
 	}

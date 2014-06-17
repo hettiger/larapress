@@ -15,7 +15,7 @@ class AccessBackendFilter extends RedirectFilter {
 	 */
 	protected function init($app)
 	{
-		$this->permission = $app['permission'];
+		$this->permission = $app['Larapress\Interfaces\PermissionInterface'];
 	}
 
 	/**

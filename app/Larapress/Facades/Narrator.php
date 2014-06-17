@@ -13,7 +13,7 @@ class Narrator extends Facade {
 	 */
 	protected static function getFacadeAccessor()
 	{
-		return 'narrator';
+		return 'Larapress\Interfaces\NarratorInterface';
 	}
 
 }

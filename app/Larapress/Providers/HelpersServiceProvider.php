@@ -28,13 +28,13 @@ class HelpersServiceProvider extends ServiceProvider {
 	{
 		$this->init();
 
-		$this->app->bind('helpers', function ()
+		$this->app->bind('Larapress\Services\Helpers', function ()
 		{
 			return new Helpers(
 				$this->app['config'],
 				$this->app['translator'],
 				$this->app['view'],
-				$this->app['mockably'],
+				$this->app['Larapress\Interfaces\MockablyInterface'],
 				$this->app->make('log')->getMonolog(),
 				$this->app['request'],
 				$this->app['session.store'],

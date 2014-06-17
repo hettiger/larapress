@@ -10,11 +10,9 @@
 |
 */
 
-App::bind('Cartalyst\Sentry\Sentry', 'sentry');
-
-App::bind('Larapress\Interfaces\CaptchaInterface', 'captcha');
-App::bind('Larapress\Interfaces\HelpersInterface', 'helpers');
-App::bind('Larapress\Interfaces\MockablyInterface', 'mockably');
-App::bind('Larapress\Interfaces\NarratorInterface', 'narrator');
-App::bind('Larapress\Interfaces\NullObjectInterface', 'null.object');
-App::bind('Larapress\Interfaces\PermissionInterface', 'permission');
+App::bind('Larapress\Interfaces\CaptchaInterface', 'Larapress\Services\Captcha');
+App::bind('Larapress\Interfaces\HelpersInterface', 'Larapress\Services\Helpers');
+App::bind('Larapress\Interfaces\MockablyInterface', 'Larapress\Services\Mockably');
+App::bind('Larapress\Interfaces\NarratorInterface', 'Larapress\Services\Narrator');
+App::bind('Larapress\Interfaces\NullObjectInterface', 'Larapress\Services\NullObject');
+App::bind('Larapress\Interfaces\PermissionInterface', 'Larapress\Services\Permission');
