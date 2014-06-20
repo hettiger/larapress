@@ -1,11 +1,11 @@
 <?php namespace Larapress\Tests\Services;
 
 use Larapress\Services\Permission;
+use Larapress\Tests\TestCase;
 use Mockery;
 use Mockery\Mock;
-use PHPUnit_Framework_TestCase;
 
-class PermissionTest extends PHPUnit_Framework_TestCase {
+class PermissionTest extends TestCase {
 
 	/**
 	 * @var Mock
@@ -17,13 +17,6 @@ class PermissionTest extends PHPUnit_Framework_TestCase {
 		parent::setUp();
 
 		$this->sentry = Mockery::mock('Cartalyst\Sentry\Sentry');
-	}
-
-	public function tearDown()
-	{
-		parent::tearDown();
-
-		Mockery::close();
 	}
 
 	protected function getPermissionInstance()

@@ -1,15 +1,18 @@
 <?php namespace Larapress\Services;
 
 use BadMethodCallException;
+use Carbon\Carbon;
+use Exception;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Database\Connection as DB;
+use Illuminate\Foundation\Application as App;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector as Redirect;
 use Illuminate\Session\Store as Session;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Translation\Translator as Lang;
-use Illuminate\View\Environment as View;
-use Larapress\Interfaces\BaseControllerInterface;
+use Illuminate\View\Factory as View;
 use Larapress\Interfaces\HelpersInterface;
 use Larapress\Interfaces\MockablyInterface;
 use Monolog\Logger as Log;
@@ -27,12 +30,12 @@ class Helpers implements HelpersInterface {
 	private $lang;
 
 	/**
-	 * @var \Illuminate\View\Environment
+	 * @var \Illuminate\View\Factory
 	 */
 	private $view;
 
 	/**
-	 * @var Mockably
+	 * @var \Larapress\Interfaces\MockablyInterface
 	 */
 	private $mockably;
 
@@ -62,35 +65,46 @@ class Helpers implements HelpersInterface {
 	private $redirect;
 
 	/**
-	 * @var \Larapress\Controllers\BaseController
+	 * @var \Illuminate\Support\Facades\Response
 	 */
-	private $baseController;
+	private $response;
+
+	/**
+	 * @var \Illuminate\Foundation\Application
+	 */
+	private $app;
+
+	/**
+	 * @var \Carbon\Carbon
+	 */
+	private $carbon;
+
+	/**
+	 * @var float
+	 */
+	protected $laravel_start = LARAVEL_START;
 
 	/**
 	 * @param \Illuminate\Config\Repository $config
 	 * @param \Illuminate\Translation\Translator $lang
-	 * @param \Illuminate\View\Environment $view
+	 * @param \Illuminate\View\Factory $view
 	 * @param \Larapress\Interfaces\MockablyInterface $mockably
 	 * @param \Monolog\Logger $log
 	 * @param \Illuminate\Http\Request $request
 	 * @param \Illuminate\Session\Store $session
 	 * @param \Illuminate\Database\Connection $db
 	 * @param \Illuminate\Routing\Redirector $redirect
-	 * @param \Larapress\Interfaces\BaseControllerInterface $baseController
+	 * @param \Illuminate\Support\Facades\Response $response
+	 * @param \Illuminate\Foundation\Application $app
+	 * @param \Carbon\Carbon $carbon
 	 *
 	 * @return \Larapress\Services\Helpers
 	 */
 	public function __construct(
-		Config $config,
-		Lang $lang,
-		View $view,
-		MockablyInterface $mockably,
-		Log $log,
-		Request $request,
-		Session $session,
-		DB $db,
-		Redirect $redirect,
-		BaseControllerInterface $baseController
+		Config $config, Lang $lang, View $view,
+		MockablyInterface $mockably, Log $log, Request $request,
+		Session $session, DB $db, Redirect $redirect,
+		Response $response, App $app, Carbon $carbon
 	) {
 		$this->config = $config;
 		$this->lang = $lang;
@@ -101,7 +115,23 @@ class Helpers implements HelpersInterface {
 		$this->session = $session;
 		$this->db = $db;
 		$this->redirect = $redirect;
-		$this->baseController = $baseController;
+		$this->response = $response;
+		$this->app = $app;
+		$this->carbon = $carbon;
+	}
+
+	/**
+	 * Initialize the base controller sharing important data to all views
+	 *
+	 * @return void
+	 */
+	public function initBaseController()
+	{
+		$lang = $this->app->getLocale();
+		$now = $this->carbon->now();
+
+		$this->view->share('lang', $lang);
+		$this->view->share('now', $now);
 	}
 
 	/**
@@ -160,7 +190,7 @@ class Helpers implements HelpersInterface {
 			'Current Route: ' . $this->request->getRequestUri()
 			. PHP_EOL .
 			'Time to create the Response: '
-			. $this->getCurrentTimeDifference($this->session->get('start.time'), 'ms') . ' ms'
+			. $this->getCurrentTimeDifference($this->laravel_start, 'ms') . ' ms'
 			. PHP_EOL .
 			'Total performed DB Queries: ' . count($this->db->getQueryLog())
 			. PHP_EOL
@@ -189,7 +219,9 @@ class Helpers implements HelpersInterface {
 	 */
 	public function force404()
 	{
-		return $this->baseController->missingMethod(array());
+		$this->setPageTitle('404 Error');
+
+		return $this->response->view('larapress::errors.404', array(), 404);
 	}
 
 	/**
@@ -219,6 +251,31 @@ class Helpers implements HelpersInterface {
 		}
 
 		return $this->redirect->back();
+	}
+
+	/**
+	 * Handle Multiple Exceptions
+	 *
+	 * Chaining lots of catch blocks in a row leads to code duplication quickly.
+	 * This method helps avoiding this and also greatly reduces the total lines of code.
+	 *
+	 * @param Exception $exception The caught exception
+	 * @param array $error_messages An array of possible error messages (e.g. array('Exception' => 'Error message');)
+	 * @return string Returns the correct error message from the $error_messages bag
+	 * @throws Exception
+	 */
+	public function handleMultipleExceptions($exception, $error_messages)
+	{
+		$namespace_class_name = get_class($exception);
+		$class_name = substr(strrchr($namespace_class_name, '\\'), 1) ? : $namespace_class_name;
+
+		if ( array_key_exists($class_name, $error_messages) )
+		{
+			return $error_messages[$class_name];
+		}
+
+		$this->log->error('Unhandled Exception rethrown. See the Stacktrace below for more information:');
+		throw $exception;
 	}
 
 }

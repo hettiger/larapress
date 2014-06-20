@@ -16,7 +16,7 @@ abstract class RedirectFilter {
 	{
 		$app = app();
 
-		$this->helpers = $app['helpers'];
+		$this->helpers = $app['Larapress\Interfaces\HelpersInterface'];
 		$this->init($app);
 	}
 

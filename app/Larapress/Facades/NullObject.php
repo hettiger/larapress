@@ -13,7 +13,7 @@ class NullObject extends Facade {
 	 */
 	protected static function getFacadeAccessor()
 	{
-		return 'null.object';
+		return 'Larapress\Interfaces\NullObjectInterface';
 	}
 
 }

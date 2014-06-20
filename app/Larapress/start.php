@@ -21,3 +21,14 @@ require app_path() . '/Larapress/routes.php';
 */
 
 require app_path() . '/Larapress/filters.php';
+
+/*
+|--------------------------------------------------------------------------
+| Require The Larapress Services File
+|--------------------------------------------------------------------------
+|
+| Require larapress's services file to define IoC bindings
+|
+*/
+
+require app_path() . '/Larapress/services.php';

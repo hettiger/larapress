@@ -1,9 +1,9 @@
 <?php namespace Larapress\Tests\Services;
 
 use Larapress\Services\Mockably;
-use PHPUnit_Framework_TestCase;
+use Larapress\Tests\TestCase;
 
-class MockablyTest extends PHPUnit_Framework_TestCase {
+class MockablyTest extends TestCase {
 
 	/**
 	 * @test microtime() can return float

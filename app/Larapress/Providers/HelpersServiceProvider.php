@@ -2,7 +2,6 @@
 
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\ServiceProvider;
-use Larapress\Controllers\BaseController;
 use Larapress\Services\Helpers;
 
 class HelpersServiceProvider extends ServiceProvider {
@@ -29,19 +28,21 @@ class HelpersServiceProvider extends ServiceProvider {
 	{
 		$this->init();
 
-		$this->app->bind('helpers', function ()
+		$this->app->singleton('Larapress\Services\Helpers', function ()
 		{
 			return new Helpers(
 				$this->app['config'],
 				$this->app['translator'],
 				$this->app['view'],
-				$this->app['mockably'],
+				$this->app['Larapress\Interfaces\MockablyInterface'],
 				$this->app->make('log')->getMonolog(),
 				$this->app['request'],
 				$this->app['session.store'],
 				$this->db->connection($this->defaultDbConnection),
 				$this->app['redirect'],
-				new BaseController
+				$this->app['Illuminate\Support\Facades\Response'],
+				$this->app['app'],
+				$this->app['Carbon\Carbon']
 			);
 		});
 	}

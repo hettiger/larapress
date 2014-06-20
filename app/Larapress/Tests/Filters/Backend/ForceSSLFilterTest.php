@@ -1,11 +1,11 @@
 <?php namespace Larapress\Tests\Filters\Backend;
 
 use Larapress\Tests\Filters\Backend\Proxies\ForceSSLFilterProxy;
+use Larapress\Tests\TestCase;
 use Mockery;
 use Mockery\Mock;
-use PHPUnit_Framework_TestCase;
 
-class ForceSSLFilterTest extends PHPUnit_Framework_TestCase {
+class ForceSSLFilterTest extends TestCase {
 
 	/**
 	 * @var Mock
@@ -23,13 +23,6 @@ class ForceSSLFilterTest extends PHPUnit_Framework_TestCase {
 
 		$this->config = Mockery::mock('\Illuminate\Config\Repository');
 		$this->helpers = Mockery::mock('\Larapress\Services\Helpers');
-	}
-
-	public function tearDown()
-	{
-		parent::tearDown();
-
-		Mockery::close();
 	}
 
 	protected function getForceSSLFilterInstance()

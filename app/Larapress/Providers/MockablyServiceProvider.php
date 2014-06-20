@@ -12,7 +12,7 @@ class MockablyServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		$this->app->bind('mockably', function ()
+		$this->app->singleton('Larapress\Services\Mockably', function ()
 		{
 			return new Mockably;
 		});

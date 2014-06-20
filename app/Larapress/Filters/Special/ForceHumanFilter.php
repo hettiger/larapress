@@ -14,7 +14,7 @@ class ForceHumanFilter extends RedirectFilter {
 	 */
 	protected function init($app)
 	{
-		$this->captcha = $app['captcha'];
+		$this->captcha = $app['Larapress\Interfaces\CaptchaInterface'];
 	}
 
 	/**

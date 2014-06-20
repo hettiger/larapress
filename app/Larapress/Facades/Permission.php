@@ -13,7 +13,7 @@ class Permission extends Facade {
 	 */
 	protected static function getFacadeAccessor()
 	{
-		return 'permission';
+		return 'Larapress\Interfaces\PermissionInterface';
 	}
 
 }

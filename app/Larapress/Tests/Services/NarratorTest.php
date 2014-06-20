@@ -1,11 +1,11 @@
 <?php namespace Larapress\Tests\Services;
 
 use Larapress\Tests\Services\Proxies\NarratorProxy;
+use Larapress\Tests\TestCase;
 use Mockery;
 use Mockery\Mock;
-use PHPUnit_Framework_TestCase;
 
-class NarratorTest extends PHPUnit_Framework_TestCase {
+class NarratorTest extends TestCase {
 
 	public $log_message;
 
@@ -57,13 +57,6 @@ class NarratorTest extends PHPUnit_Framework_TestCase {
 		$this->mockably = Mockery::mock('\Larapress\Services\Mockably');
 
 		$this->nullObject->shouldDeferMissing();
-	}
-
-	public function tearDown()
-	{
-		parent::tearDown();
-
-		Mockery::close();
 	}
 
 	protected function applyConfigFixture()
@@ -238,7 +231,8 @@ class NarratorTest extends PHPUnit_Framework_TestCase {
 	public function sendMail_can_throw_the_predefined_mail_exception_on_false_result()
 	{
 		$this->applyConfigFixture();
-		$this->mail->shouldReceive('send')->once()->andReturn(false);
+		$this->mail->shouldReceive('send')->once();
+		$this->mail->shouldReceive('failures')->once()->andReturn(array('foo@bar.baz'));
 		$narrator = $this->getNarratorInstance();
 		$this->applyTestDataFixture($narrator);
 
@@ -266,7 +260,8 @@ class NarratorTest extends PHPUnit_Framework_TestCase {
 	public function sendMail_remains_silent_on_success()
 	{
 		$this->applyConfigFixture();
-		$this->mail->shouldReceive('send')->once()->andReturn(true);
+		$this->mail->shouldReceive('send')->once();
+		$this->mail->shouldReceive('failures')->once()->andReturn(array());
 		$narrator = $this->getNarratorInstance();
 		$this->applyTestDataFixture($narrator);
 
@@ -309,7 +304,8 @@ class NarratorTest extends PHPUnit_Framework_TestCase {
 		$this->input->shouldReceive('all')->once()->andReturn(array('email' => 'baz'));
 		$this->sentry->shouldReceive('findUserByLogin')->once()->andReturn($this->getResetPasswordCodeMock());
 		$this->lang->shouldReceive('get')->withAnyArgs()->once()->andReturn('Subject');
-		$this->mail->shouldReceive('send')->once()->andReturn(true);
+		$this->mail->shouldReceive('send')->once();
+		$this->mail->shouldReceive('failures')->once()->andReturn(array());
 		$this->mockably->shouldReceive('route')->once();
 		$narrator = $this->getNarratorInstance();
 
@@ -448,7 +444,8 @@ class NarratorTest extends PHPUnit_Framework_TestCase {
 		$this->sentry->shouldReceive('findThrottlerByUserId')->with(1)->once()->andReturn($throttle);
 		$this->applyConfigFixture();
 		$this->lang->shouldReceive('get')->with('larapress::email.Password Reset!')->once()->andReturn('Subject');
-		$this->mail->shouldReceive('send')->once()->andReturn(true);
+		$this->mail->shouldReceive('send')->once();
+		$this->mail->shouldReceive('failures')->once()->andReturn(array());
 		$narrator = $this->getNarratorInstance();
 
 		$narrator->sendNewPassword(1, 'foo');

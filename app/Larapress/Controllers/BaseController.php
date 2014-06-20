@@ -1,22 +1,18 @@
 <?php namespace Larapress\Controllers;
 
-use App;
-use Carbon\Carbon;
-use Controller;
-use Helpers;
-use Larapress\Interfaces\BaseControllerInterface;
-use Response;
-use View;
+use Illuminate\Routing\Controller;
+use Larapress\Interfaces\HelpersInterface as Helpers;
 
-class BaseController extends Controller implements BaseControllerInterface {
+abstract class BaseController extends Controller {
 
-	function __construct()
+	/**
+	 * @var \Larapress\Interfaces\HelpersInterface
+	 */
+	protected $helpers;
+
+	function __construct(Helpers $helpers)
 	{
-		$lang = App::getLocale();
-		$now = Carbon::now();
-
-		View::share('lang', $lang);
-		View::share('now', $now);
+		$this->helpers = $helpers;
 	}
 
 	/**
@@ -25,13 +21,11 @@ class BaseController extends Controller implements BaseControllerInterface {
 	 * Abort the app and return a 404 response
 	 *
 	 * @param array $parameters
-	 * @return Response
+	 * @return \Illuminate\Http\Response
 	 */
 	public function missingMethod($parameters = array())
 	{
-		Helpers::setPageTitle('404 Error');
-
-		return Response::view('larapress::errors.404', array(), 404);
+		return $this->helpers->force404();
 	}
 
 }
