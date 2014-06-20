@@ -22,7 +22,7 @@ class ControlPanelController extends BackendBaseController {
 	 *
 	 * Loads the dashboard view which is the first thing you'll see after logging in.
 	 *
-	 * @return View
+	 * @return \Illuminate\View\View
 	 */
 	public function getDashboard()
 	{
