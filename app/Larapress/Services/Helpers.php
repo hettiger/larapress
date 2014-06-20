@@ -35,7 +35,7 @@ class Helpers implements HelpersInterface {
 	private $view;
 
 	/**
-	 * @var Mockably
+	 * @var \Larapress\Interfaces\MockablyInterface
 	 */
 	private $mockably;
 

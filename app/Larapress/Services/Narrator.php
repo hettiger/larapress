@@ -52,12 +52,12 @@ class Narrator implements NarratorInterface {
 	private $sentry;
 
 	/**
-	 * @var NullObject
+	 * @var \Larapress\Interfaces\NullObjectInterface
 	 */
 	private $nullObject;
 
 	/**
-	 * @var Mockably
+	 * @var \Larapress\Interfaces\MockablyInterface
 	 */
 	private $mockably;
 

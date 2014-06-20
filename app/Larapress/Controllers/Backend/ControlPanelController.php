@@ -6,7 +6,7 @@ use Illuminate\View\Factory as View;
 class ControlPanelController extends BackendBaseController {
 
 	/**
-	 * @var \View
+	 * @var \Illuminate\View\Factory
 	 */
 	private $view;
 
