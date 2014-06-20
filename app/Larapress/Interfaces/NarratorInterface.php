@@ -107,7 +107,7 @@ interface NarratorInterface {
 	 * @throws MailException Throws an exception containing further information as message
 	 * @return void
 	 */
-	public function resetPassword($input);
+	public function resetPassword($input = null);
 
 	/**
 	 * Attempt to reset a user and send him a new password

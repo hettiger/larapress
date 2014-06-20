@@ -25,12 +25,12 @@ class Captcha implements CaptchaInterface {
 	private $session;
 
 	/**
-	 * @var Helpers
+	 * @var \Larapress\Interfaces\HelpersInterface
 	 */
 	private $helpers;
 
 	/**
-	 * @var Mockably
+	 * @var \Larapress\Interfaces\MockablyInterface
 	 */
 	private $mockably;
 

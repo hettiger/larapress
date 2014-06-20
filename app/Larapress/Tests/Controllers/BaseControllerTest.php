@@ -1,62 +1,24 @@
 <?php namespace Larapress\Tests\Controllers;
 
-use Config;
-use Helpers;
-use Larapress\Controllers\BaseController;
-use Larapress\Tests\TestCase;
-use Str;
-use View;
+use Larapress\Tests\Controllers\Proxies\BaseControllerProxy;
+use Larapress\Tests\Controllers\Templates\ControllerTestCase;
 
-class BaseControllerTest extends TestCase {
+class BaseControllerTest extends ControllerTestCase {
 
-	private $backend_route;
-
-	public function setUp()
+	protected function getBaseControllerInstance()
 	{
-		parent::setUp();
-
-		$this->backend_route = Config::get('larapress.urls.backend');
+		return new BaseControllerProxy($this->helpers);
 	}
 
-	/*
-	|--------------------------------------------------------------------------
-	| Constructor Tests
-	|--------------------------------------------------------------------------
-	|
-	| Here is where you can test the constructor
-	|
-	*/
-
-	public function test_constructor_shares_important_data()
+	/**
+	 * @test missingMethod() calls the force404 helpers method
+	 */
+	public function missingMethod_returns_the_force_404_helpers_method()
 	{
-		View::shouldReceive('share')->times(2);
+		$this->helpers->shouldReceive('force404')->withNoArgs()->once()->andReturn('baz');
+		$controller = $this->getBaseControllerInstance();
 
-		new BaseController;
-	}
-
-	/*
-	|--------------------------------------------------------------------------
-	| BaseController@missingMethod Tests
-	|--------------------------------------------------------------------------
-	|
-	| Here is where you can test the BaseController@missingMethod method
-	|
-	*/
-
-	public function test_can_catch_404_errors()
-	{
-		$this->call('GET', $this->backend_route . '/' . Str::quickRandom(16));
-
-		$this->assertResponseStatus(404);
-	}
-
-	public function test_can_set_the_correct_page_title()
-	{
-		Helpers::shouldReceive('setPageTitle')->with('404 Error')->once();
-		View::share('title', 'foo'); // Prevent an for this test irrelevant ErrorException
-
-		$controller = new BaseController;
-		$controller->missingMethod(array());
+		$this->assertEquals('baz', $controller->missingMethod());
 	}
 
 }

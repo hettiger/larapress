@@ -1,11 +1,15 @@
 <?php namespace Larapress\Interfaces;
 
 use BadMethodCallException;
+use Carbon\Carbon;
+use Exception;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Database\Connection as DB;
+use Illuminate\Foundation\Application as App;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector as Redirect;
 use Illuminate\Session\Store as Session;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Translation\Translator as Lang;
 use Illuminate\View\Factory as View;
 use Monolog\Logger as Log;
@@ -22,22 +26,25 @@ interface HelpersInterface {
 	 * @param \Illuminate\Session\Store $session
 	 * @param \Illuminate\Database\Connection $db
 	 * @param \Illuminate\Routing\Redirector $redirect
-	 * @param \Larapress\Interfaces\BaseControllerInterface $baseController
+	 * @param \Illuminate\Support\Facades\Response $response
+	 * @param \Illuminate\Foundation\Application $app
+	 * @param \Carbon\Carbon $carbon
 	 *
 	 * @return \Larapress\Interfaces\HelpersInterface
 	 */
 	public function __construct(
-		Config $config,
-		Lang $lang,
-		View $view,
-		MockablyInterface $mockably,
-		Log $log,
-		Request $request,
-		Session $session,
-		DB $db,
-		Redirect $redirect,
-		BaseControllerInterface $baseController
+		Config $config, Lang $lang, View $view,
+		MockablyInterface $mockably, Log $log, Request $request,
+		Session $session, DB $db, Redirect $redirect,
+		Response $response, App $app, Carbon $carbon
 	);
+
+	/**
+	 * Initialize the base controller sharing important data to all views
+	 *
+	 * @return void
+	 */
+	public function initBaseController();
 
 	/**
 	 * Sets the page title (Shares the title variable for the view)
@@ -97,5 +104,18 @@ interface HelpersInterface {
 		$status = 302,
 		$headers = array()
 	);
+
+	/**
+	 * Handle Multiple Exceptions
+	 *
+	 * Chaining lots of catch blocks in a row leads to code duplication quickly.
+	 * This method helps avoiding this and also greatly reduces the total lines of code.
+	 *
+	 * @param Exception $exception The caught exception
+	 * @param array $error_messages An array of possible error messages (e.g. array('Exception' => 'Error message');)
+	 * @return string Returns the correct error message from the $error_messages bag
+	 * @throws Exception
+	 */
+	public function handleMultipleExceptions($exception, $error_messages);
 
 }

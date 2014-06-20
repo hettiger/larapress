@@ -1,28 +1,71 @@
 <?php namespace Larapress\Controllers\Api;
 
-use Input;
-use Mockably;
-use Response;
-use Session;
-use Validator;
+use Illuminate\Http\Request as Input;
+use Illuminate\Session\Store as Session;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Validation\Factory as Validator;
+use Larapress\Interfaces\MockablyInterface as Mockably;
+use Larapress\Interfaces\HelpersInterface as Helpers;
 
-class CaptchaController extends BaseController {
+class CaptchaController extends ApiBaseController {
+
+	/**
+	 * @var \Illuminate\Validation\Factory
+	 */
+	private $validator;
+
+	/**
+	 * @var \Illuminate\Http\Request
+	 */
+	private $input;
+
+	/**
+	 * @var \Illuminate\Support\Facades\Response
+	 */
+	private $response;
+
+	/**
+	 * @var \Illuminate\Session\Store
+	 */
+	private $session;
+
+	/**
+	 * @var \Larapress\Interfaces\MockablyInterface
+	 */
+	private $mockably;
+
+	public function __construct(
+		Helpers $helpers,
+		Validator $validator,
+		Input $input,
+		Response $response,
+		Session $session,
+		Mockably $mockably
+	) {
+		parent::__construct($helpers);
+
+		$this->validator = $validator;
+		$this->input = $input;
+		$this->response = $response;
+		$this->session = $session;
+		$this->mockably = $mockably;
+	}
 
 	public function postValidate()
 	{
-		$validator = Validator::make(
-			Input::all(),
+		$validator = $this->validator->make(
+			$this->input->all(),
 			array('recaptcha_response_field' => 'required|recaptcha')
 		);
 
 		if ( $validator->fails() )
 		{
-			return Response::json(array('result' => 'failed'));
+			return $this->response->json(array('result' => 'failed'));
 		}
 
-		Session::put('captcha.passed.time', Mockably::microtime());
+		$this->session->put('captcha.passed.time', $this->mockably->microtime());
 
-		return Response::json(array('result' => 'success'));
+		return $this->response->json(array('result' => 'success'));
 	}
 
 }

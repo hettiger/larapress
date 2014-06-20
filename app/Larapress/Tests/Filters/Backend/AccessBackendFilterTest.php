@@ -1,11 +1,11 @@
 <?php namespace Larapress\Tests\Filters\Backend;
 
 use Larapress\Tests\Filters\Backend\Proxies\AccessBackendFilterProxy;
+use Larapress\Tests\TestCase;
 use Mockery;
 use Mockery\Mock;
-use PHPUnit_Framework_TestCase;
 
-class AccessBackendFilterTest extends PHPUnit_Framework_TestCase {
+class AccessBackendFilterTest extends TestCase {
 
 	/**
 	 * @var Mock
@@ -23,13 +23,6 @@ class AccessBackendFilterTest extends PHPUnit_Framework_TestCase {
 
 		$this->permission = Mockery::mock('\Larapress\Interfaces\PermissionInterface');
 		$this->helpers = Mockery::mock('\Larapress\Interfaces\HelpersInterface');
-	}
-
-	public function tearDown()
-	{
-		parent::tearDown();
-
-		Mockery::close();
 	}
 
 	protected function getAccessBackendFilterInstance()

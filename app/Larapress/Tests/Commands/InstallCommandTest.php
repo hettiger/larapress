@@ -4,11 +4,11 @@ use Cartalyst\Sentry\Groups\GroupNotFoundException;
 use Cartalyst\Sentry\Users\UserExistsException;
 use Larapress\Tests\Commands\Proxies\GroupProxy;
 use Larapress\Tests\Commands\Proxies\InstallCommandProxy;
+use Larapress\Tests\TestCase;
 use Mockery;
 use Mockery\Mock;
-use PHPUnit_Framework_TestCase;
 
-class InstallCommandTest extends PHPUnit_Framework_TestCase {
+class InstallCommandTest extends TestCase {
 
 	/**
 	 * @var Mock
@@ -35,8 +35,6 @@ class InstallCommandTest extends PHPUnit_Framework_TestCase {
 		$_SERVER['error'] = array();
 		$_SERVER['info'] = array();
 		$_SERVER['call'] = array();
-
-		Mockery::close();
 	}
 
 	protected function getInstallCommandInstance()

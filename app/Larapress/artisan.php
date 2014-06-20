@@ -11,4 +11,4 @@
 |
 */
 
-Artisan::add(new \Larapress\Commands\InstallCommand(app('sentry'), app('mockably')));
+Artisan::add(new \Larapress\Commands\InstallCommand(app('sentry'), app('Larapress\Interfaces\MockablyInterface')));

@@ -19,6 +19,12 @@
                 <directory suffix=".php">./app/Larapress/Lang</directory>
                 <directory suffix=".php">./app/Larapress/Providers</directory>
                 <directory suffix=".php">./app/Larapress/Views</directory>
+                <directory suffix=".php">./app/Larapress/Tests</directory>
+                <file>./app/Larapress/artisan.php</file>
+                <file>./app/Larapress/filters.php</file>
+                <file>./app/Larapress/routes.php</file>
+                <file>./app/Larapress/services.php</file>
+                <file>./app/Larapress/start.php</file>
             </exclude>
         </whitelist>
     </filter>

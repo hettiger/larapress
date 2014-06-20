@@ -12,7 +12,7 @@ class PermissionServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		$this->app->bind('permission', function ()
+		$this->app->singleton('Larapress\Services\Permission', function ()
 		{
 			return new Permission(
 				$this->app['sentry']

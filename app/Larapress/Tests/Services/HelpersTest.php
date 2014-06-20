@@ -2,11 +2,11 @@
 
 use BadMethodCallException;
 use Larapress\Tests\Services\Proxies\HelpersProxy;
+use Larapress\Tests\TestCase;
 use Mockery;
 use Mockery\Mock;
-use PHPUnit_Framework_TestCase;
 
-class HelpersTest extends PHPUnit_Framework_TestCase {
+class HelpersTest extends TestCase {
 
 	/**
 	 * @var Mock
@@ -56,7 +56,17 @@ class HelpersTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * @var Mock
 	 */
-	private $baseController;
+	private $response;
+
+	/**
+	 * @var Mock
+	 */
+	private $app;
+
+	/**
+	 * @var Mock
+	 */
+	private $carbon;
 
 	public function setUp()
 	{
@@ -71,14 +81,9 @@ class HelpersTest extends PHPUnit_Framework_TestCase {
 		$this->session = Mockery::mock('\Illuminate\Session\Store');
 		$this->db = Mockery::mock('\Illuminate\Database\Connection');
 		$this->redirect = Mockery::mock('\Illuminate\Routing\Redirector');
-		$this->baseController = Mockery::mock('\Larapress\Controllers\BaseController');
-	}
-
-	public function tearDown()
-	{
-		parent::tearDown();
-
-		Mockery::close();
+		$this->response = Mockery::mock('\Illuminate\Support\Facades\Response');
+		$this->app = Mockery::mock('\Illuminate\Foundation\Application');
+		$this->carbon = Mockery::mock('\Carbon\Carbon');
 	}
 
 	protected function getHelpersInstance()
@@ -93,8 +98,31 @@ class HelpersTest extends PHPUnit_Framework_TestCase {
 			$this->session,
 			$this->db,
 			$this->redirect,
-			$this->baseController
+			$this->response,
+			$this->app,
+			$this->carbon
 		);
+	}
+
+	protected function setPageTitleFixture($page_name)
+	{
+		$this->config->shouldReceive('get')->with('larapress.names.cms')->once()->andReturn('foo');
+		$this->lang->shouldReceive('get')->with('larapress::general.' . $page_name)->once()->andReturn($page_name);
+		$this->view->shouldReceive('share')->with('title', 'foo | ' . $page_name)->once();
+	}
+
+	/**
+	 * @test initBaseController() can share important data to all views
+	 */
+	public function initBaseController_can_share_important_data_to_all_views()
+	{
+		$this->app->shouldReceive('getLocale')->withNoArgs()->atLeast()->once()->andReturn('foo');
+		$this->carbon->shouldReceive('now')->withNoArgs()->atLeast()->once()->andReturn('bar');
+		$this->view->shouldReceive('share')->with('lang', 'foo')->atLeast()->once();
+		$this->view->shouldReceive('share')->with('now', 'bar')->atLeast()->once();
+		$helpers = $this->getHelpersInstance();
+
+		$helpers->initBaseController();
 	}
 
 	/**
@@ -102,9 +130,7 @@ class HelpersTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function setPageTitle()
 	{
-		$this->config->shouldReceive('get')->with('larapress.names.cms')->once()->andReturn('foo');
-		$this->lang->shouldReceive('get')->with('larapress::general.bar')->once()->andReturn('bar');
-		$this->view->shouldReceive('share')->with('title', 'foo | bar')->once();
+		$this->setPageTitleFixture('bar');
 		$helpers = $this->getHelpersInstance();
 
 		$helpers->setPageTitle('bar');
@@ -225,7 +251,8 @@ class HelpersTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function force404_can_abort_the_app_returning_the_backend_404_view()
 	{
-		$this->baseController->shouldReceive('missingMethod')->with(array())->once()->andReturn('foo');
+		$this->setPageTitleFixture('404 Error');
+		$this->response->shouldReceive('view')->with('larapress::errors.404', array(), 404)->once()->andReturn('foo');
 		$helpers = $this->getHelpersInstance();
 
 		$this->assertEquals('foo', $helpers->force404());
@@ -253,6 +280,34 @@ class HelpersTest extends PHPUnit_Framework_TestCase {
 		$helpers = $this->getHelpersInstance();
 
 		$this->assertEquals('route', $helpers->redirectWithFlashMessage('foo', 'bar', 'baz'));
+	}
+
+	/**
+	 * @test handleMultipleExceptions() can return the correct error message
+	 */
+	public function handleMultipleExceptions_can_return_the_correct_error_message()
+	{
+		$error_messages = array('Exception' => 'foo');
+		$helpers = $this->getHelpersInstance();
+
+		$error_message = $helpers->handleMultipleExceptions(new \Exception(), $error_messages);
+
+		$this->assertEquals('foo', $error_message);
+	}
+
+	/**
+	 * @test handleMultipleExceptions() can log and rethrow the exception when missing the adequate message
+	 * @expectedException \Exception
+	 * @expectedExceptionMessage bar
+	 */
+	public function handleMultipleExceptions_can_log_and_rethrow_the_exception_when_missing_the_adequate_message()
+	{
+		$error_messages = array('SomeException' => 'foo');
+ 		$this->log->shouldReceive('error')
+			->with('Unhandled Exception rethrown. See the Stacktrace below for more information:')->once();
+		$helpers = $this->getHelpersInstance();
+
+		$helpers->handleMultipleExceptions(new \Exception('bar'), $error_messages);
 	}
 
 }

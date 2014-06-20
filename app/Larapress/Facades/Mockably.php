@@ -13,7 +13,7 @@ class Mockably extends Facade {
 	 */
 	protected static function getFacadeAccessor()
 	{
-		return 'mockably';
+		return 'Larapress\Interfaces\MockablyInterface';
 	}
 
 }

@@ -1,11 +1,11 @@
 <?php namespace Larapress\Tests\Services;
 
 use Larapress\Services\Captcha;
+use Larapress\Tests\TestCase;
 use Mockery;
 use Mockery\Mock;
-use PHPUnit_Framework_TestCase;
 
-class CaptchaTest extends PHPUnit_Framework_TestCase {
+class CaptchaTest extends TestCase {
 
 	/**
 	 * @var Mock
@@ -41,13 +41,6 @@ class CaptchaTest extends PHPUnit_Framework_TestCase {
 		$this->session = Mockery::mock('Illuminate\Session\Store');
 		$this->helpers = Mockery::mock('Larapress\Services\Helpers');
 		$this->mockably = Mockery::mock('Larapress\Services\Mockably');
-	}
-
-	public function tearDown()
-	{
-		parent::tearDown();
-
-		Mockery::close();
 	}
 
 	protected function applyConfigFixture()

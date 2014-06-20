@@ -1,73 +1,102 @@
 <?php namespace Larapress\Tests\Controllers\Api;
 
-use Larapress\Tests\TestCase;
-use Mockably;
+use Larapress\Controllers\Api\CaptchaController;
+use Larapress\Tests\Controllers\Api\Templates\ApiControllerTestCase;
 use Mockery;
-use Session;
-use Validator;
+use Mockery\Mock;
 
-class CaptchaControllerTest extends TestCase {
+class CaptchaControllerTest extends ApiControllerTestCase {
 
-	private $success_respone;
-	private $failed_response;
-	private $captcha_session_key;
+	/**
+	 * @var Mock
+	 */
+	private $validator;
+
+	/**
+	 * @var Mock
+	 */
+	private $input;
+
+	/**
+	 * @var Mock
+	 */
+	private $response;
+
+	/**
+	 * @var Mock
+	 */
+	private $session;
+
+	/**
+	 * @var Mock
+	 */
+	private $mockably;
 
 	public function setUp()
 	{
 		parent::setUp();
 
-		$this->success_respone = '{"result":"success"}';
-		$this->failed_response = '{"result":"failed"}';
-		$this->captcha_session_key = 'captcha.passed.time';
+		$this->validator = Mockery::mock('\Illuminate\Validation\Factory');
+		$this->input = Mockery::mock('\Illuminate\Http\Request');
+		$this->response = Mockery::mock('\Illuminate\Support\Facades\Response');
+		$this->session = Mockery::mock('\Illuminate\Session\Store');
+		$this->mockably = Mockery::mock('\Larapress\Interfaces\MockablyInterface');
 	}
 
-	/*
-	|--------------------------------------------------------------------------
-	| CaptchaController@postValidate Tests
-	|--------------------------------------------------------------------------
-	|
-	| Here is where you can test the CaptchaController@postValidate method
-	|
-	*/
-
-	public function test_can_browse_the_captcha_validation_api_route()
+	protected function getCaptchaControllerInstance()
 	{
-		$response = $this->route('POST', 'larapress.api.captcha.validate.post');
-
-		$this->assertResponseOk();
+		return new CaptchaController(
+			$this->helpers,
+			$this->validator,
+			$this->input,
+			$this->response,
+			$this->session,
+			$this->mockably
+		);
 	}
 
-	public function test_can_validate_and_return_failed()
+	/**
+	 * @param bool $return
+	 * @return \Mockery\MockInterface
+	 */
+	protected function getFailsMockFixture($return)
 	{
-		$validation_mock = Mockery::mock();
-		$validation_mock->shouldReceive('fails')->once()->andReturn(true);
+		$validator = Mockery::mock();
+		$validator->shouldReceive('fails')->withNoArgs()->once()->andReturn($return);
 
-		Validator::shouldReceive('make')->once()->andReturn($validation_mock);
-
-		$response = $this->route('POST', 'larapress.api.captcha.validate.post');
-
-		$this->assertEquals($this->failed_response, $response->getContent());
+		return $validator;
 	}
 
-	public function test_can_get_a_success_json_response()
+	/**
+	 * @test postValidate() does validate sets the timer and returns a success response
+	 */
+	public function postValidate_does_validate_sets_the_timer_and_returns_a_success_response()
 	{
-		$validation_mock = Mockery::mock();
-		$validation_mock->shouldReceive('fails')->once()->andReturn(false);
+		$this->input->shouldReceive('all')->withNoArgs()->once()->andReturn(array('foo'));
+		$this->validator->shouldReceive('make')
+			->with(array('foo'), array('recaptcha_response_field' => 'required|recaptcha'))
+			->once()->andReturn($this->getFailsMockFixture(false));
+		$this->mockably->shouldReceive('microtime')->withNoArgs()->once()->andReturn(1.00);
+		$this->session->shouldReceive('put')->with('captcha.passed.time', 1.00);
+		$this->response->shouldReceive('json')->with(array('result' => 'success'))->once()->andReturn('bar');
+		$controller = $this->getCaptchaControllerInstance();
 
-		Validator::shouldReceive('make')->once()->andReturn($validation_mock);
-
-		$response = $this->route('POST', 'larapress.api.captcha.validate.post');
-
-		$this->assertEquals($this->success_respone, $response->getContent());
+		$this->assertEquals('bar', $controller->postValidate());
 	}
 
-	public function test_can_write_the_current_microtime_into_the_session()
+	/**
+	 * @test postValidate() returns a failed response on validation errors
+	 */
+	public function postValidate_returns_a_failed_response_on_validation_errors()
 	{
-		Mockably::shouldReceive('microtime')->once()->andReturn('foo');
+		$this->input->shouldReceive('all')->withNoArgs()->once()->andReturn(array('foo'));
+		$this->validator->shouldReceive('make')
+			->with(array('foo'), array('recaptcha_response_field' => 'required|recaptcha'))
+			->once()->andReturn($this->getFailsMockFixture(true));
+		$this->response->shouldReceive('json')->with(array('result' => 'failed'))->once()->andReturn('bar');
+		$controller = $this->getCaptchaControllerInstance();
 
-		$this->test_can_get_a_success_json_response();
-
-		$this->assertEquals('foo', Session::get($this->captcha_session_key));
+		$this->assertEquals('bar', $controller->postValidate());
 	}
 
 }

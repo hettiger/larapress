@@ -12,7 +12,7 @@ class NarratorServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		$this->app->bind('narrator', function ()
+		$this->app->bind('Larapress\Services\Narrator', function ()
 		{
 			return new Narrator(
 				$this->app['config'],
@@ -20,8 +20,8 @@ class NarratorServiceProvider extends ServiceProvider {
 				$this->app['translator'],
 				$this->app['request'],
 				$this->app['sentry'],
-				$this->app['null.object'],
-				$this->app['mockably']
+				$this->app['Larapress\Interfaces\NullObjectInterface'],
+				$this->app['Larapress\Interfaces\MockablyInterface']
 			);
 		});
 	}

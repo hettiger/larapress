@@ -1,11 +1,11 @@
 <?php namespace Larapress\Tests\Filters\Special;
 
 use Larapress\Tests\Filters\Special\Proxies\ForceHumanFilterProxy;
+use Larapress\Tests\TestCase;
 use Mockery\Mock;
 use Mockery;
-use PHPUnit_Framework_TestCase;
 
-class ForceHumanFilterTest extends PHPUnit_Framework_TestCase {
+class ForceHumanFilterTest extends TestCase {
 
 	/**
 	 * @var Mock
@@ -23,13 +23,6 @@ class ForceHumanFilterTest extends PHPUnit_Framework_TestCase {
 
 		$this->captcha = Mockery::mock('\Larapress\Interfaces\CaptchaInterface');
 		$this->helpers = Mockery::mock('\Larapress\Interfaces\HelpersInterface');
-	}
-
-	public function tearDown()
-	{
-		parent::tearDown();
-
-		Mockery::close();
 	}
 
 	protected function getForceHumanFilterInstance()

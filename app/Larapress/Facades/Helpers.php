@@ -13,7 +13,7 @@ class Helpers extends Facade {
 	 */
 	protected static function getFacadeAccessor()
 	{
-		return 'helpers';
+		return 'Larapress\Interfaces\HelpersInterface';
 	}
 
 }
