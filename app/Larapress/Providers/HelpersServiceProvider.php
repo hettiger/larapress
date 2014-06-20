@@ -28,7 +28,7 @@ class HelpersServiceProvider extends ServiceProvider {
 	{
 		$this->init();
 
-		$this->app->bind('Larapress\Services\Helpers', function ()
+		$this->app->singleton('Larapress\Services\Helpers', function ()
 		{
 			return new Helpers(
 				$this->app['config'],

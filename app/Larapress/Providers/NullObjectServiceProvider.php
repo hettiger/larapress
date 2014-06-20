@@ -12,7 +12,7 @@ class NullObjectServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		$this->app->bind('Larapress\Services\NullObject', function ()
+		$this->app->singleton('Larapress\Services\NullObject', function ()
 		{
 			return new NullObject;
 		});
